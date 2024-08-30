@@ -11,6 +11,15 @@
 Display *display;
 
 /**
+* Frees any allocated memory on application exit
+*/
+void memoryCleanUp() {
+	free(display->window);
+	free(display->renderer);
+	free(display);
+}
+
+/**
  * The function meant to initialize the SDL window and renderer. This part of the code was created
  * using the tutorial linked to on the SDL Wiki here:
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
@@ -51,11 +60,16 @@ void initSDL(void) {
 	}
 }
 
+/**
+* The main function where all components are initialized and the gameplay update loop is maintained 
+*/
 int main(int argc, char* argv[]) {
-	// Temporary setup message, delete later
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello", "It works", NULL);
-	// Allocate memory to SDL renderer components
+	//// Temporary setup message, delete later
+	//SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello", "It works", NULL);
+	// Allocate memory to SDL renderer components and instantiate Display struct
 	memset(&display, 0, sizeof(Display));
+	display = new Display;
+
 	// Initialize SDL components
 	initSDL();
 
@@ -75,8 +89,3 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-void memoryCleanUp() {
-	free(display->window);
-	free(display->renderer);
-	free(display);
-}
