@@ -14,8 +14,6 @@ Display *display;
 * Frees any allocated memory on application exit
 */
 void memoryCleanUp() {
-	free(display->window);
-	free(display->renderer);
 	free(display);
 }
 
@@ -77,9 +75,11 @@ int main(int argc, char* argv[]) {
 	while (true) {
 		// Prepares scene for rendering
 		prepareScene(display->renderer);
+		// Updates the keyboard inputs
+		SDL_PumpEvents();
 		// Handles player input, including exit
 		takeInput();
-		// Renders the scene given the parameters identified in prepareScene()
+		// Renders the scene gven the parameters identified in prepareScene()
 		presentScene(display->renderer);
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
