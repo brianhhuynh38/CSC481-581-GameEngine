@@ -4,6 +4,7 @@
 #include "definitions.h"
 #include "draw.h"
 #include "input.h"
+#include "global.h"
 #include "structs.h"
 
 // Global variables
@@ -68,8 +69,15 @@ int main(int argc, char* argv[]) {
 	memset(&display, 0, sizeof(Display));
 	display = new Display;
 
+	memset(&player, 0, sizeof(Entity);) 
+
 	// Initialize SDL components
 	initSDL();
+
+	// starting player variables
+	player.x = 100;
+	player.y = 100;
+	//player.texture = loadTexture("");
 
 	// Basic, primitive game loop
 	while (true) {
@@ -79,6 +87,8 @@ int main(int argc, char* argv[]) {
 		SDL_PumpEvents();
 		// Handles player input, including exit
 		takeInput();
+		// Display player texture at player location
+		//blit(player.texture, player.x, player.y);
 		// Renders the scene gven the parameters identified in prepareScene()
 		presentScene(display->renderer);
 		// Slow down by 16 ms to maintain approximately 62 fps

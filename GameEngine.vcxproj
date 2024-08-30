@@ -133,8 +133,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="draw.cpp" />
+    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="init.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="stage.cpp" />
+    <ClCompile Include="stageHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -142,6 +147,8 @@
   <ItemGroup>
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="init.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="structs.h" />
   </ItemGroup>
