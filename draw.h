@@ -2,12 +2,15 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-void prepareScene(SDL_Renderer* renderer);
+namespace GEngine::Render {
 
-void presentScene(SDL_Renderer* renderer);
+	void prepareScene(void);
 
-SDL_Texture *loadTexture(char *filename);
+	void presentScene(void);
 
-void blit(SDL_Texture *texture, int x, int y);
+	SDL_Texture* loadTexture(char* filename);
+
+	void blit(SDL_Texture* texture, int x, int y);
+}
 
 #endif

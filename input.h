@@ -2,6 +2,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-void takeInput();
+namespace GEngine::Input {
+	void takeInput();
+}
 
 #endif

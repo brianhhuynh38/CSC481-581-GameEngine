@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include <iostream>
 
+using namespace GEngine::Render;
+
 #include "definitions.h"
 #include "draw.h"
 #include "input.h"
@@ -19,10 +21,11 @@ void memoryCleanUp() {
 }
 
 /**
- * The function meant to initialize the SDL window and renderer. This part of the code was created
- * using the tutorial linked to on the SDL Wiki here:
- * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
- */
+* The function meant to initialize the SDL window and renderer. This part of the code was created
+* using the tutorial linked to on the SDL Wiki here:
+* https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
+*
+*/
 void initSDL(void) {
 	// Define SDL rendering flags
 	int rendererFlags, windowFlags;
@@ -30,8 +33,7 @@ void initSDL(void) {
 	rendererFlags = SDL_RENDERER_ACCELERATED;
 	// Window does not use any specialized flags
 	windowFlags = 0;
-	// Runs memoryCleanUp() if the application exits
-	std::atexit(memoryCleanUp);
+
 
 	// If negative error code, exit with failure status
 	if (int status = SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -41,7 +43,7 @@ void initSDL(void) {
 
 	// Create window that is centered
 	// TODO: Might change later to not automatically use default resolution and have it adjust
-	display->window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+	display->window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		DEFAULT_WIDTH, DEFAULT_HEIGHT, windowFlags);
 	// Exit if the window fails to open
 	if (!display->window) {
@@ -63,26 +65,27 @@ void initSDL(void) {
 * The main function where all components are initialized and the gameplay update loop is maintained 
 */
 int main(int argc, char* argv[]) {
-	//// Temporary setup message, delete later
-	//SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello", "It works", NULL);
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	memset(&display, 0, sizeof(Display));
 	display = new Display;
 
-	memset(&player, 0, sizeof(Entity);) 
+	//memset(&player, 0, sizeof(Entity);) 
+	// 
+	// Runs memoryCleanUp() if the application exits
+	std::atexit(memoryCleanUp);
 
 	// Initialize SDL components
 	initSDL();
 
 	// starting player variables
-	player.x = 100;
-	player.y = 100;
+	//player.x = 100;
+	//player.y = 100;
 	//player.texture = loadTexture("");
 
 	// Basic, primitive game loop
 	while (true) {
 		// Prepares scene for rendering
-		prepareScene(display->renderer);
+		prepareScene();
 		// Updates the keyboard inputs
 		SDL_PumpEvents();
 		// Handles player input, including exit
@@ -90,7 +93,7 @@ int main(int argc, char* argv[]) {
 		// Display player texture at player location
 		//blit(player.texture, player.x, player.y);
 		// Renders the scene gven the parameters identified in prepareScene()
-		presentScene(display->renderer);
+		presentScene();
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
 	}
