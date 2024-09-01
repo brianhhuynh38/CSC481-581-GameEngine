@@ -1,7 +1,9 @@
 #include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 
 using namespace GEngine::Render;
+using namespace GEngine::Input;
 
 #include "definitions.h"
 #include "draw.h"
@@ -59,6 +61,8 @@ void initSDL(void) {
 	if (!display->renderer) {
 		std::cout << "The renderer failed to be created: " << SDL_GetError();
 	}
+	// Allows the use of JPG and PNG files
+	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 }
 
 /**

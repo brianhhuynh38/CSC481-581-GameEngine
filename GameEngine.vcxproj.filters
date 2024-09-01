@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{48e38880-9451-4204-8c00-911aa1741d50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{cd63e2b1-c5cb-4200-a49b-06c9f0220051}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,13 +36,10 @@
     <ClCompile Include="draw.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="stage.cpp">
+    <ClCompile Include="stageRenderer.cpp">
       <Filter>Source Files\Stages</Filter>
     </ClCompile>
-    <ClCompile Include="map.cpp">
-      <Filter>Source Files\Stages</Filter>
-    </ClCompile>
-    <ClCompile Include="stageHandler.cpp">
+    <ClCompile Include="stageManager.cpp">
       <Filter>Source Files\Stages</Filter>
     </ClCompile>
     <ClCompile Include="entity.cpp">
@@ -47,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="physics.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

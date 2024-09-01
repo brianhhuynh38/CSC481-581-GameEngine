@@ -4,22 +4,22 @@
 
 namespace GEngine::Entities {
 	class Entity {
+	private:
+		Vector m_size;
+		Vector m_position;
+		Vector m_velocity;
+		SDL_Texture* m_texture;
 	public:
 		Vector getPosition() {
-			return position;
+			return m_position;
 		}
 
 		Vector getVelocity() {
-			return velocity;
+			return m_velocity;
 		}
 
 		void LoadEntity(char* filepath) {
 
 		}
-	private:
-		Vector size;
-		Vector position;
-		Vector velocity;
-		SDL_Texture* texture;
 	};
 }
