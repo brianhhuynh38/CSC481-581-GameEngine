@@ -2,7 +2,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-namespace GEngine::Input {
+namespace Input {
 	void takeInput();
 }
 

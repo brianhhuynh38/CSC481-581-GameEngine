@@ -1,4 +1,4 @@
 
-namespace GEngine::Physics {
+namespace Physics {
 
 }

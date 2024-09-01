@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="structs.h" />

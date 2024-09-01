@@ -19,3 +19,10 @@ typedef struct {
 	int map[MAP_WIDTH][MAP_HEIGHT];
 } Stage;
 
+/**
+* Coordinate struct that allows for decimals
+*/
+typedef struct {
+	float x;
+	float y;
+} Vector2D;

@@ -2,24 +2,25 @@
 #include <SDL_image.h>
 #include <iostream>
 
-using namespace GEngine::Render;
-using namespace GEngine::Input;
-
 #include "definitions.h"
 #include "draw.h"
 #include "input.h"
 #include "global.h"
 #include "structs.h"
+#include "entity.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
 Display *display;
+/// The entity that the player is able to control
+Entities::Entity *player;
 
 /**
 * Frees any allocated memory on application exit
 */
 void memoryCleanUp() {
 	free(display);
+	delete player;
 }
 
 /**
@@ -35,7 +36,6 @@ void initSDL(void) {
 	rendererFlags = SDL_RENDERER_ACCELERATED;
 	// Window does not use any specialized flags
 	windowFlags = 0;
-
 
 	// If negative error code, exit with failure status
 	if (int status = SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -61,7 +61,7 @@ void initSDL(void) {
 	if (!display->renderer) {
 		std::cout << "The renderer failed to be created: " << SDL_GetError();
 	}
-	// Allows the use of JPG and PNG files
+	// Allows the use of JPG and PNG files by initializing them in SDL
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 }
 
@@ -73,31 +73,34 @@ int main(int argc, char* argv[]) {
 	memset(&display, 0, sizeof(Display));
 	display = new Display;
 
-	//memset(&player, 0, sizeof(Entity);) 
-	// 
+	// Create a player Entity (Temp: Make more malleable in the future)
+	char *playerTexturePath = (char *) "./Assets/Textures/DefaultPlayerTexture.png";
+	player = new Entities::Entity(
+		1.0, 1.0,
+		SDL_Point() = { 0, 0 }, 
+		playerTexturePath, 
+		false, 
+		true
+	);
+	
 	// Runs memoryCleanUp() if the application exits
 	std::atexit(memoryCleanUp);
 
 	// Initialize SDL components
 	initSDL();
 
-	// starting player variables
-	//player.x = 100;
-	//player.y = 100;
-	//player.texture = loadTexture("");
-
 	// Basic, primitive game loop
 	while (true) {
 		// Prepares scene for rendering
-		prepareScene();
+		Render::prepareScene();
 		// Updates the keyboard inputs
 		SDL_PumpEvents();
 		// Handles player input, including exit
-		takeInput();
+		Input::takeInput();
 		// Display player texture at player location
-		//blit(player.texture, player.x, player.y);
+		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y);
 		// Renders the scene gven the parameters identified in prepareScene()
-		presentScene();
+		Render::presentScene();
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
 	}

@@ -2,7 +2,7 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-namespace GEngine::Render {
+namespace Render {
 
 	void prepareScene(void);
 

@@ -2,7 +2,7 @@
 
 #include "input.h"
 
-namespace GEngine::Input {
+namespace Input {
 	/**
 	* Takes inputs from the user
 	* This was referenced from the SDL2 wiki:

@@ -7,7 +7,7 @@
 #include "draw.h"
 
 
-namespace GEngine::Render {
+namespace Render {
 
 	/**
 	* Defines and prepares the scene to render the next frame.
@@ -56,7 +56,8 @@ namespace GEngine::Render {
 		// Set destination coordinates
 		dest.x = x;
 		dest.y = y;
-		// Defines texture properties
+		// Defines texture properties with the dimensions of the source texture
+		// TODO: This can also be used to scale textures, look into this for section 6
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 		// Renders copies of the texture to the current target
 		SDL_RenderCopy(display->renderer, texture, NULL, &dest);

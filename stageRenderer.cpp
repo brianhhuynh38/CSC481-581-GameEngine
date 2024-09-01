@@ -3,7 +3,7 @@
 #include "definitions.h"
 #include "structs.h"
 
-namespace GEngine::Stages {
+namespace Stages {
 
     /*
     * Draws the stage
