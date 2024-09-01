@@ -10,7 +10,7 @@ namespace GEngine::Render {
 
 	SDL_Texture* loadTexture(char* filename);
 
-	void blit(SDL_Texture* texture, int x, int y);
+	void displayTexture(SDL_Texture* texture, int x, int y);
 }
 
 #endif

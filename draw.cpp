@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 
 #include "global.h"
@@ -37,8 +38,11 @@ namespace GEngine::Render {
 	 */
 	SDL_Texture* loadTexture(char* filename) {
 		SDL_Texture* texture;
-
-		//SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION);
+		// Logs loading percents when loading in the given file
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
+		// Loads texture into the renderer
+		texture = IMG_LoadTexture(display->renderer, filename);
+		return texture;
 	}
 
 	/**
@@ -46,13 +50,15 @@ namespace GEngine::Render {
 	 * This was referenced from the SDL2 wiki:
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php
 	 */
-	void blit(SDL_Texture* texture, int x, int y) {
-		/*SDL_Rect dest;
-
+	void displayTexture(SDL_Texture* texture, int x, int y) {
+		// Destination and size of texture render
+		SDL_Rect dest;
+		// Set destination coordinates
 		dest.x = x;
 		dest.y = y;
+		// Defines texture properties
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-
-		SDL_RenderCopy(display.renderer, texture, NULL, &dest);*/
+		// Renders copies of the texture to the current target
+		SDL_RenderCopy(display->renderer, texture, NULL, &dest);
 	}
 }

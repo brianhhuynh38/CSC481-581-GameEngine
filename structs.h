@@ -19,10 +19,3 @@ typedef struct {
 	int map[MAP_WIDTH][MAP_HEIGHT];
 } Stage;
 
-/**
-* Coordinate system to use for position-based
-*/
-typedef struct {
-	int x;
-	int y;
-} Vector;
