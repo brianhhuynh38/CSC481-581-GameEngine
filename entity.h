@@ -6,21 +6,41 @@
 
 class Entity {
 public:
+	/**
+	* Default entity constructor
+	*/
     Entity();
-    Entity(Vector s, Vector p, Vector v, SDL_Texture* t);
-    Vector getSize();
+
+	/**
+	* Custom entity constructor
+	* @parm s size
+	* @param p positon
+	* @param l layer
+	* @param v vector
+	* @param t texture
+	*/
+	Entity(Vector s, Vector p, int l, Vector v, SDL_Texture* t);
+
+    Vector getSize(void);
     void setSize(Vector s);
-	Vector getPosition();
+
+	Vector getPosition(void);
     void setPosition(Vector p);
-	Vector getVelocity();
+
+	int getLayer(void);
+	void setLayer(int l);
+
+	Vector getVelocity(void);
     void setVelocity(Vector v);
-    SDL_Texture* getTexture();
+
+    SDL_Texture* getTexture(void);
     void setTexture(SDL_Texture* t);
+
 	void LoadEntity(char* filepath);
 private:
 	Vector size;
 	Vector position;
-    int layer; // higher layer = render on top
+	int layer = 0; // higher layer = render on top
 	Vector velocity;
 	SDL_Texture* texture;
 };

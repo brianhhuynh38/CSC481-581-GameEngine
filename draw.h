@@ -1,3 +1,4 @@
+#include "structs.h"
 #pragma once
 #ifndef DRAW_H
 #define DRAW_H

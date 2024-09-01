@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
+    <None Include=".gitignore" />
+    <None Include=".gitattributes" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definitions.h">
@@ -62,5 +64,13 @@
     <ClInclude Include="global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\gfx\player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

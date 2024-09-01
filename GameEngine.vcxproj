@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\Libs\SDL2-2.30.6\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Libs\SDL2-2.30.6\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Libs\SDL2_image\include;$(ProjectDir)\Libs\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>`$(ProjectDir)\Libs\SDL2_image\lib\x64;$(ProjectDir)\Libs\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,15 +142,21 @@
     <ClCompile Include="stageHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="structs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\gfx\player.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

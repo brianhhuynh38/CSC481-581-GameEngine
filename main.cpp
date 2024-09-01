@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 
 #include "definitions.h"
@@ -6,16 +7,21 @@
 #include "input.h"
 #include "global.h"
 #include "structs.h"
+#include "entity.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
 Display *display;
+
+/// The player
+Entity *player;
 
 /**
 * Frees any allocated memory on application exit
 */
 void memoryCleanUp() {
 	free(display);
+	free(player);
 }
 
 /**
@@ -57,6 +63,9 @@ void initSDL(void) {
 	if (!display->renderer) {
 		std::cout << "The renderer failed to be created: " << SDL_GetError();
 	}
+
+	// Initializes SDL Image. Allows loading of PNGs and JPGs.
+	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 }
 
 /**
@@ -67,17 +76,13 @@ int main(int argc, char* argv[]) {
 	//SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello", "It works", NULL);
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	memset(&display, 0, sizeof(Display));
-	display = new Display;
-
-	memset(&player, 0, sizeof(Entity);) 
+	memset(&player, 0, sizeof(Entity));
 
 	// Initialize SDL components
 	initSDL();
 
-	// starting player variables
-	player.x = 100;
-	player.y = 100;
-	//player.texture = loadTexture("");
+	display = new Display;
+	player = new Entity(Vector{ 1, 1 }, Vector{ 1, 1 }, 0, Vector{ 0, 0 }, loadTexture((char*)"assets/gfx/player.png"));
 
 	// Basic, primitive game loop
 	while (true) {
@@ -88,7 +93,7 @@ int main(int argc, char* argv[]) {
 		// Handles player input, including exit
 		takeInput();
 		// Display player texture at player location
-		//blit(player.texture, player.x, player.y);
+		blit(player->getTexture(), player->getPosition().x, player->getPosition().y);
 		// Renders the scene gven the parameters identified in prepareScene()
 		presentScene(display->renderer);
 		// Slow down by 16 ms to maintain approximately 62 fps
