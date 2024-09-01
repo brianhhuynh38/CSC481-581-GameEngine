@@ -8,6 +8,7 @@
 * Defines and prepares the scene to render the next frame.
 * This was referenced from the SDL2 wiki:
 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
+* @param renderer to use
 */
 void prepareScene(SDL_Renderer* renderer) {
 	// Sets the rendering color for the window to an opaque blue
@@ -20,6 +21,7 @@ void prepareScene(SDL_Renderer* renderer) {
 * Renders the scene to the user
 * This was referenced from the SDL2 wiki:
 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
+* @param renderer to use
 */
 void presentScene(SDL_Renderer* renderer) {
 	// Updates screen with anything that needs to be renderered
@@ -30,6 +32,8 @@ void presentScene(SDL_Renderer* renderer) {
  * Loads image at given filename.
  * This was referenced from the SDL2 wiki:
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php
+ * @param filename of texture to load
+ * @return texture
  */
 SDL_Texture *loadTexture(char *filename) {
 	SDL_Texture *texture;
@@ -45,6 +49,9 @@ SDL_Texture *loadTexture(char *filename) {
  * Displays given texture at the given coordinates.
  * This was referenced from the SDL2 wiki:
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php
+ * @param texture to display
+ * @param x coordinate
+ * @param y coordinate
  */
 void blit(SDL_Texture *texture, int x, int y) {
 	SDL_Rect dest;

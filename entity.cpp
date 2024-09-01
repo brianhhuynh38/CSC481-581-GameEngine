@@ -5,7 +5,6 @@
 
 class Entity {
 public:
-
 	/**
 	* Default entity constructor
 	*/
@@ -24,7 +23,7 @@ public:
 	* @parm s size
 	* @param p positon
 	* @param l layer
-	* @param v vector
+	* @param v velocity
 	* @param t texture
 	*/ 
 	Entity(Vector s, Vector p, int l, Vector v, SDL_Texture* t) {
@@ -38,54 +37,97 @@ public:
 		texture = t;
 	}
 	
-	// Getter/setter for entity size
+	/**
+	* Gets the entities xy-size values.
+	* @return size vector of entity
+	*/
 	Vector getSize() {
 		return size;
 	}
+	/**
+	* Sets the entities xy-size values to the given vector.
+	* @param s size vector to set
+	*/
 	void setSize(Vector s) {
 		size = s;
 	}
 
-	// Getter/setter for entity position
+	/**
+	* Gets the entities xy-position value
+	* @return position vector of entity
+	*/
 	Vector getPosition(void) {
 		return position;
 	}
+	/**
+	* Sets the entities xy-position values to the given vector.
+	* @param p position vector to set
+	*/
 	void setPosition(Vector p) {
 		position = p;
 	}
 
-	// Getter/setter for entity layer
+	/**
+	* Gets the entities layer value.
+	* @return layer int of entity
+	*/
 	int getLayer(void) {
 		return layer;
 	}
+	/**
+	* Sets the entities layer value to the given int.
+	* @param l layer int to set
+	*/
 	void setLayer(int l) {
 		layer = l;
 	}
 
-	// Getter/setter for entity velocity
+	/**
+	* Gets the entities xy-velocity values to the given vector.
+	* @return velocity vector of entity
+	*/
 	Vector getVelocity(void) {
 		return velocity;
 	}
+	/**
+	* Sets the entities xy-velocity values to the given vector.
+	* @param v velocity vector to set
+	*/
 	void setVelocity(Vector v) {
 		velocity = v;
 	}
 
-	// Getter/setter for entity texture
+	/**
+	* Gets the entities texture value.
+	* @return texture of entity
+	*/
 	SDL_Texture* getTexture(void) {
 		return texture;
 	}
+	/**
+	* Sets the entities texture value to the given texture.
+	* @param t texture to set
+	*/
 	void setTexture(SDL_Texture* t) {
 		texture = t;
 	}
 
-	// load entity
+	/**
+	* Loads the entity from the given filepath.
+	* @param filepath of entity to load
+	*/
 	void LoadEntity(char* filepath) {
 
 	}
 private:
+	/** Vector size of entity */
 	Vector size;
+	/** Vector position of entity */
 	Vector position;
-	int layer = 0; // higher layer = render on top
+	/** RenderLayer of entity. (higher layer = render on top) */
+	int layer = 0;
+	/** Vector velocity of entity */
 	Vector velocity;
+	/** Texture of entity */
 	SDL_Texture* texture;
 };
