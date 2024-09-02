@@ -26,7 +26,7 @@ public:
 	* @param v velocity
 	* @param t texture
 	*/ 
-	Entity(Vector s, Vector p, int l, Vector v, SDL_Texture* t) {
+	Entity(Vector s, Vector p, float l, Vector v, SDL_Texture* t) {
 		size.x = s.x;
 		size.y = s.y;
 		position.x = p.x;
@@ -71,14 +71,14 @@ public:
 	* Gets the entities layer value.
 	* @return layer int of entity
 	*/
-	int getLayer(void) {
+	float getLayer(void) {
 		return layer;
 	}
 	/**
 	* Sets the entities layer value to the given int.
 	* @param l layer int to set
 	*/
-	void setLayer(int l) {
+	void setLayer(float l) {
 		layer = l;
 	}
 
@@ -125,7 +125,7 @@ private:
 	/** Vector position of entity */
 	Vector position;
 	/** RenderLayer of entity. (higher layer = render on top) */
-	int layer = 0;
+	float layer = 0;
 	/** Vector velocity of entity */
 	Vector velocity;
 	/** Texture of entity */

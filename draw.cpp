@@ -53,7 +53,7 @@ SDL_Texture *loadTexture(char *filename) {
  * @param x coordinate
  * @param y coordinate
  */
-void blit(SDL_Texture *texture, int x, int y) {
+void blit(SDL_Texture *texture, float x, float y) {
 	SDL_Rect dest;
 
 	dest.x = x;

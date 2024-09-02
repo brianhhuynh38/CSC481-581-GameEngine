@@ -20,9 +20,9 @@ typedef struct {
 } Stage;
 
 /**
-* Coordinate system to use for position-based
+* 2D Coordinate system to use for position-based
 */
 typedef struct {
-	int x;
-	int y;
+	float x;
+	float y;
 } Vector;
