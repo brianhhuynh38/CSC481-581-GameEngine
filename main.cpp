@@ -19,7 +19,7 @@ Entities::Entity *player;
 * Frees any allocated memory on application exit
 */
 void memoryCleanUp() {
-	free(display);
+	delete display;
 	// Free memory for player
 	player->destroy();
 	delete player;
@@ -72,7 +72,6 @@ void initSDL(void) {
 */
 int main(int argc, char* argv[]) {
 	// Allocate memory to SDL renderer components and instantiate Display struct
-	memset(&display, 0, sizeof(Display));
 	display = new Display;
 	
 	// Initialize SDL components
@@ -82,10 +81,10 @@ int main(int argc, char* argv[]) {
 	std::atexit(memoryCleanUp);
 
 	// Create a player Entity (Temp: Make more malleable in the future)
-	const char* playerTexturePath = "./Assets/Textures/DefaultPlayerTexture.png";
+	// TODO: Base starting position off window size percentage
 	player = new Entities::Entity(
 		1.0, 1.0,
-		100.0, 100.0,
+		250.0, 250.0,
 		"./Assets/Textures/DefaultPlayerTexture.png",
 		false,
 		true
