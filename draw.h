@@ -8,7 +8,7 @@ namespace Render {
 
 	void presentScene(void);
 
-	SDL_Texture* loadTexture(char* filename);
+	SDL_Texture* loadTexture(const char* filename);
 
 	void displayTexture(SDL_Texture* texture, int x, int y);
 }

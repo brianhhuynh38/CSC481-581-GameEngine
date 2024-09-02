@@ -36,12 +36,17 @@ namespace Render {
 	 * This was referenced from the SDL2 wiki:
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php
 	 */
-	SDL_Texture* loadTexture(char* filename) {
+	SDL_Texture* loadTexture(const char* filename) {
 		SDL_Texture* texture;
 		// Logs loading percents when loading in the given file
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
 		// Loads texture into the renderer
-		texture = IMG_LoadTexture(display->renderer, filename);
+		try {
+			texture = IMG_LoadTexture(display->renderer, filename);
+		}
+		catch (std::exception const& ex) {
+			std::cout << ex.what();
+		}
 		return texture;
 	}
 

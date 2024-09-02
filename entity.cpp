@@ -2,35 +2,44 @@
 #include <iostream>
 
 #include "entity.h"
-#include "structs.h"
+#include "vector2D.h"
 #include "draw.h"
 
 namespace Entities {
 
-	Entity::Entity(float scaleX, float scaleY, SDL_Point position, char* textureFilepath, bool isStationary, bool isPlayer) {
-		*m_scaleX = scaleX;
-		*m_scaleY = scaleY;
-		*m_position = position;
-		*m_velocity = SDL_Point() = { 0, 0 };
-		*m_acceleration = SDL_Point() = { 0, 0 };
+	/**
+	* Constructs an entity and initializes all pointer fields.
+	* 
+	* @param scaleX X component of scaling multipliers for rendering
+	* @param scaleY Y component of scaling multipliers for rendering
+	* @param position The coordinates where the Entity is located
+	* @param textureFilepath The filepath to where the texture is located
+	* @param isStationary Whether the object should move
+	* @param isPlayer Whether the object is a player-controlled object
+	*/
+	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, const char* textureFilepath, bool isStationary, bool isPlayer) {
+		m_scale = new Utils::Vector2D(scaleX, scaleY);
+		m_position = new Utils::Vector2D(positionX, positionY);
+		m_velocity = new Utils::Vector2D({ 0, 0 });
+		m_acceleration = new Utils::Vector2D({ 0, 0 });
 		m_texture = Render::loadTexture(textureFilepath);
 		m_isStationary = isStationary;
 		m_isPlayer = isPlayer;
 	}
 
-	SDL_Point* Entity::getPosition(void) {
+	Utils::Vector2D *Entity::getPosition(void) {
 		return m_position;
 	}
 
-	SDL_Point* Entity::getVelocity(void) {
+	Utils::Vector2D *Entity::getVelocity(void) {
 		return m_velocity;
 	}
 
-	SDL_Point* Entity::getAcceleration(void) {
+	Utils::Vector2D *Entity::getAcceleration(void) {
 		return m_acceleration;
 	}
 
-	SDL_Texture* Entity::getTexture(void) {
+	SDL_Texture *Entity::getTexture(void) {
 		return m_texture;
 	}
 
@@ -39,7 +48,11 @@ namespace Entities {
 		m_texture = Render::loadTexture(textureFilepath);
 	}
 
-	void destroy(void) {
-
+	void Entity::destroy(void) {
+		delete m_scale;
+		delete m_position;
+		delete m_velocity;
+		delete m_acceleration;
+		SDL_DestroyTexture(m_texture);
 	}
 }

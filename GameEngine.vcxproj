@@ -140,6 +140,7 @@
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
+    <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -151,6 +152,7 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

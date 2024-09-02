@@ -20,6 +20,8 @@ Entities::Entity *player;
 */
 void memoryCleanUp() {
 	free(display);
+	// Free memory for player
+	player->destroy();
 	delete player;
 }
 
@@ -72,22 +74,22 @@ int main(int argc, char* argv[]) {
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	memset(&display, 0, sizeof(Display));
 	display = new Display;
-
-	// Create a player Entity (Temp: Make more malleable in the future)
-	char *playerTexturePath = (char *) "./Assets/Textures/DefaultPlayerTexture.png";
-	player = new Entities::Entity(
-		1.0, 1.0,
-		SDL_Point() = { 0, 0 }, 
-		playerTexturePath, 
-		false, 
-		true
-	);
 	
 	// Runs memoryCleanUp() if the application exits
 	std::atexit(memoryCleanUp);
 
 	// Initialize SDL components
 	initSDL();
+
+	// Create a player Entity (Temp: Make more malleable in the future)
+	const char* playerTexturePath = "./Assets/Textures/DefaultPlayerTexture.png";
+	player = new Entities::Entity(
+		1.0, 1.0,
+		SDL_Point() = { 0, 0 },
+		"./Assets/Textures/DefaultPlayerTexture.png",
+		false,
+		true
+	);
 
 	// Basic, primitive game loop
 	while (true) {
