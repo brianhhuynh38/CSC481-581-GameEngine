@@ -1,10 +1,11 @@
 #include "structs.h"
+#include "vector2D.h"
 
 #pragma once
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
 extern Display* display;
-extern Vector2D globalScaling;
+extern Utils::Vector2D globalScaling;
 
 #endif

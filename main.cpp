@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
 	const char* playerTexturePath = "./Assets/Textures/DefaultPlayerTexture.png";
 	player = new Entities::Entity(
 		1.0, 1.0,
-		SDL_Point() = { 0, 0 },
+		0, 0,
 		"./Assets/Textures/DefaultPlayerTexture.png",
 		false,
 		true
