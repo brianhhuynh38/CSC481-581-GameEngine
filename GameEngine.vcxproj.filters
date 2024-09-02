@@ -75,7 +75,7 @@
     <ClCompile Include="player.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="oscillatingEntity.cpp">
+    <ClCompile Include="movingEntity.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,7 +98,7 @@
     <ClInclude Include="player.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="oscillatingEntity.h">
+    <ClInclude Include="movingEntity.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="vector2D.h">
