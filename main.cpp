@@ -75,17 +75,17 @@ int main(int argc, char* argv[]) {
 	memset(&display, 0, sizeof(Display));
 	display = new Display;
 	
-	// Runs memoryCleanUp() if the application exits
-	std::atexit(memoryCleanUp);
-
 	// Initialize SDL components
 	initSDL();
+
+	// Runs memoryCleanUp() if the application exits
+	std::atexit(memoryCleanUp);
 
 	// Create a player Entity (Temp: Make more malleable in the future)
 	const char* playerTexturePath = "./Assets/Textures/DefaultPlayerTexture.png";
 	player = new Entities::Entity(
 		1.0, 1.0,
-		0, 0,
+		100.0, 100.0,
 		"./Assets/Textures/DefaultPlayerTexture.png",
 		false,
 		true
@@ -95,14 +95,18 @@ int main(int argc, char* argv[]) {
 	while (true) {
 		// Prepares scene for rendering
 		Render::prepareScene();
+
 		// Updates the keyboard inputs
 		SDL_PumpEvents();
 		// Handles player input, including exit
 		Input::takeInput();
+
 		// Display player texture at player location
-		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y);
+		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getScale()->x, player->getScale()->y);
+		
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
+
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
 	}

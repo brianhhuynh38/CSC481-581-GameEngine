@@ -20,23 +20,43 @@ namespace Entities {
 	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, const char* textureFilepath, bool isStationary, bool isPlayer) {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
-		m_velocity = new Utils::Vector2D({ 0, 0 });
-		m_acceleration = new Utils::Vector2D({ 0, 0 });
+		m_velocity = new Utils::Vector2D({ 0.0, 0.0 });
+		m_acceleration = new Utils::Vector2D({ 0.0, 0.0 });
 		m_texture = Render::loadTexture(textureFilepath);
 		m_isStationary = isStationary;
 		m_isPlayer = isPlayer;
+	}
+
+	Utils::Vector2D *Entity::getScale(void) {
+		return m_scale;
+	}
+
+	void Entity::setScale(float scaleX, float scaleY) {
+		m_scale = new Utils::Vector2D(scaleX, scaleY);
 	}
 
 	Utils::Vector2D *Entity::getPosition(void) {
 		return m_position;
 	}
 
+	void Entity::setPosition(float positionX, float positionY) {
+		m_position = new Utils::Vector2D(positionX, positionY);
+	}
+
 	Utils::Vector2D *Entity::getVelocity(void) {
 		return m_velocity;
 	}
 
+	void Entity::setVelocity(float velocityX, float velocityY) {
+		m_velocity = new Utils::Vector2D(velocityX, velocityY);
+	}
+
 	Utils::Vector2D *Entity::getAcceleration(void) {
 		return m_acceleration;
+	}
+
+	void Entity::setAcceleration(float accelerationX, float accelerationY) {
+		m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
 	}
 
 	SDL_Texture *Entity::getTexture(void) {
