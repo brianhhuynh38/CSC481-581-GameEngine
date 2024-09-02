@@ -13,13 +13,17 @@ namespace Utils {
 		float y;
 		Vector2D(float x, float y);
 
-		void add(Vector2D other);
+		Vector2D add(Vector2D other);
 
-		void add(float x, float y);
+		Vector2D add(float x, float y);
 
-		void multConst(float constant);
+		Vector2D multConst(float constant);
+
+		Vector2D divideConst(float constant);
 
 		float getMagnitude();
+
+		Vector2D normalizeVector();
 	};
 }
 

@@ -18,3 +18,13 @@ typedef struct {
 typedef struct {
 	int map[MAP_WIDTH][MAP_HEIGHT];
 } Stage;
+
+/**
+ * InputHandler holds the current input values for keypresses.
+ */
+typedef struct {
+	int up;
+	int down;
+	int left;
+	int right;
+} InputHandler;

@@ -8,12 +8,18 @@
 #include "global.h"
 #include "structs.h"
 #include "entity.h"
+#include "player.h"
+#include "playerController.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
 Display *display;
 /// The entity that the player is able to control
-Entities::Entity *player;
+Entities::Player *player;
+/// The default player controller
+Controllers::PlayerController *playerController;
+/// The InputHandler struct used to keep track of keypresses and other input.
+InputHandler *inputHandler;
 
 /**
 * Frees any allocated memory on application exit
@@ -73,6 +79,8 @@ void initSDL(void) {
 int main(int argc, char* argv[]) {
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	display = new Display;
+
+	inputHandler = new InputHandler;
 	
 	// Initialize SDL components
 	initSDL();
@@ -82,13 +90,18 @@ int main(int argc, char* argv[]) {
 
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
-	player = new Entities::Entity(
+	player = new Entities::Player(
 		1.0, 1.0,
 		250.0, 250.0,
+		10.0,
 		"./Assets/Textures/DefaultPlayerTexture.png",
 		false,
-		true
+		true,
+		30.0
 	);
+
+	// Create player controller for player(temp for testing)
+	playerController = new Controllers::PlayerController(player);
 
 	// Basic, primitive game loop
 	while (true) {

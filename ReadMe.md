@@ -1,6 +1,6 @@
 # Starting Instructions
 
-Compiler: c++ 17 standard
+Compiler: C++ 17 standard
 
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
@@ -23,3 +23,18 @@ Files influenced by this tutorial:
 |  [`draw.cpp`](./draw.cpp)  |        [`draw.h`](./draw.h)        |
 | [`input.cpp`](./input.cpp) |       [`input.h`](./input.h)       |
 | | [`structs.h`](./structs.h) |
+
+## [Parallel Realities Shooter Tutorial - Part 2](https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php)
+
+The code functions were referenced from the tutorial with changes mainly relating to the overall structure
+of our engine. Our [`Entity`](./entity.cpp) implementation was class-based using a [`Vector2D`](./vector2D.cpp) 
+class we created in order to store `floats` as coordinate dimensions rather than ints. The rendering functions 
+are largely the same, but with tweaks to better fit our implementation and architecture.
+
+Files influenced by this tutorial:
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+|  [`main.cpp`](./main.cpp)  |  |
+|  [`draw.cpp`](./draw.cpp)  |       [`draw.h`](./draw.h)         |
+| [`entity.cpp`](./entity.cpp) | [`entity.h`](./entity.h) |

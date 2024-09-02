@@ -7,5 +7,6 @@
 
 extern Display* display;
 extern Utils::Vector2D globalScaling;
+extern InputHandler inputHandler;
 
 #endif

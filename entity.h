@@ -1,4 +1,5 @@
 #include "vector2D.h"
+#include <SDL.h>
 
 #pragma once
 #ifndef ENTITY_H
@@ -7,15 +8,18 @@
 namespace Entities {
 
 	class Entity {
-	private:
+	protected:
 		Utils::Vector2D *m_scale;
 		Utils::Vector2D *m_position;
 		Utils::Vector2D *m_velocity;
 		Utils::Vector2D *m_acceleration;
+		float m_mass;
 		SDL_Texture *m_texture;
 		bool m_isStationary;
-		bool m_isPlayer;
+		bool m_affectedByPhysics;
 	public:
+
+		Entity();
 
 		/**
 		* Constructs an entity and initializes all pointer fields.
@@ -25,10 +29,10 @@ namespace Entities {
 		* @param position The coordinates where the Entity is located
 		* @param textureFilepath The filepath to where the texture is located
 		* @param isStationary Whether the object should move
-		* @param isPlayer Whether the object is a player-controlled object
+		* @param affectedByPhysics Whether the object is affectedByPhysics
 		*/
-		Entity(float scaleX, float scaleY, float positionX, float positionY,
-			const char* textureFilepath, bool isStationary, bool isPlayer);
+		Entity(float scaleX, float scaleY, float positionX, float positionY, float mass,
+			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
 
 		Utils::Vector2D *getScale(void);
 		void setScale(float scaleX, float scaleY);
@@ -41,6 +45,9 @@ namespace Entities {
 
 		Utils::Vector2D *getAcceleration(void);
 		void setAcceleration(float accelerationX, float accelerationY);
+
+		float getMass();
+		void setMass(float mass);
 
 		SDL_Texture *getTexture(void);
 		void setTexture(char* textureFilepath);
