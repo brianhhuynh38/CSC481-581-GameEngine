@@ -139,10 +139,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movingEntity.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerController.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
-    <ClCompile Include="Vector2D.cpp" />
+    <ClCompile Include="timeline.cpp" />
+    <ClCompile Include="vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -155,7 +157,9 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="movingEntity.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="playerController.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="timeline.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>
   <ItemGroup>

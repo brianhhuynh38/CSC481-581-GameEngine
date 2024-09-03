@@ -11,6 +11,9 @@ namespace Utils {
 	public:
 		float x;
 		float y;
+		
+		Vector2D(void);
+
 		Vector2D(float x, float y);
 
 		Vector2D add(Vector2D other);
@@ -21,9 +24,9 @@ namespace Utils {
 
 		Vector2D divideConst(float constant);
 
-		float getMagnitude();
+		float getMagnitude(void);
 
-		Vector2D normalizeVector();
+		Vector2D normalizeVector(void);
 	};
 }
 

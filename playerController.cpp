@@ -1,31 +1,33 @@
 #include "playerController.h"
 
+#include "global.h"
+
 namespace Controllers {
     
     /**
      * Constructor for PlayerController
      * @param *player pointer to player to control
      */
-    PlayerController::PlayerController(Player *player){
-        this.player = player;
+    PlayerController::PlayerController(Entities::Player *player){
+        this->player = player;
     }
 
     /**
      * Checks for movement inputs from keys and applies movement to player
      */
-    void movementInput() {
-        // gets maxVelocity from player
-        float speed = player->getMaxVelocity();
-        if (inputHandler->right) {
+    void PlayerController::movementInput() {
+        // gets maxSpeed from player
+        float speed = player->getMaxSpeed();
+        if (inputHandler.right) {
             movementVector.x += speed;
         }
-        if (inputHandler->left) {
+        if (inputHandler.left) {
             movementVector.x -= speed;
         }
-        if (inputHandler->down) {
+        if (inputHandler.down) {
             movementVector.y += speed;
         }
-        if (inputHandler->up) {
+        if (inputHandler.up) {
             movementVector.y -= speed;
         }
         // if moving diagonally, multiplies vectors xy values by cos(45deg)
@@ -36,7 +38,7 @@ namespace Controllers {
 
         // Moves player if given vector's magnitude is not zero
         if (movementVector.getMagnitude() != 0) {
-            player.move(movementVector);
+            player->move(movementVector);
         }
     }
 }

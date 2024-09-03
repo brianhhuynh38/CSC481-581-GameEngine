@@ -5,6 +5,15 @@
 
 
 namespace Utils {
+
+	/**
+	* Vector2D default constructor
+	*/
+	Vector2D::Vector2D(void) {
+		this->x = 0.0;
+		this->y = 0.0;
+	}
+
 	/**
 	 * Vector2D constructor
 	 * @param x coordinate
@@ -56,7 +65,7 @@ namespace Utils {
 	* Calculates and returns the magnitude of the vector
 	* @returns The magnitude of the vector
 	*/
-	float Vector2D::getMagnitude() {
+	float Vector2D::getMagnitude(void) {
 		return sqrt((pow(x, 2) + pow(y, 2)));
 	}
 
@@ -64,7 +73,7 @@ namespace Utils {
 	* Calculates the unit vector for this vector, then returns it
 	* @returns The normalized vector
 	*/
-	Vector2D Vector2D::normalizeVector() {
+	Vector2D Vector2D::normalizeVector(void) {
 		return this->divideConst(getMagnitude());
 	}
 }

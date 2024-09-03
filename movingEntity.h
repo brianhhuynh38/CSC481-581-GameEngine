@@ -7,7 +7,7 @@
 
 namespace Entities {
 
-	class MovingEntity : Entity {
+	class MovingEntity : public Entity {
 	private:
 		bool m_continuous;
 		bool m_reverse;
@@ -15,7 +15,7 @@ namespace Entities {
 		int m_pauseTimer;
 		float m_speed;
 		float m_progress;
-		Utils::Vector2D endPosition;
+		Utils::Vector2D m_endPosition;
 	public:
 		MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float mass,
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics, 
@@ -36,7 +36,7 @@ namespace Entities {
 		void setSpeed(float speed);
 
 		float getProgress();
-		void setProgress();
+		void setProgress(float progress);
 
 		Utils::Vector2D getEndPosition();
 		void setEndPosition(Utils::Vector2D position);
