@@ -13,10 +13,16 @@ namespace Entities {
 		Utils::Vector2D *m_position;
 		Utils::Vector2D *m_velocity;
 		Utils::Vector2D *m_acceleration;
+		/** Weight of entity (changes how gravity affects it) */
 		float m_mass;
+		/** Texture to use for this entity */
 		SDL_Texture *m_texture;
+		/** Whether or not this entity is stationary */
 		bool m_isStationary;
+		/** Whether or not this entity is affected by physics (gravity) */
 		bool m_affectedByPhysics;
+		/** Whether or not the entity should be visably rendered on screen (lets you hide entities)*/
+		bool m_isVisable;
 	public:
 
 		Entity();
@@ -53,6 +59,7 @@ namespace Entities {
 		void setTexture(char* textureFilepath);
 
 		void destroy(void);
+
 	};
 }
 

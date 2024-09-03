@@ -2,9 +2,19 @@
 
 static class StageManager {
 private:
-
+	/** CurrentStage to display */
+	Stage currentStage;
+	/** Array of stages */
 	Stage stages[];
 public:
+
+	/**
+	 * StageManagerConstructor
+	 * 
+	 */
+	//StageManager() {
+
+	//}
 
 	void loadAllMaps(char* filepath) {
 		// Loop through maps in the filepath, call readFile

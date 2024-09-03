@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <iostream>
 
 #include "input.h"
 #include "structs.h"
@@ -16,46 +17,45 @@ namespace Input {
 		/// depending on whether or not the key is pressed (1 is pressed)
 		/// </summary>
 		const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
-		
+
 		// Quits the application if the Escape key is pressed
 		if (keyboardState[SDL_SCANCODE_ESCAPE]) {
 			exit(0);
 		}
 
-		// Checks if right key is pressed
-		if (keyboardState[SDL_SCANCODE_RIGHT]) {
-			inputHandler.right = 1;
-		}
-		// Checks if right key was un-pressed
-		else if (inputHandler.right == 1) {
-			inputHandler.right = 0;
-		}
+		// checks directional inputs (arrow keys)
+		checkKeyState(SDL_SCANCODE_RIGHT, keyboardState);
+		checkKeyState(SDL_SCANCODE_LEFT, keyboardState);
+		checkKeyState(SDL_SCANCODE_DOWN, keyboardState);
+		checkKeyState(SDL_SCANCODE_UP, keyboardState);
 
-		//Checks if left key is pressed
-		if (keyboardState[SDL_SCANCODE_LEFT]) {
-			inputHandler.left = 1;
-		}
-		// Checks if left key was un-pressed
-		else if (inputHandler.left == 1) {
-			inputHandler.left = 0;
-		}
+		// checks interact input (E)
+		checkKeyState(SDL_SCANCODE_E, keyboardState);
+		
+	}
 
-		//Checks if down key is pressed
-		if (keyboardState[SDL_SCANCODE_DOWN]) {
-			inputHandler.down = 1;
+	/**
+	 * Checks the state of the given keyboard key by referencing 
+	 * the keyboardState array and the inputHandler.
+	 * inputHander is then updated with the keys current state:
+	 * 0 = key is not pressed
+	 * 1 = key is currently pressed
+	 * 2 = key was just unpressed
+	 * @param scanCode key scanCode to check for
+	 * @param keyboardState array of keyboard key states
+	 */
+	void checkKeyState(int scanCode, const Uint8* keyboardState) {
+		// if key is currently being pressed
+		if (keyboardState[scanCode]) {
+			inputHandler.keyboard[scanCode] = 1;
 		}
-		// Checks if down key was un-pressed
-		else if (inputHandler.down == 1) {
-			inputHandler.down = 0;
+		// if key is not currently being pressed, but previously was
+		else if (inputHandler.keyboard[scanCode] == 1) {
+			inputHandler.keyboard[scanCode] = 2;
 		}
-
-		//Checks if up key is pressed
-		if (keyboardState[SDL_SCANCODE_UP]) {
-			inputHandler.up = 1;
-		}
-		// Checks if up key was un-pressed
-		else if (inputHandler.up == 1) {
-			inputHandler.up = 0;
+		// if key is not currently being pressed
+		else {
+			inputHandler.keyboard[scanCode] = 0;
 		}
 	}
 

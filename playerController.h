@@ -30,6 +30,12 @@ namespace Controllers {
          */
         void movementInput();
 
+        /**
+         * Checks for action inputs from keys
+         */
+        void actionInput();
+
+
         void setPlayer(Entities::Player newPlayer);
 
         //void setMovementRestrictions();

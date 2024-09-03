@@ -18,16 +18,16 @@ namespace Controllers {
     void PlayerController::movementInput() {
         // gets maxSpeed from player
         float speed = player->getMaxSpeed();
-        if (inputHandler.right) {
+        if (inputHandler.keyboard[SDL_SCANCODE_RIGHT]) {
             movementVector.x += speed;
         }
-        if (inputHandler.left) {
+        if (inputHandler.keyboard[SDL_SCANCODE_LEFT]) {
             movementVector.x -= speed;
         }
-        if (inputHandler.down) {
+        if (inputHandler.keyboard[SDL_SCANCODE_DOWN]) {
             movementVector.y += speed;
         }
-        if (inputHandler.up) {
+        if (inputHandler.keyboard[SDL_SCANCODE_UP]) {
             movementVector.y -= speed;
         }
         // if moving diagonally, multiplies vectors xy values by cos(45deg)
@@ -39,6 +39,15 @@ namespace Controllers {
         // Moves player if given vector's magnitude is not zero
         if (movementVector.getMagnitude() != 0) {
             player->move(movementVector);
+        }
+    }
+
+    /**
+     * Checks for action inputs from keys
+     */
+    void actionInput() {
+        if (inputHandler.keyboard[SDL_SCANCODE_E]) {
+            
         }
     }
 }

@@ -8,6 +8,7 @@
 #include "global.h"
 #include "structs.h"
 #include "entity.h"
+#include "stage.h"
 #include "player.h"
 #include "playerController.h"
 
@@ -16,14 +17,16 @@
 Display *display;
 /// The entity that the player is able to control
 Entities::Player *player;
+/// Bullet entity (TEST)
+Entities::Entity *ball;
 /// The default player controller
 Controllers::PlayerController *playerController;
 /// The InputHandler struct used to keep track of keypresses and other input.
-InputHandler *inputHandler;
+InputHandler inputHandler;
 
 /**
-* Frees any allocated memory on application exit
-*/
+ * Frees any allocated memory on application exit
+ */
 void memoryCleanUp() {
 	delete display;
 	// Free memory for player
@@ -32,11 +35,11 @@ void memoryCleanUp() {
 }
 
 /**
-* The function meant to initialize the SDL window and renderer. This part of the code was created
-* using the tutorial linked to on the SDL Wiki here:
-* https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
-*
-*/
+ * The function meant to initialize the SDL window and renderer. This part of the code was created
+ * using the tutorial linked to on the SDL Wiki here:
+ * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
+ *
+ */
 void initSDL(void) {
 	// Define SDL rendering flags
 	int rendererFlags, windowFlags;
@@ -74,13 +77,45 @@ void initSDL(void) {
 }
 
 /**
-* The main function where all components are initialized and the gameplay update loop is maintained 
-*/
+ * Caps the framerate
+ * This references the tutorial linked to on the SDL wiki here :
+ * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
+ */
+static void capFrameRate(long* then, float* remainder) {
+	long wait, frameTime;
+
+	wait = 16 + *remainder;
+
+	*remainder -= (int)*remainder;
+
+	frameTime = SDL_GetTicks() - *then;
+
+	wait -= frameTime;
+
+	if (wait < 1) {
+		wait = 1;
+	}
+
+	SDL_Delay(wait);
+
+	*remainder += 0.667;
+
+	*then = SDL_GetTicks();
+}
+
+/**
+ * The main function where all components are initialized and the gameplay update loop is maintained 
+ */
 int main(int argc, char* argv[]) {
+	
+	long then;
+	float remainder;
+	
 	// Allocate memory to SDL renderer components and instantiate Display struct
+	memset(&display, 0, sizeof(Display));
 	display = new Display;
 
-	inputHandler = new InputHandler;
+	//inputHandler = new InputHandler;
 	
 	// Initialize SDL components
 	initSDL();
@@ -88,19 +123,35 @@ int main(int argc, char* argv[]) {
 	// Runs memoryCleanUp() if the application exits
 	std::atexit(memoryCleanUp);
 
+	// Initiate current stage
+	//initStage();
+
+	then = SDL_GetTicks();
+
+	remainder = 0;
+
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
 	player = new Entities::Player(
 		1.0, 1.0,
 		250.0, 250.0,
 		10.0,
-		"./Assets/Textures/DefaultPlayerTexture.png",
+		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
-		30.0
+		1.0
+	);
+	// Create temporary ball object
+	ball = new Entities::Entity(
+		1.0, 1.0,
+		250.0, 250.0,
+		10.0,
+		"./Assets/Textures/BallTexture.png",
+		false,
+		true
 	);
 
-	// Create player controller for player(temp for testing)
+	// Create player controller for player (temp for testing)
 	playerController = new Controllers::PlayerController(player);
 
 	// Basic, primitive game loop
@@ -113,6 +164,13 @@ int main(int argc, char* argv[]) {
 		// Handles player input, including exit
 		Input::takeInput();
 
+		// Run logic and draw scene
+		//display->delegate.logic();
+		//display->delegate.draw();
+
+		// check player movmentInput (TESTING)
+		playerController->movementInput();
+
 		// Display player texture at player location
 		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getScale()->x, player->getScale()->y);
 		
@@ -121,6 +179,8 @@ int main(int argc, char* argv[]) {
 
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
+
+		capFrameRate(&then, &remainder);
 	}
 
 	// Success condition

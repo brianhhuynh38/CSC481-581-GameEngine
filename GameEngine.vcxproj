@@ -140,6 +140,7 @@
     <ClCompile Include="movingEntity.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="movingEntity.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="timeline.h" />
     <ClInclude Include="vector2D.h" />

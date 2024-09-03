@@ -15,3 +15,6 @@
 
 #define MAP_RENDER_WIDTH 20
 #define MAP_RENDER_HEIGHT 12
+
+// max keyboard keys available to press
+#define MAX_KEYBOARD_KEYS 350
