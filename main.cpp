@@ -184,9 +184,9 @@ int main(int argc, char* argv[]) {
 	playerController = new Controllers::PlayerController(player);
 	//Create entity controller
 	entityController = new EntityController();
-	//entityController->addEntity(*player);
-	//entityController->addEntity(*ground);
-	//entityController->addEntity(*ball);
+	entityController->addEntity(*player);
+	entityController->addEntity(*ground);
+	entityController->addEntity(*ball);
 
 	// Create Timeline
 	timeline = Timeline();
@@ -227,7 +227,7 @@ int main(int argc, char* argv[]) {
 		Render::presentScene();
 
 		// Update the physics of all entities
-		//entityController->updateEntities();
+		entityController->updateEntities();
 
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
