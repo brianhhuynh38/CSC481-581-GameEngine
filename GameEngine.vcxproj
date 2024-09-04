@@ -155,6 +155,7 @@
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="collisions.h" />
     <ClInclude Include="configIO.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />

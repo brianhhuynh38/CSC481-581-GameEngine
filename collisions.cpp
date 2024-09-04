@@ -1,9 +1,4 @@
-#include <SDL.h>
-#include <iostream>
-
-#include "input.h"
-#include "structs.h"
-#include "global.h"
+#include "collisions.h"
 
 /**
     * Checks collisions
@@ -62,4 +57,5 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
     */
 bool checkCollisions(std::list<SDL_Rect> collisions, std::list<Entities::Entity> entities) {
     // Loop through entities, use their colliders to check the collisions, using checkCollision method
+    return NULL; // temp
 }

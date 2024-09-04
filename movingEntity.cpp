@@ -4,6 +4,8 @@
 #include "movingEntity.h"
 #include "draw.h"
 #include "global.h"
+#include "definitions.h"
+#include "collisions.h"
 
 namespace Entities {
 
@@ -67,7 +69,7 @@ namespace Entities {
 					m_currentTimer = m_pauseTimer;
 				}
 				// If the object collided or went too far to the left or right
-				if( ( m_position->x < 0 ) || ( m_position->x + m_scale > SCREEN_WIDTH ) || checkCollisions( m_colliders, m_entities ) ) {
+				if( ( m_position->x < 0 ) || ( m_position->x + m_scale->x > DEFAULT_WIDTH) /* || checkCollisions(m_colliders, m_entities) */ ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
 					// mPosX -= mVelX;
         			// mCollider.x = mPosX;
@@ -82,7 +84,7 @@ namespace Entities {
 					m_currentTimer = m_pauseTimer;
 				}
 				// If the object collided or went too far up or down
-				if( ( m_position->y < 0 ) || ( m_position->y + m_scale > SCREEN_HEIGHT ) || checkCollisions( m_colliders, m_entities ) ) {
+				if( ( m_position->y < 0 ) || ( m_position->y + m_scale->y > DEFAULT_HEIGHT ) /* || checkCollisions(m_colliders, m_entities)*/ ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
 					// mPosY -= mVelY;
         			// mCollider.y = mPosY;

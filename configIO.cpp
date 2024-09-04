@@ -7,7 +7,8 @@
 /**
 * Loads variables defined in the config.ini file and sets them to their proper places
 */
-void loadConfigFile() {
+void loadConfigFile(void) {
+
 	// File to open
 	std::ifstream file;
 	// Open config.ini
@@ -19,7 +20,7 @@ void loadConfigFile() {
 			std::getline(file, value);
 			// If gravity, convert to float and set gravity
 			if (identifier == "gravity") {
-				physics = Physics(std::stof(value));
+				physics.setGravity(std::stof(value));
 			}
 		}
 	}

@@ -6,6 +6,7 @@
 /**
 * Loads variables defined in the config.ini file and sets them to their proper places
 */
-void loadConfigFile();
+void loadConfigFile(void);
+
 
 #endif

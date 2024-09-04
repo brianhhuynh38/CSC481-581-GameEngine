@@ -4,8 +4,8 @@
 
 
 /**
-	* StageManager Constructor
-	*/
+ * StageManager Constructor
+ */
 StageManager::StageManager() {
 
 }
@@ -32,6 +32,7 @@ char * StageManager::readFile(const char *filename) {
 
 		buffer[length] = '\0';
 	}*/
+	return NULL;
 }
 
 Stages::Stage StageManager::getMap(int index) {

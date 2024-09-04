@@ -17,12 +17,13 @@ extern Utils::Vector2D globalScaling;
 extern InputHandler inputHandler;
 /** The timeline used to manage time used for physics calculations */
 extern Timeline timeline;
-/** The space where physics calculations are done in relations to Entities*/
+/** The space where physics calculations are done in relations to Entities */
 extern Physics physics;
-/** Enables entity physics and logic */
-extern EntityController entityController;
+/** controls entity logic */
+extern EntityController *entityController;
 
-// Temporary: player entity
-extern Entities::Player player;
+// Temporary
+extern Entities::Player *player;
+
 
 #endif

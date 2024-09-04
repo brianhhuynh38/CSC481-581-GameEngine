@@ -1,5 +1,6 @@
 #include "vector2D.h"
 #include <SDL.h>
+#include <list>
 
 #pragma once
 #ifndef ENTITY_H
