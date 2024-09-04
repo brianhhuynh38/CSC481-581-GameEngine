@@ -60,11 +60,14 @@ namespace Render {
 	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h) {
 		// Destination and size of texture render
 		SDL_Rect dest;
+	
+
 		// Set destination coordinates
 		dest.x = x;
 		dest.y = y;
 		dest.w = w;
 		dest.h = h;
+
 		// Defines texture properties with the dimensions of the source texture
 		// TODO: This can also be used to scale textures, look into this for section 6
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);

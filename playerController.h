@@ -17,7 +17,7 @@ namespace Controllers {
         Entities::Player* player;
 
         /** 2D movement vector to be applied to the player */
-        Utils::Vector2D movementVector;
+        Utils::Vector2D movementVector = Utils::Vector2D(0,0);
     public:
         /**
          * Constructor for PlayerController
@@ -36,7 +36,7 @@ namespace Controllers {
         void actionInput();
 
 
-        void setPlayer(Entities::Player newPlayer);
+        void setPlayer(Entities::Player *p);
 
         //void setMovementRestrictions();
 
