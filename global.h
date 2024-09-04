@@ -14,9 +14,9 @@ extern Utils::Vector2D globalScaling;
 extern InputHandler inputHandler;
 extern Timeline timeline;
 extern Physics physics;
-extern EntityController entityController;
+extern EntityController *entityController;
 
 // Temporary
-extern Entities::Player player;
+extern Entities::Player *player;
 
 #endif

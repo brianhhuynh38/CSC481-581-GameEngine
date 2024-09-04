@@ -18,13 +18,13 @@
 /// The Display struct used to initialize renderer and window
 Display *display;
 /// The entity that the player is able to control
-Entities::Player *player;
+//Entities::Player *player; (moved to global for now)
 /// Bullet entity (TEST)
 Entities::Entity *ball;
 /// The default player controller
 Controllers::PlayerController *playerController;
 /// Controller for all entities and their physics
-EntityController* entityController;
+//EntityController* entityController;
 /// The InputHandler struct used to keep track of keypresses and other input.
 InputHandler inputHandler;
 
