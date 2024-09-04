@@ -69,6 +69,14 @@ namespace Entities {
 	}
 
 	/**
+	* Adds the parameter position vector to the Entity's current position vector
+	* @param position: The position to add to the current position
+	*/
+	void Entity::updatePosition(Utils::Vector2D position) {
+		m_position->add(position);
+	}
+
+	/**
 	* Sets new values to the position ratio
 	* @param positionX The new x value of the position to set
 	* @param positionY The new y value of the position to set
@@ -86,6 +94,14 @@ namespace Entities {
 	}
 
 	/**
+	* Adds the parameter velocity vector to the Entity's current velocity vector
+	* @param velocity: The velocity to add to the current velocity
+	*/
+	void Entity::updateVelocity(Utils::Vector2D velocity) {
+		m_velocity->add(velocity);
+	}
+
+	/**
 	* Sets new values to the velocity ratio
 	* @param velocityX The new x value of the velocity to set
 	* @param velocityY The new y value of the velocity to set
@@ -100,6 +116,14 @@ namespace Entities {
 	*/
 	Utils::Vector2D *Entity::getAcceleration(void) {
 		return m_acceleration;
+	}
+
+	/**
+	* Adds the parameter acceleration vector to the Entity's current acceleration vector
+	* @param acceleration: The acceleration to add to the current acceleration
+	*/
+	void Entity::updateAcceleration(Utils::Vector2D acceleration) {
+		m_acceleration->add(acceleration);
 	}
 
 	/**

@@ -22,7 +22,7 @@ namespace Entities {
 		/** Whether or not this entity is affected by physics (gravity) */
 		bool m_affectedByPhysics;
 		/** Whether or not the entity should be visably rendered on screen (lets you hide entities)*/
-		bool m_isVisable;
+		bool m_isVisible;
 	public:
 
 		Entity();
@@ -44,12 +44,15 @@ namespace Entities {
 		void setScale(float scaleX, float scaleY);
 
 		Utils::Vector2D *getPosition(void);
+		void updatePosition(Utils::Vector2D position);
 		void setPosition(float positionX, float positionY);
 
 		Utils::Vector2D *getVelocity(void);
+		void updateVelocity(Utils::Vector2D velocity);
 		void setVelocity(float velocityX, float velocityY);
 
 		Utils::Vector2D *getAcceleration(void);
+		void updateAcceleration(Utils::Vector2D acceleration);
 		void setAcceleration(float accelerationX, float accelerationY);
 
 		float getMass();

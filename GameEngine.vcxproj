@@ -133,8 +133,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="configLoader.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="entity.cpp" />
+    <ClCompile Include="entityController.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movingEntity.cpp" />
@@ -148,15 +150,19 @@
     <ClCompile Include="vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="config.ini" />
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="configLoader.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="entityController.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="movingEntity.h" />
+    <ClInclude Include="physics.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
     <ClInclude Include="stage.h" />
