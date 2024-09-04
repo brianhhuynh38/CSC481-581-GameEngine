@@ -7,7 +7,9 @@ class Physics {
 private:
 	float m_gravity;
 public:
-	Physics(float gravity);
+	Physics();
+
+	void setGravity(float gravity);
 
 	void updateEntityPhysicsVectors(Entities::Entity entity);
 

@@ -24,9 +24,13 @@ Entities::Entity *ball;
 /// The default player controller
 Controllers::PlayerController *playerController;
 /// Controller for all entities and their physics
-//EntityController* entityController;
+EntityController* entityController;
 /// The InputHandler struct used to keep track of keypresses and other input.
 InputHandler inputHandler;
+/// The physics system
+Physics physics;
+
+Timeline timeline;
 
 /**
  * Frees any allocated memory on application exit
@@ -116,7 +120,6 @@ int main(int argc, char* argv[]) {
 	float remainder;
 	
 	// Allocate memory to SDL renderer components and instantiate Display struct
-	memset(&display, 0, sizeof(Display));
 	display = new Display;
 
 	//inputHandler = new InputHandler;
@@ -133,6 +136,8 @@ int main(int argc, char* argv[]) {
 	then = SDL_GetTicks();
 
 	remainder = 0;
+
+	
 
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
@@ -158,10 +163,12 @@ int main(int argc, char* argv[]) {
 	// Create player controller for player (temp for testing)
 	playerController = new Controllers::PlayerController(player);
 	//Create entity controller
-	//entityController = new EntityController();
+	entityController = new EntityController();
 
 	// Create Timeline
 	timeline = Timeline();
+	// Create physics
+	physics = Physics();
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();

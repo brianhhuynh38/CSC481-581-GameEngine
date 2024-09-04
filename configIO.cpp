@@ -16,7 +16,7 @@ void loadConfigFile() {
 			std::getline(file, value);
 			// If gravity, convert to float and set gravity
 			if (identifier == "gravity") {
-				physics = Physics(std::stof(value));
+				physics.setGravity(std::stof(value));
 			}
 		}
 	}
