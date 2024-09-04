@@ -11,6 +11,7 @@
 #include "stage.h"
 #include "player.h"
 #include "playerController.h"
+#include "entityController.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -21,6 +22,8 @@ Entities::Player *player;
 Entities::Entity *ball;
 /// The default player controller
 Controllers::PlayerController *playerController;
+/// Controller for all entities and their physics
+EntityController* entityController;
 /// The InputHandler struct used to keep track of keypresses and other input.
 InputHandler inputHandler;
 
@@ -153,6 +156,8 @@ int main(int argc, char* argv[]) {
 
 	// Create player controller for player (temp for testing)
 	playerController = new Controllers::PlayerController(player);
+	//Create entity controller
+	//entityController = new EntityController();
 
 	// Create Timeline
 	timeline = Timeline();
@@ -182,6 +187,9 @@ int main(int argc, char* argv[]) {
 		
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
+
+		// Update the physics of all entities
+		//entityController->updateEntities();
 
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);

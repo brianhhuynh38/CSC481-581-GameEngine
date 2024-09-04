@@ -8,7 +8,7 @@
 */
 class EntityController {
 private:
-	std::list<Entities::Entity> entities;
+	std::list<Entities::Entity> m_entities;
 public:
 	EntityController();
 
