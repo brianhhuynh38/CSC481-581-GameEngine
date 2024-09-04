@@ -3,8 +3,8 @@
 
 EntityController::EntityController() {
 	// creates empty entities list
-	m_entities = {};
-	// TODO: Figure out way to store and load all entities to be used in the game
+	m_entities = new std::list<Entities::Entity>();
+	m_entities->push_back(Entities::Entity());
 }
 
 void EntityController::updateEntities() {
@@ -25,9 +25,10 @@ std::list<Entities::Entity> EntityController::getEntities() {
  * @param e entity to be added to end of the entities list
  */
 void EntityController::addEntity(Entities::Entity e) {
-	m_entities->emplace_back((Entities::Entity)e);
+	m_entities->emplace_back(e);
 }
 
 void EntityController::cleanUp() {
 	// TODO: Free allocated memory
+	delete m_entities;
 }
