@@ -18,7 +18,7 @@
 /// The Display struct used to initialize renderer and window
 Display *display;
 /// The entity that the player is able to control
-//Entities::Player *player; (moved to global for now)
+Entities::Player *player;
 /// Bullet entity (TEST)
 Entities::Entity *ball;
 /// The default player controller

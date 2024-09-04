@@ -3,6 +3,6 @@
 #ifndef CONFIGIO_H
 #define CONFIGIO_H
 
-void loadConfigFile();
+void loadConfigFile(void);
 
 #endif

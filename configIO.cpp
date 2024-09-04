@@ -4,7 +4,7 @@
 #include "global.h"
 #include "configIO.h"
 
-void loadConfigFile() {
+void loadConfigFile(void) {
 	// File to open
 	std::ifstream file;
 	// Open config.ini
