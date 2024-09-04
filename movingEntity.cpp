@@ -144,12 +144,4 @@ namespace Entities {
 	void MovingEntity::setSpeed(float speed) {
 		m_speed = speed;
 	}
-
-	Utils::Vector2D MovingEntity::getEndPosition() {
-		return m_endPosition;
-	}
-
-	void MovingEntity::setEndPosition(Utils::Vector2D position) {
-		m_endPosition = position;
-	}
 }

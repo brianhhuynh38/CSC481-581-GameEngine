@@ -17,7 +17,11 @@ SDL2 and SDL2_image libraries in Project properties:
 
 **Additional Dependencies**: `SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)`
 
+## Controls
+
 To exit the engine, press the `ESCAPE` key.
+
+To control the player, use the `ARROW KEYS` for movement.
 
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
