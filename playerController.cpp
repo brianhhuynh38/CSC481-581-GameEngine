@@ -18,26 +18,31 @@ namespace Controllers {
     void PlayerController::movementInput() {
         // gets maxSpeed from player
         float speed = player->getMaxSpeed();
-        if (inputHandler.keyboard[SDL_SCANCODE_RIGHT]) {
+
+        // horizontal movement
+        if (inputHandler.keyboard[SDL_SCANCODE_RIGHT] == 1) {
             movementVector.x += speed;
         }
-        if (inputHandler.keyboard[SDL_SCANCODE_LEFT]) {
+        if (inputHandler.keyboard[SDL_SCANCODE_LEFT] == 1) {
             movementVector.x -= speed;
         }
-        if (inputHandler.keyboard[SDL_SCANCODE_DOWN]) {
+        // vertical movement
+        if (inputHandler.keyboard[SDL_SCANCODE_DOWN] == 1) {
             movementVector.y += speed;
         }
-        if (inputHandler.keyboard[SDL_SCANCODE_UP]) {
+        if (inputHandler.keyboard[SDL_SCANCODE_UP] == 1) {
             movementVector.y -= speed;
         }
+
         // if moving diagonally, multiplies vectors xy values by cos(45deg)
         if (movementVector.x != 0 && movementVector.y != 0) {
             movementVector.x *= 0.525322;
             movementVector.y *= 0.525322;
         }
 
-        // Moves player if given vector's magnitude is not zero
+        // applies movement to player if given vector's magnitude is non-zero
         if (movementVector.getMagnitude() != 0) {
+            std::cout << "movementMagnitude:" << movementVector.getMagnitude() << "\n";  // TESTING!!!
             player->move(movementVector);
         }
     }
@@ -45,9 +50,13 @@ namespace Controllers {
     /**
      * Checks for action inputs from keys
      */
-    void actionInput() {
-        if (inputHandler.keyboard[SDL_SCANCODE_E]) {
-            
+    void PlayerController::actionInput() {
+        if (inputHandler.keyboard[SDL_SCANCODE_E] == 1) {
+            std::cout << "ACTION PRESSED\n";  // TESTING!!!
         }
+    }
+
+    void PlayerController::setPlayer(Entities::Player *p) {
+        this->player = p;
     }
 }

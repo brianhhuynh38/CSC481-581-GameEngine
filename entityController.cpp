@@ -2,6 +2,8 @@
 #include "global.h"
 
 EntityController::EntityController() {
+	// creates empty entities list
+	m_entities = {};
 	// TODO: Figure out way to store and load all entities to be used in the game
 }
 
@@ -16,6 +18,14 @@ void EntityController::updateEntities() {
 
 std::list<Entities::Entity> EntityController::getEntities() {
 	return *m_entities;
+}
+
+/**
+ * Adds the given entity to the entities list
+ * @param e entity to be added to end of the entities list
+ */
+void EntityController::addEntity(Entities::Entity e) {
+	m_entities->emplace_back((Entities::Entity)e);
 }
 
 void EntityController::cleanUp() {

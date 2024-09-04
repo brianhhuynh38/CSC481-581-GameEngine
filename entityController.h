@@ -27,6 +27,12 @@ public:
 	std::list<Entities::Entity> getEntities();
 
 	/**
+	* Adds the given entity to the entities list
+	* @param e entity to be added to end of the entities list
+	*/
+	void addEntity(Entities::Entity e);
+
+	/**
 	* Frees any allocated memory
 	*/
 	void cleanUp();

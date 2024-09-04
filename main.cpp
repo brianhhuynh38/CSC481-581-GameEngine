@@ -21,6 +21,8 @@ Display *display;
 Entities::Player *player;
 /// Bullet entity (TEST)
 Entities::Entity *ball;
+/// floor entity (TEST)
+Entities::Entity *ground;
 /// The default player controller
 Controllers::PlayerController *playerController;
 /// Controller for all entities and their physics
@@ -153,22 +155,44 @@ int main(int argc, char* argv[]) {
 	// Create temporary ball object
 	ball = new Entities::Entity(
 		1.0, 1.0,
-		250.0, 250.0,
+		550.0, 250.0,
 		10.0,
 		"./Assets/Textures/BallTexture.png",
 		false,
 		true
+	);
+	// Create temporary box object that moves
+	/*ball = new Entities::MovingEntity(
+		1.0, 1.0,
+		550.0, 550.0,
+		10.0,
+		"./Assets/Textures/devTexture0.png",
+		false,
+		true,
+	);*/
+	// Create temporary ground object
+	ground = new Entities::Entity(
+		20.0, 20.0,
+		250.0, 550.0,
+		10.0,
+		"./Assets/Textures/devTexture1.png",
+		true,
+		false
 	);
 
 	// Create player controller for player (temp for testing)
 	playerController = new Controllers::PlayerController(player);
 	//Create entity controller
 	entityController = new EntityController();
+	//entityController->addEntity(*player);
+	//entityController->addEntity(*ground);
+	//entityController->addEntity(*ball);
 
 	// Create Timeline
 	timeline = Timeline();
 	// Create physics
-	physics = Physics();
+	physics = Physics(); 
+
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();
@@ -189,13 +213,15 @@ int main(int argc, char* argv[]) {
 
 		// Run logic and draw scene
 		//display->delegate.logic();
-		//display->delegate.draw();
+	    //display->delegate.draw();
 
 		// check player movmentInput (TESTING)
 		playerController->movementInput();
 
-		// Display player texture at player location
+		// Display player and floor texture at their locations
 		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getScale()->x, player->getScale()->y);
+		Render::displayTexture(ground->getTexture(), ground->getPosition()->x, ground->getPosition()->y, ground->getScale()->x, ground->getScale()->y);
+		Render::displayTexture(ball->getTexture(), ball->getPosition()->x, ball->getPosition()->y, ball->getScale()->x, ball->getScale()->y);
 		
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
