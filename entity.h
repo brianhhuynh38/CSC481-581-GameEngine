@@ -7,11 +7,19 @@
 
 namespace Entities {
 
+	/**
+	* Class that represents objects and acts as a superclass to subsets of more specified 
+	* objects within the game. Can be affected by physics if enabled.
+	*/
 	class Entity {
 	protected:
+		/** The scaling vector for the Entity */
 		Utils::Vector2D *m_scale;
+		/** The position the Entity is currently at */
 		Utils::Vector2D *m_position;
+		/** The velocity the Entity is moving at */
 		Utils::Vector2D *m_velocity;
+		/** The acceleration at which the Entity is accelerating */
 		Utils::Vector2D *m_acceleration;
 		/** Weight of entity (changes how gravity affects it) */
 		float m_mass;
@@ -27,6 +35,9 @@ namespace Entities {
 		bool m_isVisible;
 	public:
 
+		/**
+		* Default constructor that intializes all values to 0
+		*/
 		Entity();
 
 		/**
@@ -35,6 +46,7 @@ namespace Entities {
 		* @param scaleX X component of scaling multipliers for rendering
 		* @param scaleY Y component of scaling multipliers for rendering
 		* @param position The coordinates where the Entity is located
+		* @param mass The mass of the Entity
 		* @param textureFilepath The filepath to where the texture is located
 		* @param isStationary Whether the object should move
 		* @param affectedByPhysics Whether the object is affectedByPhysics
@@ -42,31 +54,116 @@ namespace Entities {
 		Entity(float scaleX, float scaleY, float positionX, float positionY, float mass,
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
 
+		/**
+		* Returns the scale
+		*/
 		Utils::Vector2D *getScale(void);
 		void setScale(float scaleX, float scaleY);
 
+		/**
+		* Returns the position
+		*/
 		Utils::Vector2D *getPosition(void);
+
+		/**
+		* Updates the position by adding the provided position to the current one
+		* 
+		* @param position: The position to add
+		*/
 		void updatePosition(Utils::Vector2D position);
+
+		/**
+		* Sets the position using the two float values provided
+		* 
+		* @param positionX: The x component of the position
+		* @param positionY: The y component of the position
+		*/
 		void setPosition(float positionX, float positionY);
 
+		/**
+		* Returns the velocity
+		*/
 		Utils::Vector2D *getVelocity(void);
+
+		/**
+		* Updates the velocity by adding the provided velocity vector to the current one
+		* 
+		* @param velocity: The velocity to be added to the current velocity
+		*/
 		void updateVelocity(Utils::Vector2D velocity);
+
+		/**
+		* Sets the velocity using the two provided float values
+		*/
 		void setVelocity(float velocityX, float velocityY);
 
+		/**
+		* Returns the acceleration
+		*/
 		Utils::Vector2D *getAcceleration(void);
+
+		/**
+		* Updates the acceleration by adding the provided acceleration vector the the current one
+		* 
+		* @param acceleration: The aceleration vector to add
+		*/
 		void updateAcceleration(Utils::Vector2D acceleration);
+
+		/**
+		* Sets the acceleration to the acceleration vector provided
+		* 
+		* @param accelerationX: The x component of the acceleration
+		* @param accelerationY: The y component of the acceleration
+		*/
 		void setAcceleration(float accelerationX, float accelerationY);
 
+		/**
+		* Returns the mass
+		*/
 		float getMass();
+
+		/**
+		* Sets the mass
+		* 
+		* @param mass: The mass to set
+		*/
 		void setMass(float mass);
 
+		/**
+		* Returns the pointer to the SDL_Texture
+		*/
 		SDL_Texture *getTexture(void);
+
+		/**
+		* Loads the texture at the given filepath
+		*/
 		void setTexture(char* textureFilepath);
 
+		/**
+		* Returns the list of colliders
+		*/
 		std::list<SDL_Rect> getColliders(void);
+
+		/**
+		* Set a list of colliders 
+		* 
+		* @param colliders: The colliders to set
+		*/
 		void setColliders(std::list<SDL_Rect> colliders);
+
+		/**
+		* Adds a collider to the list of colliders
+		* 
+		* @param x: The x component of the collider's position
+		* @param y: The y component of the collider's position
+		* @param w: The width of the collider
+		* @param h: The height of the collider
+		*/
 		void addCollider(int x, int y, int w, int h);
 
+		/**
+		* Deletes objects to free memory allocated to each relevant field
+		*/
 		void destroy(void);
 
 	};

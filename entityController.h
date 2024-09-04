@@ -8,13 +8,26 @@
 */
 class EntityController {
 private:
+	/** The list of all entities */
 	std::list<Entities::Entity> *m_entities;
 public:
+	/**
+	* The constructor for EntityController
+	*/
 	EntityController();
 
+	/**
+	* Updates each entity's logic and physics
+	*/
 	void updateEntities();
 
+	/**
+	* Returns the entities list
+	*/
 	std::list<Entities::Entity> getEntities();
 
+	/**
+	* Frees any allocated memory
+	*/
 	void cleanUp();
 };

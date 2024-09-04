@@ -4,6 +4,9 @@
 #include "global.h"
 #include "configIO.h"
 
+/**
+* Loads variables defined in the config.ini file and sets them to their proper places
+*/
 void loadConfigFile() {
 	// File to open
 	std::ifstream file;
