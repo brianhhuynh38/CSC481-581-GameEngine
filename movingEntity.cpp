@@ -6,6 +6,7 @@
 #include "global.h"
 #include "definitions.h"
 #include "collisions.h"
+#include "stage.h"
 
 namespace Entities {
 
@@ -63,31 +64,45 @@ namespace Entities {
 			if (m_reverse) {
 				// Move the object the calculated distance
 				m_position->x -= distance;
+				// Move the colliders the calculated distance
+				for (SDL_Rect collider : m_colliders) {
+					collider.x -= distance;
+				}
 				// If the object moves past the start position, set to lower bound, then set currentTimer
 				if (m_position->x < m_startPosition.x) {
 					m_position->x = m_startPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
-				// If the object collided or went too far to the left or right
-				if( ( m_position->x < 0 ) || ( m_position->x + m_scale->x > DEFAULT_WIDTH) /* || checkCollisions(m_colliders, m_entities) */ ) {
+				// If the object collided going left or right
+				if( checkCollisions(m_colliders, entityController->getEntities()) ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
-					// mPosX -= mVelX;
-        			// mCollider.x = mPosX;
+					m_position->x += distance;
+					// Move the colliders back the calculated distance
+					for (SDL_Rect collider : m_colliders) {
+						collider.x += distance;
+					}
 				}
 			}
 			else { // Move the object towards the end position
 				// Move the object the calculated distance
 				m_position->x += distance;
+				// Move the colliders the calculated distance
+				for (SDL_Rect collider : m_colliders) {
+					collider.y += distance;
+				}
 				// If the object moves past the end position, set to upper bound, then set currentTimer
 				if (m_position->x > m_endPosition.x) {
 					m_position->x = m_endPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
-				// If the object collided or went too far up or down
-				if( ( m_position->y < 0 ) || ( m_position->y + m_scale->y > DEFAULT_HEIGHT ) /* || checkCollisions(m_colliders, m_entities)*/ ) {
+				// If the object collided going up or down
+				if (checkCollisions(m_colliders, entityController->getEntities())) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
-					// mPosY -= mVelY;
-        			// mCollider.y = mPosY;
+					m_position->y -= distance;
+					// Move the colliders back the calculated distance
+					for (SDL_Rect collider : m_colliders) {
+						collider.y -= distance;
+					}
 				}
 			}
 		}

@@ -57,5 +57,15 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
     */
 bool checkCollisions(std::list<SDL_Rect> collisions, std::list<Entities::Entity> entities) {
     // Loop through entities, use their colliders to check the collisions, using checkCollision method
-    return NULL; // temp
+    for (auto& entity : entities) { // Loop through each entity
+        for (auto& entityCollider : entity.getColliders()) { // Loop through each entity's collider
+            for (auto& colliderRect : collisions) { // Loop through the colliders list given
+                if (SDL_HasIntersection(&entityCollider, &colliderRect)) {
+                    return true;
+                }
+            }
+        }
+    }
+    
+    return false;
 }
