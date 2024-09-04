@@ -13,54 +13,122 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Render">
+      <UniqueIdentifier>{f7307e17-f1f8-4b7b-a126-e84f16e689ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stages">
+      <UniqueIdentifier>{0f40962f-748f-444e-8d97-47e00b02c44a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities">
+      <UniqueIdentifier>{ca1e5fa9-c848-4173-bea9-bc4d5e703991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{48e38880-9451-4204-8c00-911aa1741d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{cd63e2b1-c5cb-4200-a49b-06c9f0220051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{8ac9df5c-1676-4dcb-adee-d154a6ef91c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{359fbd27-665a-4047-962e-5f38235c5109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{43be1d0e-f729-49bf-b2e3-6c67715945fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{137a6bf8-77cb-4cf5-841a-9ed2777dbe61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Render">
+      <UniqueIdentifier>{f0d3046c-b0d7-4c8d-b77f-25b24899aaa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{c0f3c7e2-f99b-4e91-8d80-8c7dbe6ed8ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers">
+      <UniqueIdentifier>{37f90c28-bb1b-478d-881f-9f674f670e45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="stageRenderer.cpp">
+      <Filter>Source Files\Stages</Filter>
     </ClCompile>
-    <ClCompile Include="init.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stageHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="map.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="stageManager.cpp">
+      <Filter>Source Files\Stages</Filter>
     </ClCompile>
     <ClCompile Include="entity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="stage.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="input.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="physics.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2D.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="movingEntity.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="timeline.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="playerController.cpp">
+      <Filter>Source Files\Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="definitions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="structs.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
-    <ClInclude Include="draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="init.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="definitions.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="movingEntity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2D.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="timeline.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="playerController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\DefaultPlayerTexture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
