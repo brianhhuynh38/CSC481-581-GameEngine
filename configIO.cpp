@@ -5,7 +5,6 @@
 #include "configIO.h"
 
 void loadConfigFile() {
-	float gravity;
 	// File to open
 	std::ifstream file;
 	// Open config.ini

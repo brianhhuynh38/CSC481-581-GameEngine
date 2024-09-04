@@ -17,6 +17,8 @@ SDL2 and SDL2_image libraries in Project properties:
 
 **Additional Dependencies**: `SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)`
 
+To exit the engine, press the `ESCAPE` key.
+
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
 will list each tutorial and each file that it was used to construct/influence the construction of. 
@@ -64,15 +66,22 @@ a more model-based approach.
 
 |        `.cpp` Files        |            Header Files            |
 | -------------------------- | ---------------------------------- |
-|  ||
+| [`playerController.cpp`](./playerController.cpp) | [`playerController.h`](./playerController.h) |
+| [`input.cpp`](./input.cpp) | [`input.h`](./input.h) |
+| [`main.cpp`](./main.cpp) | [`structs.h`](./structs.h) |
 
 ### [Parallel Realities Platformer Tutorial - Part 1](https://www.parallelrealities.co.uk/tutorials/ppp/ppp1.php)
 
-This tutorial was referenced to create the map and stage intialization within the project. [INCOMPLETE]
+This tutorial was referenced to create the map and stage intialization within the project. We used it as a reference 
+for rendering maps as well, though our implementation does not currently implement a tile system, so our code does not 
+completely follow this tutorial, applying it to our coordinate system implementation.
 
 |        `.cpp` Files        |            Header Files            |
 | -------------------------- | ---------------------------------- |
-|  ||
+| [`stageManager.cpp`](./stageManager.cpp) | [`stageManager.h`](./stageManager.h) |
+| [`stage.cpp`](./stage.cpp) | [`stage.h`](./stage.h) |
+| [`stageRenderer.cpp`](./stageRenderer.cpp) |  |
+|  | [`definitions.h`](./definitions.h) |
 
 ### [Lazy Foo' Productions Collider Tutorial](https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php)
 
@@ -82,5 +91,5 @@ moving the entity back to where it was, in the `Entity::move` method.
 
 |        `.cpp` Files        |            Header Files            |
 | -------------------------- | ---------------------------------- |
-|||
-
+| [`collisions.cpp`](./collisions.cpp) | |
+| [`entity.cpp`](./entity.cpp) | [`entity.h`](./entity.h) |
