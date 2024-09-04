@@ -17,6 +17,8 @@ namespace Entities {
 		float m_mass;
 		/** Texture to use for this entity */
 		SDL_Texture *m_texture;
+		/** Rectangle collider to use for this entity */
+		std::list<SDL_Rect> m_colliders;
 		/** Whether or not this entity is stationary */
 		bool m_isStationary;
 		/** Whether or not this entity is affected by physics (gravity) */
@@ -60,6 +62,10 @@ namespace Entities {
 
 		SDL_Texture *getTexture(void);
 		void setTexture(char* textureFilepath);
+
+		std::list<SDL_Rect> getColliders(void);
+		void setColliders(std::list<SDL_Rect> colliders);
+		void addCollider(int x, int y, int w, int h);
 
 		void destroy(void);
 

@@ -1,6 +1,21 @@
+# Introduction
+This is Team 1's game engine repository for CSC 581 - Game Engine Foundaations. Below are 
+compilation instructions, as well as our references for each of the tutorials we used while 
+making this project.
+
 # Starting Instructions
 
-Compiler: C++ 17 standard
+**Compiler**: C++ 17 standard
+
+This project uses a Visual Studio solution file to organize and compile. The libraries are included 
+within the project for convenience. The following are the relative filepaths used for the  
+SDL2 and SDL2_image libraries in Project properties:
+
+**Include Directories**:`$(ProjectDir)\Libs\[LibraryName]\include`
+
+**Library Directories**: `$(ProjectDir)\Libs\[LibraryName]\lib\x64`
+
+**Additional Dependencies**: `SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)`
 
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
@@ -8,7 +23,9 @@ will list each tutorial and each file that it was used to construct/influence th
 Additionally, we will provide a short description detailing its use and impact within our codebase. 
 Each tutorial can be accessed by clicking on its title:
 
-## [Parallel Realities Shooter Tutorial - Part 1](https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php)
+## Homework 1
+
+### [Parallel Realities Shooter Tutorial - Part 1](https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php)
 
 The code was largely taken from the tutorial with some more minor changes with variable naming
 and a call to Pump_Events() in order to make the Keyboard inputs work properly. We also did not
@@ -24,7 +41,7 @@ Files influenced by this tutorial:
 | [`input.cpp`](./input.cpp) |       [`input.h`](./input.h)       |
 | | [`structs.h`](./structs.h) |
 
-## [Parallel Realities Shooter Tutorial - Part 2](https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php)
+### [Parallel Realities Shooter Tutorial - Part 2](https://www.parallelrealities.co.uk/tutorials/shooter/shooter2.php)
 
 The code functions were referenced from the tutorial with changes mainly relating to the overall structure
 of our engine. Our [`Entity`](./entity.cpp) implementation was class-based using a [`Vector2D`](./vector2D.cpp) 
@@ -38,3 +55,32 @@ Files influenced by this tutorial:
 |  [`main.cpp`](./main.cpp)  |  |
 |  [`draw.cpp`](./draw.cpp)  |       [`draw.h`](./draw.h)         |
 | [`entity.cpp`](./entity.cpp) | [`entity.h`](./entity.h) |
+
+### [Parallel Realities Shooter Tutorial - Part 5](https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php)
+
+This was referenced mostly for player input and initialization as well as initialization of stages. Our 
+implementation does not completely match regarding the overall structure suggested by the guide, as we follow 
+a more model-based approach.
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+|  ||
+
+### [Parallel Realities Platformer Tutorial - Part 1](https://www.parallelrealities.co.uk/tutorials/ppp/ppp1.php)
+
+This tutorial was referenced to create the map and stage intialization within the project. [INCOMPLETE]
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+|  ||
+
+### [Lazy Foo' Productions Collider Tutorial](https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php)
+
+The colliders tutorial was used to build the `checkCollision` method, for the calculations of checking for 
+collisions between `SDL_Rect` objects. It was also used to understand how to handle the result of a collision, 
+moving the entity back to where it was, in the `Entity::move` method.
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+|||
+

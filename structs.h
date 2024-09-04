@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <list>
 #include "definitions.h"
 #pragma once
 
@@ -28,10 +29,11 @@ typedef struct {
  * This references the tutorial linked to on the SDL wiki here :
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
  */
-typedef struct {
-	int map[MAP_WIDTH][MAP_HEIGHT];
-	
-} Stage;
+// typedef struct {
+// 	int map[MAP_WIDTH][MAP_HEIGHT];
+// 	std::list<Entities::Player> m_players;
+// 	std::list<Entities::Entity> m_entities;
+// } Stage;
 
 /**
  * InputHandler holds the current input values for keypresses.

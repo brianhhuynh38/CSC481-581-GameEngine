@@ -1,11 +1,12 @@
 #include "structs.h"
+#include "stage.h"
 
 static class StageManager {
 private:
-	/** CurrentStage to display */
-	Stage currentStage;
+	/** CurrentStage index to display */
+	int currStageIndex;
 	/** Array of stages */
-	Stage stages[];
+	Stages::Stage stages[];
 public:
 
 	/**
@@ -40,7 +41,7 @@ public:
 		}*/
 	}
 
-	Stage getMap(int index) {
+	Stages::Stage getMap(int index) {
 		return stages[index];
 	}
 	/*

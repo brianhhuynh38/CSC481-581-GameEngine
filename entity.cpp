@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <iostream>
+#include <list>
 
 #include "entity.h"
 #include "vector2D.h"
@@ -170,6 +171,43 @@ namespace Entities {
 		catch (std::exception& e) {
 			std::cerr << "Could not load texture at: " << textureFilepath;
 		}
+	}
+	
+	/**
+	* Returns the collider of the entity
+	* @returns The collider of the entity as SDL_Rect
+	*/
+	std::list<SDL_Rect> Entity::getColliders(void) {
+		return m_colliders;
+	}
+
+	/**
+	* Sets the colliders by giving a list of colliders
+	* @param colliders List of SDL_Rect colliders
+	*/
+	void Entity::setColliders(std::list<SDL_Rect> colliders) {
+		try {
+			m_colliders = colliders;
+		}
+		catch (std::exception& e) {
+			std::cerr << "ERROR: Could not set colliders: " << e.what();
+		}
+	}
+
+	/**
+	* Adds a collider to the list of colliders by giving the coordinates and size
+	* @param x: x position coordinate
+	* @param y: y position coordinate
+	* @param w: width of rect
+	* @param h: height of rect
+	*/
+	void Entity::addCollider(int x, int y, int w, int h) {
+		SDL_Rect collider = SDL_Rect();
+		collider.x = x;
+		collider.y = y;
+		collider.w = w;
+		collider.h = h;
+		m_colliders.emplace_back(collider);
 	}
 
 	/**

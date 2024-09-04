@@ -10,6 +10,7 @@
 #include "entity.h"
 #include "stage.h"
 #include "player.h"
+#include "configIO.h"
 #include "playerController.h"
 #include "entityController.h"
 
@@ -162,7 +163,11 @@ int main(int argc, char* argv[]) {
 	// Create Timeline
 	timeline = Timeline();
 
+	// Loads in config file to read and get configured gravity
+	loadConfigFile();
+
 	// Basic, primitive game loop
+	// TODO: Add ability to reload everything via terminal at some point
 	while (true) {
 		// Updates to get a new deltaTime
 		timeline.updateTime();

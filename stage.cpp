@@ -1,14 +1,48 @@
+#include <list>
+
 #include "stage.h"
+#include "draw.h"
 
 namespace Stages {
 
 	/**
-	 * Runs the stages logic.
+	 * Draws the players in the stage.
 	 * This references the tutorial linked to on the SDL wiki here :
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
-	static void logic(void) {
+	void Stage::drawPlayers(void) {
+		// // Create player list iterator
+		// std::list<Entities::Player>::iterator iter;
+		
+		// // Draws each player 
+		// for (iter = m_entities.begin(); iter != m_entities.end(); ++iter) {
+		// 	Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getScale()->x, iter->getScale()->y);
+		// }
+		
+		// Display player texture at player location
+		Render::displayTexture(
+			player.getTexture(), 
+			player.getPosition()->x, 
+			player.getPosition()->y, 
+			player.getScale()->x, 
+			player.getScale()->y
+		);
+		
+	}
 
+	/**
+	 * Draws the entities in the stage.
+	 * This references the tutorial linked to on the SDL wiki here :
+	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
+	 */
+	void Stage::drawEntities(void) {
+		// Create entity list iterator
+		std::list<Entities::Entity>::iterator iter;
+		std::list<Entities::Entity> entities = entityController.getEntities();
+		// Draws each entity
+		for (iter = entities.begin(); iter != entities.end(); ++iter) {
+			Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getScale()->x, iter->getScale()->y);
+		}
 	}
 
 	/**
@@ -16,8 +50,42 @@ namespace Stages {
 	 * This references the tutorial linked to on the SDL wiki here :
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
-	static void draw(void) {
+	void Stage::draw(void) {
+		drawPlayers();
 
+		drawEntities();
+	}
+
+	/**
+	 * Runs player logic
+	 * This references the tutorial linked to on the SDL wiki here :
+	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
+	 */
+	void Stage::doPlayers(void) {
+		
+	}
+
+	/**
+	 * Runs entity logic.
+	 * This references the tutorial linked to on the SDL wiki here :
+	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
+	 */
+	void Stage::doEntities(void) {
+
+		entityController.updateEntities();
+		
+	}
+
+	/**
+	 * Runs the stages logic.
+	 * This references the tutorial linked to on the SDL wiki here :
+	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
+	 */
+	void Stage::logic(void) {
+		// runs player logic
+		doPlayers();
+		// runs entity logic
+		doEntities();
 	}
 
 	/**
@@ -25,11 +93,15 @@ namespace Stages {
 	 * using the tutorial linked to on the SDL Wiki here:
      * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
-	void initStage(void) {
+	void Stage::initStage(void) {
 		display->delegate.logic = logic;
 		display->delegate.draw = draw;
 
 		//stage = new Stage;
+		//memset(&stage, 0, sizeof(stage));
+
+
+		initPlayer();
 		
 	}
 
@@ -38,17 +110,24 @@ namespace Stages {
 	 * This references the tutorial linked to on the SDL wiki here :
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
-	static void initPlayer(void) {
-		/*player = malloc(sizeof(Entities::Player));
-		memset(player, 0, sizeof(Entities::Entity));
-		stage.fighterTail->next = player;
-		stage.fighterTail = player;
+	void Stage::initPlayer(void) {
+		player = Entities::Player(
+			1.0, 1.0,
+			250.0, 250.0,
+			10.0,
+			"./Assets/Textures/DefaultPlayerTexture1.png",
+			false,
+			true,
+			1.0
+		);
+		//m_players.insert();
 
+		// player starting point
 		player->x = 100;
 		player->y = 100;
-		player->texture = loadTexture("gfx/player.png");
+		player->texture = loadTexture("./Assets/Textures/DefaultPlayerTexture1.png");
 		SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
-		*/
+		
 	} 
 
 	/**

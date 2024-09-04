@@ -8,11 +8,13 @@
 */
 class EntityController {
 private:
-	std::list<Entities::Entity> m_entities;
+	std::list<Entities::Entity> *m_entities;
 public:
 	EntityController();
 
 	void updateEntities();
+
+	std::list<Entities::Entity> getEntities();
 
 	void cleanUp();
 };

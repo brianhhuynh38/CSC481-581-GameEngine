@@ -133,7 +133,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="configLoader.cpp" />
+    <ClCompile Include="collisions.cpp" />
+    <ClCompile Include="configIO.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="entityController.cpp" />
@@ -154,7 +155,7 @@
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="configLoader.h" />
+    <ClInclude Include="configIO.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="entity.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
     <ClInclude Include="stage.h" />
+    <ClInclude Include="stageManager.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="timeline.h" />
     <ClInclude Include="vector2D.h" />
