@@ -49,7 +49,7 @@ void initSDL(void) {
 	windowFlags = 0;
 
 	// If negative error code, exit with failure status
-	if (int status = SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (int status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		std::cout << "SDL failed to start up:" << status;
 		exit(1);
 	}
@@ -154,8 +154,14 @@ int main(int argc, char* argv[]) {
 	// Create player controller for player (temp for testing)
 	playerController = new Controllers::PlayerController(player);
 
+	// Create Timeline
+	timeline = Timeline();
+
 	// Basic, primitive game loop
 	while (true) {
+		// Updates to get a new deltaTime
+		timeline.updateTime();
+
 		// Prepares scene for rendering
 		Render::prepareScene();
 
