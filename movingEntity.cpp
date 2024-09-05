@@ -84,8 +84,10 @@ namespace Entities {
 					m_position->x = m_startPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
+
+				HitInfo hInfo = checkCollisions(m_colliders, entityController->getEntities());
 				// If the object collided going left or right
-				if( checkCollisions(m_colliders, entityController->getEntities()) ) {
+				if( hInfo.hit ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
 					m_position->x += distance;
 
@@ -116,8 +118,11 @@ namespace Entities {
 					m_position->x = m_endPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
+
+				HitInfo hInfo = checkCollisions(m_colliders, entityController->getEntities());
+				
 				// If the object collided going up or down
-				if (checkCollisions(m_colliders, entityController->getEntities())) {
+				if ( hInfo.hit ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
 					m_position->y -= distance;
 					// Create colliders iterator

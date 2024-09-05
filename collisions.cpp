@@ -7,6 +7,8 @@
     */
 bool checkCollision(SDL_Rect a, SDL_Rect b)
 {
+
+
     //The sides of the rectangles
     int leftA, leftB;
     int rightA, rightB;
@@ -51,13 +53,17 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
 }
 
 /**
-    * Loop through entities, use their colliders to check the collisions, using checkCollision method
-    * This was referenced from the SDL2 tutorial:
-    * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
-    */
-bool checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities) {
+ * Loop through entities, use their colliders to check the collisions, using checkCollision method
+ * This was referenced from the SDL2 tutorial:
+ * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
+ */
+HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities) {
     // Create list iterator
 	std::list<Entities::Entity>::iterator iterEnt;
+
+    // Create hit responce for return
+    HitInfo hInfo{false};
+
     // Loop through entities, use their colliders to check the collisions, using checkCollision method
     for (iterEnt = (*entities).begin(); iterEnt != (*entities).end(); ++iterEnt) { // Iterate through all entities
 
@@ -78,15 +84,20 @@ bool checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity
 
             for (iterColOther = collisions->begin(); iterColOther != collisions->end(); ++iterColOther) { // Iterate through all of the colliders of the entity
                 if (&(*iterCol) != &(*iterColOther)) {
-                    std::cout << "Collider 1: " << iterCol->x << "," << iterCol->y << "," << iterCol->w << "," << iterCol->h << "\n";
-                    std::cout << "Collider 2: " << iterColOther->x << "," << iterColOther->y << "," << iterColOther->w << "," << iterColOther->h << "\n";
+                    //std::cout << "Collider 1: " << iterCol->x << "," << iterCol->y << "," << iterCol->w << "," << iterCol->h << "\n";
+                    //std::cout << "Collider 2: " << iterColOther->x << "," << iterColOther->y << "," << iterColOther->w << "," << iterColOther->h << "\n";
                 }
                 if ((&(*iterCol) != &(*iterColOther)) && SDL_HasIntersection(&(*iterCol), &(*iterColOther))) {
-                    return true;
+                    
+                    Utils::Vector2D direction = Utils::Vector2D(iterColOther->x, iterColOther->y).add(Utils::Vector2D(-iterCol->x, -iterCol->y));
+                    
+                    hInfo.hit = true;
+                    hInfo.hitVector = direction;
+                    return hInfo;
                 }
             }
         }
     }
     
-    return false;
+    return hInfo;
 }

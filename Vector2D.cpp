@@ -19,7 +19,7 @@ namespace Utils {
 	 * @param x coordinate
 	 * @param y coordinate
 	 */
-	Vector2D::Vector2D(float x, float y) {
+	Vector2D::Vector2D(int x, int y) {
 		this->x = x;
 		this->y = y;
 	}
@@ -39,7 +39,7 @@ namespace Utils {
 	 * @param y coordinate to add
 	 * @returns The result of the addition between the two Vectors
 	 */
-	Vector2D Vector2D::add(float x, float y) {
+	Vector2D Vector2D::add(int x, int y) {
 		return Vector2D(this->x + x, this->y + y);
 	}
 
@@ -76,4 +76,6 @@ namespace Utils {
 	Vector2D Vector2D::normalizeVector(void) {
 		return this->divideConst(getMagnitude());
 	}
+
+
 }

@@ -15,9 +15,13 @@ namespace Controllers {
         bool active = true;
         /** Pointer to player to control */
         Entities::Player* player;
+        /** whether or not this controller uses acceleration in it's movement calculations */
+        bool useAcceleration = false;
+        /** sets movement to move like a platformer (temp value) */
+        bool platformerMovement = false;
 
         /** 2D movement vector to be applied to the player */
-        Utils::Vector2D movementVector = Utils::Vector2D(0,0);
+        //Utils::Vector2D movementVector = Utils::Vector2D(0,0);
     public:
         /**
          * Constructor for PlayerController

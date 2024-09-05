@@ -9,16 +9,16 @@ namespace Utils {
 	*/
 	class Vector2D {
 	public:
-		float x;
-		float y;
+		int x;
+		int y;
 		
 		Vector2D(void);
 
-		Vector2D(float x, float y);
+		Vector2D(int x, int y);
 
 		Vector2D add(Vector2D other);
 
-		Vector2D add(float x, float y);
+		Vector2D add(int x, int y);
 
 		Vector2D multConst(float constant);
 
@@ -27,6 +27,7 @@ namespace Utils {
 		float getMagnitude(void);
 
 		Vector2D normalizeVector(void);
+
 	};
 }
 

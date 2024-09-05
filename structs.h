@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <list>
 #include "definitions.h"
+#include "vector2D.h"
 #pragma once
 
 /**
@@ -42,3 +43,13 @@ typedef struct {
 	// list of all available keys and their states
 	int keyboard[MAX_KEYBOARD_KEYS];
 } InputHandler;
+
+/**
+ * Collision hit responce struct. is returned when collision occurs
+ */
+typedef struct {
+	// true if collision occured (false by default)
+	bool hit;
+	// directional vector of hit
+	Utils::Vector2D hitVector;
+} HitInfo;
