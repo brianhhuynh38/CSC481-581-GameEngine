@@ -55,12 +55,33 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
     * This was referenced from the SDL2 tutorial:
     * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
     */
-bool checkCollisions(std::list<SDL_Rect> collisions, std::list<Entities::Entity> entities) {
+bool checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities) {
+    // Create list iterator
+	std::list<Entities::Entity>::iterator iterEnt;
     // Loop through entities, use their colliders to check the collisions, using checkCollision method
-    for (auto& entity : entities) { // Loop through each entity
-        for (auto& entityCollider : entity.getColliders()) { // Loop through each entity's collider
-            for (auto& colliderRect : collisions) { // Loop through the colliders list given
-                if (SDL_HasIntersection(&entityCollider, &colliderRect)) {
+    for (iterEnt = (*entities).begin(); iterEnt != (*entities).end(); ++iterEnt) { // Iterate through all entities
+
+        // Create colliders iterator
+        std::list<SDL_Rect>::iterator iterCol;
+
+        // Get colliders of entity
+        std::list<SDL_Rect> *entityCollisions = (*iterEnt).getColliders();
+
+        // Loop through colliders from 'entities'
+        for (iterCol = entityCollisions->begin(); iterCol != entityCollisions->end(); ++iterCol) { // Iterate through all of the colliders of the entity
+
+            // Create colliders iterator of other objects
+            std::list<SDL_Rect>::iterator iterColOther;
+
+            // Get colliders of entity to check against checked object
+            std::list<SDL_Rect> *entityCollisions = (*iterEnt).getColliders();
+
+            for (iterColOther = collisions->begin(); iterColOther != collisions->end(); ++iterColOther) { // Iterate through all of the colliders of the entity
+                if (&(*iterCol) != &(*iterColOther)) {
+                    std::cout << "Collider 1: " << iterCol->x << "," << iterCol->y << "," << iterCol->w << "," << iterCol->h << "\n";
+                    std::cout << "Collider 2: " << iterColOther->x << "," << iterColOther->y << "," << iterColOther->w << "," << iterColOther->h << "\n";
+                }
+                if ((&(*iterCol) != &(*iterColOther)) && SDL_HasIntersection(&(*iterCol), &(*iterColOther))) {
                     return true;
                 }
             }

@@ -35,6 +35,7 @@ namespace Entities {
 		* @param scaleX X component of scaling multipliers for rendering
 		* @param scaleY Y component of scaling multipliers for rendering
 		* @param position The coordinates where the Entity is located
+		* @param size The size of the Entity
 		* @param mass The mass of the Entity
 		* @param textureFilepath The filepath to where the texture is located
 		* @param isStationary Whether the object should move
@@ -46,7 +47,7 @@ namespace Entities {
 		* @param endPosX The x component of the end position
 		* @param endPosY The y component of the end position
 		*/
-		MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float mass,
+		MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics, 
 			bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY);
 

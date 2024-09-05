@@ -1,10 +1,10 @@
 #include "entityController.h"
 #include "global.h"
+#include "draw.h"
 
 EntityController::EntityController() {
 	// creates empty entities list
 	m_entities = new std::list<Entities::Entity>();
-	m_entities->push_back(Entities::Entity());
 }
 
 void EntityController::updateEntities() {
@@ -16,8 +16,8 @@ void EntityController::updateEntities() {
 	}
 }
 
-std::list<Entities::Entity> EntityController::getEntities() {
-	return *m_entities;
+std::list<Entities::Entity> *EntityController::getEntities() {
+	return m_entities;
 }
 
 /**
@@ -30,5 +30,6 @@ void EntityController::addEntity(Entities::Entity e) {
 
 void EntityController::cleanUp() {
 	// TODO: Free allocated memory
+	// TODO: free memory on entities with the destroy function
 	delete m_entities;
 }

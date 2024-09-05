@@ -31,7 +31,7 @@ EntityController* entityController;
 InputHandler inputHandler;
 /// The physics system
 Physics physics;
-
+// The timeline used to keep track of time intervals
 Timeline timeline;
 
 /**
@@ -139,23 +139,23 @@ int main(int argc, char* argv[]) {
 
 	remainder = 0;
 
-	
-
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
 	player = new Entities::Player(
 		1.0, 1.0,
 		250.0, 250.0,
+		15.0, 25.0,
 		10.0,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
-		1.0
+		5.0
 	);
 	// Create temporary ball object
 	ball = new Entities::Entity(
 		1.0, 1.0,
 		550.0, 250.0,
+		20.0, 20.0,
 		10.0,
 		"./Assets/Textures/BallTexture.png",
 		false,
@@ -172,8 +172,9 @@ int main(int argc, char* argv[]) {
 	);*/
 	// Create temporary ground object
 	ground = new Entities::Entity(
-		20.0, 20.0,
+		20.0, 12.0,
 		250.0, 550.0,
+		100.0, 50.0,
 		10.0,
 		"./Assets/Textures/devTexture1.png",
 		true,
@@ -187,12 +188,11 @@ int main(int argc, char* argv[]) {
 	entityController->addEntity(*player);
 	entityController->addEntity(*ground);
 	entityController->addEntity(*ball);
-
+	
 	// Create Timeline
 	timeline = Timeline();
 	// Create physics
 	physics = Physics(); 
-
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();

@@ -24,7 +24,7 @@ public:
 	/**
 	* Returns the entities list
 	*/
-	std::list<Entities::Entity> getEntities();
+	std::list<Entities::Entity> *getEntities();
 
 	/**
 	* Adds the given entity to the entities list

@@ -18,6 +18,8 @@ namespace Entities {
 		Utils::Vector2D *m_scale;
 		/** The position the Entity is currently at */
 		Utils::Vector2D *m_position;
+		/** The size of the entity. */
+		Utils::Vector2D *m_size;
 		/** The velocity the Entity is moving at */
 		Utils::Vector2D *m_velocity;
 		/** The acceleration at which the Entity is accelerating */
@@ -27,7 +29,7 @@ namespace Entities {
 		/** Texture to use for this entity */
 		SDL_Texture *m_texture;
 		/** Rectangle collider to use for this entity */
-		std::list<SDL_Rect> m_colliders;
+		std::list<SDL_Rect> *m_colliders;
 		/** Whether or not this entity is stationary */
 		bool m_isStationary;
 		/** Whether or not this entity is affected by physics (gravity) */
@@ -47,12 +49,13 @@ namespace Entities {
 		* @param scaleX X component of scaling multipliers for rendering
 		* @param scaleY Y component of scaling multipliers for rendering
 		* @param position The coordinates where the Entity is located
+		* @param size The size of the Entity
 		* @param mass The mass of the Entity
 		* @param textureFilepath The filepath to where the texture is located
 		* @param isStationary Whether the object should move
 		* @param affectedByPhysics Whether the object is affectedByPhysics
 		*/
-		Entity(float scaleX, float scaleY, float positionX, float positionY, float mass,
+		Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
 
 		/**
@@ -143,7 +146,7 @@ namespace Entities {
 		/**
 		* Returns the list of colliders
 		*/
-		std::list<SDL_Rect> getColliders(void);
+		std::list<SDL_Rect> *getColliders(void);
 
 		/**
 		* Set a list of colliders 
