@@ -20,14 +20,21 @@ namespace Entities {
 		Utils::Vector2D *m_position;
 		/** The size of the entity. */
 		Utils::Vector2D *m_size;
-		/** The velocity the Entity is moving at */
-		Utils::Vector2D *m_velocity;
-		/** The acceleration at which the Entity is accelerating */
-		Utils::Vector2D *m_acceleration;
 		/** Weight of entity (changes how gravity affects it) */
 		float m_mass;
+
+		/** The velocity the Entity is moving at */
+		Utils::Vector2D *m_velocity;
+		/** Max velocity */
+		float m_velocity_max;
+		/** The acceleration at which the Entity is accelerating */
+		Utils::Vector2D *m_acceleration;
+		/** Max acceleration */
+		float m_acceleration_max;
+
 		/** Texture to use for this entity */
 		SDL_Texture *m_texture;
+
 		/** Rectangle collider to use for this entity */
 		std::list<SDL_Rect> *m_colliders;
 		/** Whether or not this entity is stationary */

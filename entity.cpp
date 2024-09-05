@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <list>
+#include <algorithm>
 
 #include "entity.h"
 #include "vector2D.h"
@@ -18,7 +19,9 @@ namespace Entities {
 		m_size = new Utils::Vector2D(0.0, 0.0);
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
+		m_velocity_max = 10;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
+		m_acceleration_max = 10;
 		m_mass = 5;
 
 		m_texture = Render::loadTexture(".\Assets\Textures\MissingTexture.png");
@@ -49,10 +52,12 @@ namespace Entities {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
+		m_mass = mass;
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
+		m_velocity_max = 10;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_mass = mass;
+		m_acceleration_max = 10;
 
 		m_texture = Render::loadTexture(textureFilepath);
 
@@ -134,7 +139,10 @@ namespace Entities {
 	* @param velocity: The velocity to add to the current velocity
 	*/
 	void Entity::updateVelocity(Utils::Vector2D velocity) {
-		*m_velocity = m_velocity->add(velocity);
+		Utils::Vector2D vel = (m_velocity->add(velocity));
+		vel.x = std::max(std::min(vel.x, m_velocity_max), -m_velocity_max);
+		vel.y = std::max(std::min(vel.y, m_velocity_max), -m_velocity_max);
+		*m_velocity = vel;
 	}
 
 	/**
@@ -159,7 +167,10 @@ namespace Entities {
 	* @param acceleration: The acceleration to add to the current acceleration
 	*/
 	void Entity::updateAcceleration(Utils::Vector2D acceleration) {
-		*m_acceleration = m_acceleration->add(acceleration);
+		Utils::Vector2D acc = (m_acceleration->add(acceleration));
+		acc.x = std::max(std::min(acc.x, m_acceleration_max), -m_acceleration_max);
+		acc.y = std::max(std::min(acc.y, m_acceleration_max), -m_acceleration_max);
+		*m_acceleration = acc;
 	}
 
 	/**

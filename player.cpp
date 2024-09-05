@@ -18,7 +18,7 @@ namespace Entities {
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_jumpVector = new Utils::Vector2D(0.0, -6.0);
+		m_jumpVector = new Utils::Vector2D(0.0, -25.0);
 
 		m_texture = Render::loadTexture(textureFilepath);
 
@@ -37,7 +37,8 @@ namespace Entities {
 	void Player::move(Utils::Vector2D movementVector) {
 		Utils::Vector2D oldPosition = *m_position;
 
-		// quick fix for geting to fast
+		// quick fix for geting to fast 
+		
 		float maxMove = 10;
 		if (movementVector.x > maxMove) {
 			movementVector.x = maxMove;
@@ -53,7 +54,7 @@ namespace Entities {
 		}
 
 		// update velocity
-		*m_velocity = movementVector;
+		*m_acceleration = movementVector;
 
 		*m_position = m_position->add(movementVector);
 
@@ -77,19 +78,6 @@ namespace Entities {
 			std::cout << "collided\n";
 			// Move back (code below from tutorial. Replace with code that fits our setup)
 			*m_position = oldPosition;
-			
-			//std::cout << "collided at: " << m_position->x << ", " << m_position->y << "\n";
-			// pushes away from collision box 
-			/*if ( abs(hInfo.hitVector.x) > abs(hInfo.hitVector.y) ) {
-				*m_position = m_position->add(Utils::Vector2D(-m_velocity->x, 0));
-				std::cout << "pushed by: " << -m_velocity->x << ", " << 0 << "\n";
-			}
-			else {
-				*m_position = m_position->add(Utils::Vector2D(0, -m_velocity->y));
-				std::cout << "pushed by: " << 0 << ", " << -m_velocity->y << "\n";
-			}*/
-			//std::cout << "now at: " << m_position->x << ", " << m_position->y << "\n";
-
 
 			// Create colliders iterator
         	std::list<SDL_Rect>::iterator iterCol2;

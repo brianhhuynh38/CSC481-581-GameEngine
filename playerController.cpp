@@ -18,16 +18,10 @@ namespace Controllers {
     void PlayerController::movementInput() {
         // gets maxSpeed from player
         float speed = player->getMaxSpeed();
-        Utils::Vector2D moveVector;
-        // gets players current velocity
-        if (useAcceleration){
-            moveVector = *(player->getAcceleration());
-        }
-        //else {
-        //    moveVector = Utils::Vector2D(0,0);
-        //}
-        //moveVector = *(player->getVelocity());
-        moveVector = *(player->getAcceleration());
+        Utils::Vector2D moveVector = Utils::Vector2D(0,0);
+        moveVector.y = player->getAcceleration()->y;
+        
+        
 
         // horizontal movement
         if (inputHandler.keyboard[SDL_SCANCODE_RIGHT] == 1) {
@@ -47,14 +41,14 @@ namespace Controllers {
             }
         }
 
-        // vertical movement
+        // vertical movement (platformer)
         if (platformerMovement) {
             if (inputHandler.keyboard[SDL_SCANCODE_DOWN] == 1) {
 
             }
             // Jump
             if (inputHandler.keyboard[SDL_SCANCODE_UP] == 1 && player->getIsGrounded()) {
-                moveVector.y += player->getJumpVector()->y;
+                moveVector.y = player->getJumpVector()->y;
                 player->setIsGrounded(false);
             }
         }

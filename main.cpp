@@ -10,6 +10,7 @@
 #include "entity.h"
 #include "stage.h"
 #include "player.h"
+#include "movingEntity.h"
 #include "configIO.h"
 #include "playerController.h"
 #include "entityController.h"
@@ -19,8 +20,10 @@
 Display *display;
 /// The entity that the player is able to control
 Entities::Player *player;
-/// Bullet entity (TEST)
+/// Ball entity (TEST)
 Entities::Entity *ball;
+/// movingBox entity (TEST)
+Entities::Entity *movingBox;
 /// floor entity (TEST)
 Entities::Entity *ground;
 /// The default player controller
@@ -145,7 +148,7 @@ int main(int argc, char* argv[]) {
 		1.0, 1.0,
 		250.0, 250.0,
 		15.0, 25.0,
-		50000.0,
+		10.0,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
@@ -162,13 +165,20 @@ int main(int argc, char* argv[]) {
 		true
 	);
 	// Create box object that moves (Temp)
-	/*movingBox = new Entities::MovingEntity(
+	movingBox = new Entities::MovingEntity();
+	/*(
 		1.0, 1.0,
 		550.0, 550.0,
 		10.0,
 		"./Assets/Textures/devTexture0.png",
 		false,
 		true,
+		true,
+		false,
+		10,
+		5,
+		800.0,
+		800.0
 	);*/
 	// Create ground object (Temp)
 	ground = new Entities::Entity(
