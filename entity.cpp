@@ -21,6 +21,9 @@ namespace Entities {
 		m_texture = nullptr;
 		m_isStationary = false;
 		m_affectedByPhysics = true;
+		m_colliders = new std::list<SDL_Rect>();
+		m_colliders->emplace_back(SDL_Rect() = {0, 0, 1, 1});
+		m_isVisible = true; // TODO: For future use, currently not doing anything
 	}
 
 	/**
@@ -33,16 +36,20 @@ namespace Entities {
 	* @param isStationary Whether the object should move
 	* @param affectedByPhysics Whether the object is affected by physics
 	*/
-	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float mass,
+	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
+		m_size = new Utils::Vector2D(width, height);
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_mass = mass;
 		m_texture = Render::loadTexture(textureFilepath);
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
+		m_colliders = new std::list<SDL_Rect>();
+		m_colliders->emplace_back(SDL_Rect() = {(int) positionX, (int) positionY, (int) (scaleX * width), (int) (scaleY * height)});
+		m_isVisible = true; // TODO: For future use, currently not doing anything
 	}
 	/**
 	* Returns the scale ratio of the entity
@@ -177,7 +184,7 @@ namespace Entities {
 	* Returns the collider of the entity
 	* @returns The collider of the entity as SDL_Rect
 	*/
-	std::list<SDL_Rect> Entity::getColliders(void) {
+	std::list<SDL_Rect> *Entity::getColliders(void) {
 		return m_colliders;
 	}
 
@@ -187,7 +194,7 @@ namespace Entities {
 	*/
 	void Entity::setColliders(std::list<SDL_Rect> colliders) {
 		try {
-			m_colliders = colliders;
+			*m_colliders = colliders;
 		}
 		catch (std::exception& e) {
 			std::cerr << "ERROR: Could not set colliders: " << e.what();
@@ -207,7 +214,7 @@ namespace Entities {
 		collider.y = y;
 		collider.w = w;
 		collider.h = h;
-		m_colliders.emplace_back(collider);
+		m_colliders->emplace_back(collider);
 	}
 
 	/**

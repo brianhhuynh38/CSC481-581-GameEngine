@@ -31,7 +31,7 @@ namespace Stages {
 	void Stage::drawEntities(void) {
 		// Create entity list iterator
 		std::list<Entities::Entity>::iterator iter;
-		std::list<Entities::Entity> entities = entityController->getEntities();
+		std::list<Entities::Entity> entities = *entityController->getEntities();
 		// Draws each entity
 		for (iter = entities.begin(); iter != entities.end(); ++iter) {
 			Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getScale()->x, iter->getScale()->y);
@@ -107,6 +107,7 @@ namespace Stages {
 		player = new Entities::Player(
 			1.0, 1.0,
 			250.0, 250.0,
+			15.0, 25.0,
 			10.0,
 			"./Assets/Textures/DefaultPlayerTexture1.png",
 			false,

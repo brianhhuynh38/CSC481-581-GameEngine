@@ -42,7 +42,7 @@ namespace Controllers {
 
         // applies movement to player if given vector's magnitude is non-zero
         if (movementVector.getMagnitude() != 0) {
-            std::cout << "movementMagnitude:" << movementVector.getMagnitude() << "\n";  // TESTING!!!
+            //std::cout << "movementMagnitude:" << movementVector.getMagnitude() << "\n";  // TESTING!!!
             player->move(movementVector);
         }
     }

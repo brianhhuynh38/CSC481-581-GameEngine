@@ -6,6 +6,7 @@
 #include "global.h"
 #include "definitions.h"
 #include "collisions.h"
+#include "stage.h"
 
 namespace Entities {
 
@@ -16,6 +17,8 @@ namespace Entities {
 	* @param scaleY: The y component of the object's scale
 	* @param positionX: The x component of the Object's position
 	* @param positionY: The y component of the Object's position
+	* @param width: The width of the Object
+	* @param height: The height component of the Object
 	* @param mass: The mass of the object
 	* @param textureFilepath: The filepath to the object's texture
 	* @param isStationary: Whether or not the object is able to move
@@ -28,12 +31,13 @@ namespace Entities {
 	* @param endPosX: The x component of the position at the end of the object's path
 	* @param endPosY: The y component of the position at the end of the object's path
 	*/
-	MovingEntity::MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float mass,
+	MovingEntity::MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics,
 		bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY) {
 		// Entity parts
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
+		m_size = new Utils::Vector2D(width, height);
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_mass = mass;
@@ -48,6 +52,8 @@ namespace Entities {
 		m_speed = speed;
 		m_startPosition = Utils::Vector2D(positionX, positionY);
 		m_endPosition = Utils::Vector2D(endPosX, endPosY);
+		m_colliders = new std::list<SDL_Rect>();
+		m_colliders->emplace_back(SDL_Rect() = {(int) positionX, (int) positionY, (int) (scaleX * width), (int) (scaleY * height)});
 	}
 
 	/**
@@ -56,38 +62,71 @@ namespace Entities {
 	*/
 	void MovingEntity::move() {
 		// Find distance that is travelled within the allotted deltaTime
-		float distance = m_speed * (timeline.getDeltaTime() / 1000);
+		float distance = m_speed * (float) (timeline.getDeltaTime() / 1000.0f);
 		// Move the object if it is not frozen and is not paused by the timer
 		if (!m_isStationary && m_currentTimer <= 0) {
 			// Move the object back to the start position
 			if (m_reverse) {
 				// Move the object the calculated distance
 				m_position->x -= distance;
+				
+				// Create colliders iterator
+        		std::list<SDL_Rect>::iterator iterCol;
+
+        		// Loop through colliders
+        		for (iterCol = m_colliders->begin(); iterCol != m_colliders->end(); ++iterCol) {
+					// Move the colliders the calculated distance
+					iterCol->x -= distance;
+				}
+
 				// If the object moves past the start position, set to lower bound, then set currentTimer
 				if (m_position->x < m_startPosition.x) {
 					m_position->x = m_startPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
-				// If the object collided or went too far to the left or right
-				if( ( m_position->x < 0 ) || ( m_position->x + m_scale->x > DEFAULT_WIDTH) /* || checkCollisions(m_colliders, m_entities) */ ) {
+				// If the object collided going left or right
+				if( checkCollisions(m_colliders, entityController->getEntities()) ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
-					// mPosX -= mVelX;
-        			// mCollider.x = mPosX;
+					m_position->x += distance;
+
+					// Create colliders iterator
+        			std::list<SDL_Rect>::iterator iterCol2;
+
+					// Move the colliders back the calculated distance
+					for (iterCol2 = m_colliders->begin(); iterCol2 != m_colliders->end(); ++iterCol2) {
+						iterCol2->x += distance;
+					}
 				}
 			}
 			else { // Move the object towards the end position
 				// Move the object the calculated distance
 				m_position->x += distance;
+				
+				// Create colliders iterator
+        		std::list<SDL_Rect>::iterator iterCol;
+				
+        		// Loop through colliders
+        		for (iterCol = m_colliders->begin(); iterCol != m_colliders->end(); ++iterCol) {
+					// Move the colliders the calculated distance
+					iterCol->y += distance;
+				}
+
 				// If the object moves past the end position, set to upper bound, then set currentTimer
 				if (m_position->x > m_endPosition.x) {
 					m_position->x = m_endPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
-				// If the object collided or went too far up or down
-				if( ( m_position->y < 0 ) || ( m_position->y + m_scale->y > DEFAULT_HEIGHT ) /* || checkCollisions(m_colliders, m_entities)*/ ) {
+				// If the object collided going up or down
+				if (checkCollisions(m_colliders, entityController->getEntities())) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
-					// mPosY -= mVelY;
-        			// mCollider.y = mPosY;
+					m_position->y -= distance;
+					// Create colliders iterator
+        			std::list<SDL_Rect>::iterator iterCol2;
+
+					// Move the colliders back the calculated distance
+					for (iterCol2 = m_colliders->begin(); iterCol2 != m_colliders->end(); ++iterCol2) {
+						iterCol2->y -= distance;
+					}
 				}
 			}
 		}

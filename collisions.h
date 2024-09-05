@@ -21,6 +21,6 @@ bool checkCollision(SDL_Rect a, SDL_Rect b);
  * This was referenced from the SDL2 tutorial:
  * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
  */
-bool checkCollisions(std::list<SDL_Rect> collisions, std::list<Entities::Entity> entities);
+bool checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities);
 
 #endif

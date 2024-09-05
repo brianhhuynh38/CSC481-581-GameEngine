@@ -2,10 +2,13 @@
 #include "global.h"
 
 Physics::Physics() {
-	// default
+	// default value
 	m_gravity = 9.81f;
 }
 
+/**
+* Sets the gravity value
+*/
 void Physics::setGravity(float gravity) {
 	m_gravity = gravity;
 }
