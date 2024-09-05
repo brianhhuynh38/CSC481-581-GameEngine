@@ -18,27 +18,32 @@ namespace Controllers {
     void PlayerController::movementInput() {
         // gets maxSpeed from player
         float speed = player->getMaxSpeed();
-        Utils::Vector2D velocity;
+        Utils::Vector2D moveVector;
         // gets players current velocity
         if (useAcceleration){
-            velocity = *(player->getVelocity());
+            moveVector = *(player->getAcceleration());
         }
+        //else {
+        //    moveVector = Utils::Vector2D(0,0);
+        //}
+        //moveVector = *(player->getVelocity());
+        moveVector = *(player->getAcceleration());
 
         // horizontal movement
         if (inputHandler.keyboard[SDL_SCANCODE_RIGHT] == 1) {
             if (useAcceleration) {
-                velocity.x += speed;
+                moveVector.x += speed;
             }
             else {
-                velocity.x = speed;
+                moveVector.x = speed;
             }
         }
         if (inputHandler.keyboard[SDL_SCANCODE_LEFT] == 1) {
             if (useAcceleration) {
-                velocity.x -= speed;
+                moveVector.x -= speed;
             }
             else {
-                velocity.x = -speed;
+                moveVector.x = -speed;
             }
         }
 
@@ -49,7 +54,7 @@ namespace Controllers {
             }
             // Jump
             if (inputHandler.keyboard[SDL_SCANCODE_UP] == 1 && player->getIsGrounded()) {
-                velocity.y += player->getJumpVector()->y;
+                moveVector.y += player->getJumpVector()->y;
                 player->setIsGrounded(false);
             }
         }
@@ -57,32 +62,40 @@ namespace Controllers {
             // vertical movement (top down)
             if (inputHandler.keyboard[SDL_SCANCODE_DOWN] == 1) {
                 if (useAcceleration) {
-                    velocity.y += speed;
+                    moveVector.y += speed;
                 }
                 else {
-                    velocity.y = speed;
+                    moveVector.y = speed;
                 }
             }
             if (inputHandler.keyboard[SDL_SCANCODE_UP] == 1) {
                 if (useAcceleration) {
-                    velocity.y -= speed;
+                    moveVector.y -= speed;
                 }
                 else {
-                    velocity.y = -speed;
+                    moveVector.y = -speed;
                 }
             }
         }
 
         // if moving diagonally, multiplies vectors xy values by cos(45deg)
-        if (!platformerMovement && velocity.x != 0 && velocity.y != 0) {
-            velocity.x *= 0.525322;
-            velocity.y *= 0.525322;
+        if (!platformerMovement && moveVector.x != 0 && moveVector.y != 0) {
+            moveVector.x *= 0.525322;
+            moveVector.y *= 0.525322;
         }
-        // applies movement to player if given vector's magnitude is non-zero
-        if (velocity.getMagnitude() != 0) {
-            //std::cout << "movementMagnitude:" << velocity.getMagnitude() << "\n";  // TESTING!!!
-            player->move(velocity);
-        }
+        
+        //std::cout << "movementMagnitude:" << moveVector.getMagnitude() << "\n";  // TESTING!!!
+        //if (useAcceleration) {
+        //    player->move(moveVector);
+        //    //physics.applyForce(player, moveVector);
+        //    //std::cout << "applyForce: (" << moveVector.x << ", " << moveVector.y << ")\n";
+        //}
+        //else {
+        //    player->move(moveVector);
+        //}
+        player->setVelocity(moveVector.x, moveVector.y);
+        player->move(moveVector);
+        
     }
 
     /**

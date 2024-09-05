@@ -18,7 +18,7 @@ namespace Entities {
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_jumpVector = new Utils::Vector2D(0.0, -5.0);
+		m_jumpVector = new Utils::Vector2D(0.0, -6.0);
 
 		m_texture = Render::loadTexture(textureFilepath);
 
@@ -36,6 +36,21 @@ namespace Entities {
 	 */
 	void Player::move(Utils::Vector2D movementVector) {
 		Utils::Vector2D oldPosition = *m_position;
+
+		// quick fix for geting to fast
+		float maxMove = 10;
+		if (movementVector.x > maxMove) {
+			movementVector.x = maxMove;
+		}
+		else if (movementVector.x < -maxMove) {
+			movementVector.x = -maxMove;
+		}
+		if (movementVector.y > maxMove) {
+			movementVector.y = maxMove;
+		}
+		else if (movementVector.y < -maxMove) {
+			movementVector.y = -maxMove;
+		}
 
 		// update velocity
 		*m_velocity = movementVector;

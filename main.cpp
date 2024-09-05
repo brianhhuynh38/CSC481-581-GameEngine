@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 		1.0, 1.0,
 		250.0, 250.0,
 		15.0, 25.0,
-		10.0,
+		50000.0,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,

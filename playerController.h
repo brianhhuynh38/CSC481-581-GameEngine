@@ -18,7 +18,7 @@ namespace Controllers {
         /** whether or not this controller uses acceleration in it's movement calculations */
         bool useAcceleration = false;
         /** sets movement to move like a platformer (temp value) */
-        bool platformerMovement = false;
+        bool platformerMovement = true;
 
         /** 2D movement vector to be applied to the player */
         //Utils::Vector2D movementVector = Utils::Vector2D(0,0);

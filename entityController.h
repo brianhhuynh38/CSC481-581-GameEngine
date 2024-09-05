@@ -1,5 +1,7 @@
 #include "entity.h"
 #include <list>
+#include <SDL.h>
+#include <iostream>
 
 #pragma once
 

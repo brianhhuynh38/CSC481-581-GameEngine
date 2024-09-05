@@ -92,7 +92,7 @@ namespace Entities {
 	 * @param position: The position to add to the current position
 	 */
 	void Entity::updatePosition(Utils::Vector2D position) {
-		m_position->add(position);
+		*m_position = m_position->add(position);
 	}
 
 	/**
@@ -134,7 +134,7 @@ namespace Entities {
 	* @param velocity: The velocity to add to the current velocity
 	*/
 	void Entity::updateVelocity(Utils::Vector2D velocity) {
-		m_velocity->add(velocity);
+		*m_velocity = m_velocity->add(velocity);
 	}
 
 	/**
@@ -159,7 +159,7 @@ namespace Entities {
 	* @param acceleration: The acceleration to add to the current acceleration
 	*/
 	void Entity::updateAcceleration(Utils::Vector2D acceleration) {
-		m_acceleration->add(acceleration);
+		*m_acceleration = m_acceleration->add(acceleration);
 	}
 
 	/**
@@ -169,6 +169,8 @@ namespace Entities {
 	*/
 	void Entity::setAcceleration(float accelerationX, float accelerationY) {
 		m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
+		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
+		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
 	}
 
 	/**
