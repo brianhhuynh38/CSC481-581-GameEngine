@@ -22,7 +22,6 @@ void EntityController::updateEntities() {
 	std::list<Entities::MovingEntity>::iterator movIter;
 	// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
 	for (movIter = (*m_movingEntities).begin(); movIter != (*m_movingEntities).end(); ++movIter) {
-		std::cout << "MOVINGENTITIYY";
 		movIter->move();
 	}
 }

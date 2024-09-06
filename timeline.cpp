@@ -13,8 +13,8 @@ void Timeline::updateTime() {
 	m_currentTicks = SDL_GetTicks64();
 	m_deltaTime = (double)((m_currentTicks - m_previousTicks)*1000 / (double)SDL_GetPerformanceFrequency());
 	m_previousTicks = m_currentTicks;
-	std::cout << "dTime: " << m_deltaTime << "ms\n";
-
+	//std::cout << "dTime: " << m_deltaTime << "ms\n";
+	
 }
 
 double Timeline::getDeltaTime() {

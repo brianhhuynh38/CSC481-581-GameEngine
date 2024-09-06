@@ -29,6 +29,14 @@ namespace Render {
 	void presentScene(void) {
 		// Updates screen with anything that needs to be renderered
 		SDL_RenderPresent(display->renderer);
+		if (proportionalScalingActive) {
+			// Renders given the global scale
+			SDL_RenderSetScale(display->renderer, globalScaling.x, globalScaling.y);
+		}
+		else {
+			// Renders given constant scale
+			SDL_RenderSetScale(display->renderer, 1, 1);
+		}
 	}
 
 	/**

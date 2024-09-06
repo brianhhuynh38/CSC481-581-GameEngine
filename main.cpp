@@ -34,9 +34,20 @@ Controllers::PlayerController *playerController;
 EntityController* entityController;
 /// The InputHandler struct used to keep track of keypresses and other input.
 InputHandler inputHandler;
+
+/// Global scale factor
+Utils::Vector2D globalScaling;
+/// Determines if proportional scaling is active
+bool proportionalScalingActive;
+
+/// The resolution width the window is set to
+int resolutionWidth;
+/// The resolution Height the window is set to
+int resolutionHeight;
+
 /// The physics system
 Physics physics;
-// The timeline used to keep track of time intervals
+/// The timeline used to keep track of time intervals
 Timeline timeline;
 
 /**
@@ -72,7 +83,7 @@ void initSDL(void) {
 	// Create window that is centered
 	// TODO: Might change later to not automatically use default resolution and have it adjust
 	display->window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		DEFAULT_WIDTH, DEFAULT_HEIGHT, windowFlags);
+		resolutionWidth, resolutionHeight, windowFlags);
 	// Exit if the window fails to open
 	if (!display->window) {
 		std::cout << "The window was unable to open: " << SDL_GetError();
@@ -129,7 +140,13 @@ int main(int argc, char* argv[]) {
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	display = new Display;
 
-	//inputHandler = new InputHandler;
+	// Create Timeline
+	timeline = Timeline();
+	// Create physics
+	physics = Physics();
+
+	// Loads in config file to read and get configured gravity
+	loadConfigFile();
 	
 	// Initialize SDL components
 	initSDL();
@@ -180,7 +197,7 @@ int main(int argc, char* argv[]) {
 		true,
 		false,
 		10,
-		5,
+		500,
 		800.0,
 		800.0
 	);
@@ -214,14 +231,23 @@ int main(int argc, char* argv[]) {
 	entityController->addEntity(*ground);
 	entityController->addEntity(*platform);
 	entityController->addEntity(*ball);
+	entityController->addEntity(*movingBox);
+	entityController->addMovingEntity(*movingBox);
 	
-	// Create Timeline
-	timeline = Timeline();
-	// Create physics
-	physics = Physics(); 
+	
 
-	// Loads in config file to read and get configured gravity
-	loadConfigFile();
+	// Get current window size
+	int* w = new int(0);
+	int* h = new int(0);
+	SDL_GetWindowSizeInPixels(display->window, w, h);
+	std::cout << "WindowSize " << *w << ", " << *h;
+
+	// Sets global scaling to 80 by default (1280x720), 
+	// but sets it to not be on proportional scaling by default
+	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
+	proportionalScalingActive = false;
+
+	std::cout << "globalScaling: " << globalScaling.x << ", " << globalScaling.y;
 
 	// Basic, primitive game loop
 	// TODO: Add ability to reload everything via terminal at some point
@@ -251,7 +277,7 @@ int main(int argc, char* argv[]) {
 		entityController->updateEntities();
 
 		// TEST PRINT for player info (DELETE LATER)
-		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
+		//std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
 		// Display player and floor texture at their locations
 		Render::displayEntity(*player);
@@ -268,6 +294,9 @@ int main(int argc, char* argv[]) {
 
 		capFrameRate(&then, &remainder);
 	}
+
+	delete w;
+	delete h;
 
 	// Success condition
 	return 0;

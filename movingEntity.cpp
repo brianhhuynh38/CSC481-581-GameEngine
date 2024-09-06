@@ -84,29 +84,32 @@ namespace Entities {
 	* TODO: Modify to allow for multidirectional movement in the future
 	*/
 	void MovingEntity::move() {
-		std::cout << "ACTUALLY MOVE \n";
 		// Find distance that is travelled within the allotted deltaTime
-		float distance = m_speed * (float) (timeline.getDeltaTime() / 1000.0f);
+		float distance = m_speed * (float) (timeline.getDeltaTime());
 		// Move the object if it is not frozen and is not paused by the timer
 		if (!m_isStationary && m_currentTimer <= 0) {
+
+			// std::cout << "Entity: " << m_position->x << "Collider: " << m_colliders->front().x;
+
 			// Move the object back to the start position
 			if (m_reverse) {
 				// Move the object the calculated distance
 				m_position->x -= distance;
-				
+
 				// Create colliders iterator
         		std::list<SDL_Rect>::iterator iterCol;
-
-        		// Loop through colliders
-        		for (iterCol = m_colliders->begin(); iterCol != m_colliders->end(); ++iterCol) {
-					// Move the colliders the calculated distance
-					iterCol->x -= distance;
-				}
 
 				// If the object moves past the start position, set to lower bound, then set currentTimer
 				if (m_position->x < m_startPosition.x) {
 					m_position->x = m_startPosition.x;
 					m_currentTimer = m_pauseTimer;
+					m_reverse = false;
+				}
+
+				// Loop through colliders
+        		for (iterCol = m_colliders->begin(); iterCol != m_colliders->end(); ++iterCol) {
+					// Move the colliders the calculated distance
+					iterCol->x = m_position->x;
 				}
 
 				HitInfo hInfo = checkCollisions(m_colliders, entityController->getEntities());
@@ -130,17 +133,18 @@ namespace Entities {
 				
 				// Create colliders iterator
         		std::list<SDL_Rect>::iterator iterCol;
-				
-        		// Loop through colliders
-        		for (iterCol = m_colliders->begin(); iterCol != m_colliders->end(); ++iterCol) {
-					// Move the colliders the calculated distance
-					iterCol->y += distance;
-				}
 
 				// If the object moves past the end position, set to upper bound, then set currentTimer
 				if (m_position->x > m_endPosition.x) {
 					m_position->x = m_endPosition.x;
 					m_currentTimer = m_pauseTimer;
+					m_reverse = true;
+				}
+
+				// Loop through colliders
+        		for (iterCol = m_colliders->begin(); iterCol != m_colliders->end(); ++iterCol) {
+					// Move the colliders the calculated distance
+					iterCol->x = m_position->x;
 				}
 
 				HitInfo hInfo = checkCollisions(m_colliders, entityController->getEntities());

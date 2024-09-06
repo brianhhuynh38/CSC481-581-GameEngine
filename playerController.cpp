@@ -95,22 +95,23 @@ namespace Controllers {
         canPressInput = canPress;
     }
 
-    Uint32 my_callbackfunc(Uint32 interval, void* param) {
-        return NULL;
-    }
-
     /**
      * Checks for action inputs from keys
      */
     void PlayerController::actionInput() {
         setCanPress(false);
-        if (inputHandler.keyboard[SDL_SCANCODE_E] == 1) {
+        if (inputHandler.keyboard[SDL_SCANCODE_E] == 2) {
             std::cout << "ACTION PRESSED\n";  // TESTING!!!
         }
-        if (inputHandler.keyboard[SDL_SCANCODE_MINUS] == 1) {
+        if (inputHandler.keyboard[SDL_SCANCODE_MINUS] == 2) {
+            if (proportionalScalingActive) {
+                proportionalScalingActive = false;
+            } else {
+                proportionalScalingActive = true;
+            }
+            
             std::cout << "SCALING BUTTON PRESSED\n";  // TESTING!!!
         }
-        SDL_AddTimer((33 / 10) * 10, my_callbackfunc, {this});
     }
 
     void PlayerController::setPlayer(Entities::Player *p) {

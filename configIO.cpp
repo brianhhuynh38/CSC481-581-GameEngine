@@ -23,6 +23,14 @@ void loadConfigFile(void) {
 			if (identifier == "gravity") {
 				physics.setGravity(std::stof(value));
 			}
+			else if (identifier == "resolutionWidth") {
+				std::cout << value;
+				resolutionWidth = std::stoi(value);
+			}
+			else if (identifier == "resolutionHeight") {
+				std::cout << value;
+				resolutionHeight = std::stoi(value);
+			}
 		}
 	}
 	file.close();

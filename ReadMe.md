@@ -89,7 +89,7 @@ completely follow this tutorial, applying it to our coordinate system implementa
 
 ### [Lazy Foo' Productions Collider Tutorial](https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php)
 
-The colliders tutorial was used to build the `checkCollision` method, for the calculations of checking for 
+The colliders tutorial was used to build the `checkCollision` method (in the future), for the calculations of checking for 
 collisions between `SDL_Rect` objects. It was also used to understand how to handle the result of a collision, 
 moving the entity back to where it was, in the `Entity::move` method.
 
