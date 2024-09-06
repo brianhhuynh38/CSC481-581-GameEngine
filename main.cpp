@@ -184,7 +184,7 @@ int main(int argc, char* argv[]) {
 	);
 	// Create ground object (Temp)
 	ground = new Entities::Entity(
-		10.0, 1.0,
+		1.0, 1.0,
 		250.0, 550.0,
 		100.0, 50.0,
 		10.0,
@@ -230,16 +230,19 @@ int main(int argc, char* argv[]) {
 		// check player movmentInput (TESTING)
 		playerController->movementInput();
 
+		// check player actionInput (TESTING)
+		playerController->actionInput();
+
 		// Update the physics of all entities
 		entityController->updateEntities();
 
 		// TEST PRINT for player info (DELETE LATER)
-		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
+		// std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
 		// Display player and floor texture at their locations
-		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getScale()->x, player->getScale()->y);
-		Render::displayTexture(ground->getTexture(), ground->getPosition()->x, ground->getPosition()->y, ground->getScale()->x, ground->getScale()->y);
-		Render::displayTexture(ball->getTexture(), ball->getPosition()->x, ball->getPosition()->y, ball->getScale()->x, ball->getScale()->y);
+		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getSize()->x, player->getSize()->y, player->getScale()->x, player->getScale()->y);
+		Render::displayTexture(ground->getTexture(), ground->getPosition()->x, ground->getPosition()->y, ground->getSize()->x, ground->getSize()->y, ground->getScale()->x, ground->getScale()->y);
+		Render::displayTexture(ball->getTexture(), ball->getPosition()->x, ball->getPosition()->y, ball->getSize()->x, ball->getSize()->y, ball->getScale()->x, ball->getScale()->y);
 		
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();

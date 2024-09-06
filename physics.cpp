@@ -30,7 +30,7 @@ void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
 	entity->updateVelocity(entity->getAcceleration()->multConst(deltaTime));
 	// Update position using velocity
 	entity->updatePosition(entity->getVelocity()->multConst(deltaTime));
-	std::cout << "DT:" << deltaTime << "\n";
+	// std::cout << "DT:" << deltaTime << "\n";
 }
 
 /**

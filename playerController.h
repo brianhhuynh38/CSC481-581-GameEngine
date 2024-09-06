@@ -20,6 +20,8 @@ namespace Controllers {
         /** sets movement to move like a platformer (temp value) */
         bool platformerMovement = true;
 
+        bool canPressInput = true;
+
         /** 2D movement vector to be applied to the player */
         //Utils::Vector2D movementVector = Utils::Vector2D(0,0);
     public:
@@ -39,8 +41,11 @@ namespace Controllers {
          */
         void actionInput();
 
-
         void setPlayer(Entities::Player *p);
+
+        bool getCanPress();
+
+        void setCanPress(bool canPress);
 
         //void setMovementRestrictions();
 

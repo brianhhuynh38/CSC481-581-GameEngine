@@ -14,9 +14,11 @@ namespace Stages {
 
 		// Display player texture at player location
 		Render::displayTexture(
-			player->getTexture(), 
-			player->getPosition()->x, 
-			player->getPosition()->y, 
+			player->getTexture(),
+			player->getPosition()->x,
+			player->getPosition()->y,
+			player->getSize()->x,
+			player->getSize()->y,
 			player->getScale()->x, 
 			player->getScale()->y
 		);
@@ -34,7 +36,7 @@ namespace Stages {
 		std::list<Entities::Entity> entities = *entityController->getEntities();
 		// Draws each entity
 		for (iter = entities.begin(); iter != entities.end(); ++iter) {
-			Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getScale()->x, iter->getScale()->y);
+			Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getSize()->x, iter->getSize()->y, iter->getScale()->x, iter->getScale()->y);
 		}
 	}
 
@@ -118,7 +120,7 @@ namespace Stages {
 		//m_players.insert();
 
 		player->setTexture( (char*) "./Assets/Textures/DefaultPlayerTexture1.png");
-		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getScale()->x, player->getScale()->y);
+		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getSize()->x, player->getSize()->y, player->getScale()->x, player->getScale()->y);
 		
 	} 
 
