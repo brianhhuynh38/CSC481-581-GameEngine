@@ -21,7 +21,11 @@ SDL2 and SDL2_image libraries in Project properties:
 
 To exit the engine, press the `ESCAPE` key.
 
-To control the player, use the `ARROW KEYS` for movement.
+To control the player, use the `ARROW KEYS` for movement, use `UP ARROW` for jump.
+
+To activate proportional resolution, use the `MINUS KEY` (Base resolution is 1280x720)
+
+Press `E` for nothing (future interact button)
 
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
