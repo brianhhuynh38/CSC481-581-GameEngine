@@ -34,10 +34,12 @@ namespace Render {
 	 * @param texture to display
 	 * @param x coordinate of texture
 	 * @param y coordinate of texture
-	 * @param w width scale of texture
-	 * @param h height scale of texture
+	 * @param w width of texture
+	 * @param h height of texture
+	 * @param sw width scale of texture
+	 * @param sh height scale of texture
 	 */
-	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h, float sh, float sw);
+	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h, float sw, float sh);
 }
 
 #endif

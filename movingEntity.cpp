@@ -84,6 +84,7 @@ namespace Entities {
 	* TODO: Modify to allow for multidirectional movement in the future
 	*/
 	void MovingEntity::move() {
+		std::cout << "ACTUALLY MOVE \n";
 		// Find distance that is travelled within the allotted deltaTime
 		float distance = m_speed * (float) (timeline.getDeltaTime() / 1000.0f);
 		// Move the object if it is not frozen and is not paused by the timer

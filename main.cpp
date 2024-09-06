@@ -23,7 +23,7 @@ Entities::Player *player;
 /// Ball entity (TEST)
 Entities::Entity *ball;
 /// movingBox entity (TEST)
-Entities::Entity *movingBox;
+Entities::MovingEntity *movingBox;
 /// floor entity (TEST)
 Entities::Entity *ground;
 /// The default player controller
@@ -186,7 +186,7 @@ int main(int argc, char* argv[]) {
 	ground = new Entities::Entity(
 		1.0, 1.0,
 		250.0, 550.0,
-		100.0, 50.0,
+		200.0, 50.0,
 		10.0,
 		"./Assets/Textures/devTexture1.png",
 		true,
@@ -197,9 +197,12 @@ int main(int argc, char* argv[]) {
 	playerController = new Controllers::PlayerController(player);
 	//Create entity controller
 	entityController = new EntityController();
-	entityController->addEntity(*player);
+	entityController->addEntity((Entities::Entity) *player);
 	entityController->addEntity(*ground);
 	entityController->addEntity(*ball);
+	entityController->addEntity(*movingBox);
+	// Add MovingEntities
+	entityController->addMovingEntity(*movingBox);
 	
 	// Create Timeline
 	timeline = Timeline();
@@ -243,11 +246,10 @@ int main(int argc, char* argv[]) {
 		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getSize()->x, player->getSize()->y, player->getScale()->x, player->getScale()->y);
 		Render::displayTexture(ground->getTexture(), ground->getPosition()->x, ground->getPosition()->y, ground->getSize()->x, ground->getSize()->y, ground->getScale()->x, ground->getScale()->y);
 		Render::displayTexture(ball->getTexture(), ball->getPosition()->x, ball->getPosition()->y, ball->getSize()->x, ball->getSize()->y, ball->getScale()->x, ball->getScale()->y);
+		Render::displayTexture(movingBox->getTexture(), movingBox->getPosition()->x, movingBox->getPosition()->y, movingBox->getSize()->x, movingBox->getSize()->y, movingBox->getScale()->x, movingBox->getScale()->y);
 		
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
-
-		
 
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
