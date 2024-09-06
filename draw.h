@@ -1,3 +1,5 @@
+#include "entity.h"
+
 #pragma once
 #ifndef DRAW_H
 #define DRAW_H
@@ -38,6 +40,13 @@ namespace Render {
 	 * @param h height scale of texture
 	 */
 	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h, float sh, float sw);
+
+	/**
+	 * Displays the given entities texture
+	 * (just a short version of the displayTexture function)
+	 * @param entity to display
+	 */
+	void displayEntity(Entities::Entity entity);
 }
 
 #endif

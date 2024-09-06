@@ -30,7 +30,6 @@ void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
 	entity->updateVelocity(entity->getAcceleration()->multConst(deltaTime));
 	// Update position using velocity
 	entity->updatePosition(entity->getVelocity()->multConst(deltaTime));
-	// std::cout << "DT:" << deltaTime << "\n";
 }
 
 /**
@@ -50,5 +49,5 @@ void Physics::applyForce(Entities::Entity *entity, Utils::Vector2D forceVector) 
 */
 void Physics::applyGravity(Entities::Entity *entity) {
 	// Gravity value is multiplied by 01 to make it a downward force
-	entity->updateAcceleration(Utils::Vector2D(0, m_gravity));
+	entity->updateAcceleration(Utils::Vector2D(0, m_gravity * entity->getMass()).multConst(timeline.getDeltaTime()));
 }

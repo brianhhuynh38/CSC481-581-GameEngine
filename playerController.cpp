@@ -76,16 +76,8 @@ namespace Controllers {
             moveVector.x *= 0.525322;
             moveVector.y *= 0.525322;
         }
-        
-        //std::cout << "movementMagnitude:" << moveVector.getMagnitude() << "\n";  // TESTING!!!
-        //if (useAcceleration) {
-        //    player->move(moveVector);
-        //    //physics.applyForce(player, moveVector);
-        //    //std::cout << "applyForce: (" << moveVector.x << ", " << moveVector.y << ")\n";
-        //}
-        //else {
-        //    player->move(moveVector);
-        //}
+        moveVector.multConst(timeline.getDeltaTime());
+
         player->setVelocity(moveVector.x, moveVector.y);
 
         // move on x axis
