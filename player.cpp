@@ -77,7 +77,9 @@ namespace Entities {
 		if( hInfo.hit ) {
 			std::cout << "collided\n";
 			// Move back (code below from tutorial. Replace with code that fits our setup)
-			*m_position = oldPosition;
+			//*m_position = oldPosition;
+			*m_position = m_position->add(movementVector.multConst(-1));
+
 
 			// Create colliders iterator
         	std::list<SDL_Rect>::iterator iterCol2;

@@ -88,7 +88,11 @@ namespace Controllers {
         //    player->move(moveVector);
         //}
         player->setVelocity(moveVector.x, moveVector.y);
-        player->move(moveVector);
+
+        // move on x axis
+        player->move(Utils::Vector2D(moveVector.x, 0));
+        // move on y axis
+        player->move(Utils::Vector2D(0, moveVector.y));
         
     }
 
