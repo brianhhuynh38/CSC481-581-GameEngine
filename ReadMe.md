@@ -17,7 +17,7 @@ SDL2 and SDL2_image libraries in Project properties:
 
 **Additional Dependencies**: `SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)`
 
-There is a `config.ini file where certain variables can be modified and customized:
+There is a `config.ini` file where certain variables can be modified and customized:
  - Resolution
  - Gravity
 
