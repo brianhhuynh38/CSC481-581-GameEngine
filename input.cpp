@@ -31,7 +31,9 @@ namespace Input {
 
 		// checks interact input (E)
 		checkKeyState(SDL_SCANCODE_E, keyboardState);
-		
+
+		// checks change to scaling/constant size input (-)
+		checkKeyState(SDL_SCANCODE_MINUS, keyboardState);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 #include "playerController.h"
 
 #include "global.h"
+#include "SDL.h"
 
 namespace Controllers {
     
@@ -20,8 +21,6 @@ namespace Controllers {
         float speed = player->getMaxSpeed();
         Utils::Vector2D moveVector = Utils::Vector2D(0,0);
         moveVector.y = player->getAcceleration()->y;
-        
-        
 
         // horizontal movement
         if (inputHandler.keyboard[SDL_SCANCODE_RIGHT] == 1) {
@@ -96,13 +95,30 @@ namespace Controllers {
         
     }
 
+    bool PlayerController::getCanPress() {
+        return canPressInput;
+    }
+
+    void PlayerController::setCanPress(bool canPress) {
+        canPressInput = canPress;
+    }
+
+    Uint32 my_callbackfunc(Uint32 interval, void* param) {
+        return NULL;
+    }
+
     /**
      * Checks for action inputs from keys
      */
     void PlayerController::actionInput() {
+        setCanPress(false);
         if (inputHandler.keyboard[SDL_SCANCODE_E] == 1) {
             std::cout << "ACTION PRESSED\n";  // TESTING!!!
         }
+        if (inputHandler.keyboard[SDL_SCANCODE_MINUS] == 1) {
+            std::cout << "SCALING BUTTON PRESSED\n";  // TESTING!!!
+        }
+        SDL_AddTimer((33 / 10) * 10, my_callbackfunc, {this});
     }
 
     void PlayerController::setPlayer(Entities::Player *p) {

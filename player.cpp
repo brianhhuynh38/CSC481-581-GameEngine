@@ -75,7 +75,7 @@ namespace Entities {
 
 		// If the object collided with something
 		if( hInfo.hit ) {
-			std::cout << "collided\n";
+			//std::cout << "collided\n";
 			// Move back (code below from tutorial. Replace with code that fits our setup)
 			//*m_position = oldPosition;
 			*m_position = m_position->add(movementVector.multConst(-1));

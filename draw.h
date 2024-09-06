@@ -37,8 +37,7 @@ namespace Render {
 	 * @param w width scale of texture
 	 * @param h height scale of texture
 	 */
-	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h);
-
+	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h, float sh, float sw);
 }
 
 #endif
