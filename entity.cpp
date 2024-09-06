@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <list>
+#include <algorithm>
 
 #include "entity.h"
 #include "vector2D.h"
@@ -10,41 +11,56 @@
 namespace Entities {
 
 	/**
-	* Default constructor that sets all values to 0
+	* Default constructor that sets all values to their defaults
 	*/
 	Entity::Entity() {
 		m_scale = new Utils::Vector2D(1.0, 1.0);
 		m_position = new Utils::Vector2D(0.0, 0.0);
+		m_size = new Utils::Vector2D(0.0, 0.0);
+
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
+		m_velocity_max = 10;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
+		m_acceleration_max = 10;
 		m_mass = 5;
-		m_texture = nullptr;
+
+		m_texture = Render::loadTexture(".\Assets\Textures\MissingTexture.png");
+
 		m_isStationary = false;
-		m_affectedByPhysics = true;
+		m_affectedByPhysics = false;
 		m_colliders = new std::list<SDL_Rect>();
 		m_colliders->emplace_back(SDL_Rect() = {0, 0, 1, 1});
 		m_isVisible = true; // TODO: For future use, currently not doing anything
 	}
 
 	/**
-	* Constructs an entity and initializes all pointer fields.
-	* 
-	* @param scaleX X component of scaling multipliers for rendering
-	* @param scaleY Y component of scaling multipliers for rendering
-	* @param position The coordinates where the Entity is located
-	* @param textureFilepath The filepath to where the texture is located
-	* @param isStationary Whether the object should move
-	* @param affectedByPhysics Whether the object is affected by physics
-	*/
+	 * Constructs an entity and initializes all pointer fields.
+	 *
+	 * @param scaleX X component of scaling multipliers for rendering
+	 * @param scaleY Y component of scaling multipliers for rendering
+	 * @param positionX The X coordinates where the Entity is located
+	 * @param positionY The Y coordinates where the Entity is located
+	 * @param width The width size of the Entity
+	 * @param height The height size of the Entity
+	 * @param mass The mass of the Entity
+	 * @param textureFilepath The filepath to where the texture is located
+	 * @param isStationary Whether the object should move
+	 * @param affectedByPhysics Whether the object is affectedByPhysics
+	 */
 	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
-		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_mass = mass;
+
+		m_velocity = new Utils::Vector2D(0.0, 0.0);
+		m_velocity_max = 10;
+		m_acceleration = new Utils::Vector2D(0.0, 0.0);
+		m_acceleration_max = 10;
+
 		m_texture = Render::loadTexture(textureFilepath);
+
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
 		m_colliders = new std::list<SDL_Rect>();
@@ -52,51 +68,68 @@ namespace Entities {
 		m_isVisible = true; // TODO: For future use, currently not doing anything
 	}
 	/**
-	* Returns the scale ratio of the entity
-	* @returns The scale ratio of the entity as a 2D vector
-	*/
+	 * Returns the scale ratio of the entity
+	 * @returns The scale ratio of the entity as a 2D vector
+	 */
 	Utils::Vector2D *Entity::getScale(void) {
 		return m_scale;
 	}
 
 	/**
-	* Sets new values to the scale ratio
-	* @param scaleX The new x value of the scale to set
-	* @param scaleY The new y value of the scale to set
-	*/
+	 * Sets new values to the scale ratio
+	 * @param scaleX The new x value of the scale to set
+	 * @param scaleY The new y value of the scale to set
+	 */
 	void Entity::setScale(float scaleX, float scaleY) {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 	}
 
 	/**
-	* Returns the position of the entity
-	* @returns The position of the entity as a 2D vector
-	*/
+	 * Returns the position of the entity
+	 * @returns The position of the entity as a 2D vector
+	 */
 	Utils::Vector2D *Entity::getPosition(void) {
 		return m_position;
 	}
 
 	/**
-	* Adds the parameter position vector to the Entity's current position vector
-	* @param position: The position to add to the current position
-	*/
+	 * Adds the parameter position vector to the Entity's current position vector
+	 * @param position: The position to add to the current position
+	 */
 	void Entity::updatePosition(Utils::Vector2D position) {
-		m_position->add(position);
+		*m_position = m_position->add(position);
 	}
 
 	/**
-	* Sets new values to the position ratio
-	* @param positionX The new x value of the position to set
-	* @param positionY The new y value of the position to set
-	*/
+	 * Sets new values to the position ratio
+	 * @param positionX The new x value of the position to set
+	 * @param positionY The new y value of the position to set
+	 */
 	void Entity::setPosition(float positionX, float positionY) {
 		m_position = new Utils::Vector2D(positionX, positionY);
 	}
 
 	/**
-	* Returns the velocity of the entity
-	* @returns The velocity of the entity as a 2D vector
-	*/
+	 * Returns the width and height as a vector2D
+	 * @return m_size
+	 */
+	Utils::Vector2D* Entity::getSize(void) {
+		return m_size;
+	}
+
+	/**
+	 * sets the height and width
+	 * @param width to set
+	 * @param height to set
+	 */
+	void Entity::setSize(float width, float height) {
+		m_size = new Utils::Vector2D(width, height);
+	}
+
+	/**
+	 * Returns the velocity of the entity
+	 * @returns The velocity of the entity as a 2D vector
+	 */
 	Utils::Vector2D *Entity::getVelocity(void) {
 		return m_velocity;
 	}
@@ -106,7 +139,10 @@ namespace Entities {
 	* @param velocity: The velocity to add to the current velocity
 	*/
 	void Entity::updateVelocity(Utils::Vector2D velocity) {
-		m_velocity->add(velocity);
+		Utils::Vector2D vel = (m_velocity->add(velocity));
+		vel.x = std::max(std::min(vel.x, m_velocity_max), -m_velocity_max);
+		vel.y = std::max(std::min(vel.y, m_velocity_max), -m_velocity_max);
+		*m_velocity = vel;
 	}
 
 	/**
@@ -131,7 +167,10 @@ namespace Entities {
 	* @param acceleration: The acceleration to add to the current acceleration
 	*/
 	void Entity::updateAcceleration(Utils::Vector2D acceleration) {
-		m_acceleration->add(acceleration);
+		Utils::Vector2D acc = (m_acceleration->add(acceleration));
+		acc.x = std::max(std::min(acc.x, m_acceleration_max), -m_acceleration_max);
+		acc.y = std::max(std::min(acc.y, m_acceleration_max), -m_acceleration_max);
+		*m_acceleration = acc;
 	}
 
 	/**
@@ -141,6 +180,8 @@ namespace Entities {
 	*/
 	void Entity::setAcceleration(float accelerationX, float accelerationY) {
 		m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
+		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
+		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
 	}
 
 	/**
@@ -215,6 +256,22 @@ namespace Entities {
 		collider.w = w;
 		collider.h = h;
 		m_colliders->emplace_back(collider);
+	}
+
+	/**
+	 * Returns true if this entity should be affected by physics
+	 * @return affectedByPhysics
+	 */
+	bool Entity::getAffectedByPhysics(void) {
+		return m_affectedByPhysics;
+	}
+
+	/**
+	 * Sets value of affectedByPhysics for the entity
+	 * @param affectedByPhysics
+	 */
+	void Entity::setAffectedByPhysics(bool affectedByPhysics) {
+		m_affectedByPhysics = affectedByPhysics;
 	}
 
 	/**

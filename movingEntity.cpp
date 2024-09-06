@@ -10,6 +10,29 @@
 
 namespace Entities {
 
+	MovingEntity::MovingEntity() {
+		// Entity parts
+		m_scale = new Utils::Vector2D(1, 1);
+		m_position = new Utils::Vector2D(300, 300);
+		m_size = new Utils::Vector2D(1, 1);
+		m_velocity = new Utils::Vector2D(0.0, 0.0);
+		m_acceleration = new Utils::Vector2D(0.0, 0.0);
+		m_mass = 1;
+		m_texture = Render::loadTexture(".\Assets\Textures\MissingTexture.png");
+		m_isStationary = false;
+		m_affectedByPhysics = true;
+		// MovingEntity parts
+		m_continuous = true;
+		m_reverse = false;
+		m_pauseTimer = 10;
+		m_currentTimer = 0;
+		m_speed = 5;
+		m_startPosition = Utils::Vector2D(300, 300);
+		m_endPosition = Utils::Vector2D(800, 500);
+		m_colliders = new std::list<SDL_Rect>();
+		m_colliders->emplace_back(SDL_Rect() = { (int)m_position->x, (int)m_position->y, (int)(m_scale->x * m_size->x), (int)(m_scale->y * m_size->y) });
+	}
+
 	/**
 	* The constructor for the moving entity. This implementation moves from left to right.
 	* 
@@ -84,8 +107,10 @@ namespace Entities {
 					m_position->x = m_startPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
+
+				HitInfo hInfo = checkCollisions(m_colliders, entityController->getEntities());
 				// If the object collided going left or right
-				if( checkCollisions(m_colliders, entityController->getEntities()) ) {
+				if( hInfo.hit ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
 					m_position->x += distance;
 
@@ -116,8 +141,11 @@ namespace Entities {
 					m_position->x = m_endPosition.x;
 					m_currentTimer = m_pauseTimer;
 				}
+
+				HitInfo hInfo = checkCollisions(m_colliders, entityController->getEntities());
+				
 				// If the object collided going up or down
-				if (checkCollisions(m_colliders, entityController->getEntities())) {
+				if ( hInfo.hit ) {
 					// Move back (code below from tutorial. Replace with code that fits our setup)
 					m_position->y -= distance;
 					// Create colliders iterator

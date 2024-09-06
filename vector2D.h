@@ -27,6 +27,7 @@ namespace Utils {
 		float getMagnitude(void);
 
 		Vector2D normalizeVector(void);
+
 	};
 }
 

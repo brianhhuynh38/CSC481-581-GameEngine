@@ -76,4 +76,6 @@ namespace Utils {
 	Vector2D Vector2D::normalizeVector(void) {
 		return this->divideConst(getMagnitude());
 	}
+
+
 }

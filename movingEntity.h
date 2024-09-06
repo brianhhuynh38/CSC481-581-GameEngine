@@ -29,6 +29,12 @@ namespace Entities {
 		/** The entity's destination */
 		Utils::Vector2D m_endPosition;
 	public:
+
+		/**
+		 * Default constructor
+		 */
+		MovingEntity();
+
 		/**
 		* The constructor for MovingEntity
 		* 

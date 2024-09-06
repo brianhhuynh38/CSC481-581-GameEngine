@@ -10,9 +10,12 @@ EntityController::EntityController() {
 void EntityController::updateEntities() {
 	// Create list iterator
 	std::list<Entities::Entity>::iterator iter;
-	// Updates the physics vectors for each entity in the list of entities
+	// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
 	for (iter = (*m_entities).begin(); iter != (*m_entities).end(); ++iter) {
-		physics.updateEntityPhysicsVectors(*iter);
+		if ((*iter).getAffectedByPhysics()) {
+			physics.updateEntityPhysicsVectors(&(*iter));
+			//std::cout << "phys";
+		}
 	}
 }
 

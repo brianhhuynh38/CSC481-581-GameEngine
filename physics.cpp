@@ -20,13 +20,27 @@ void Physics::setGravity(float gravity) {
 * 
 * @param entity: The entity being updated
 */
-void Physics::updateEntityPhysicsVectors(Entities::Entity entity) {
+void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
 	// Get delta time to find and update velocity and acceleration
 	int deltaTime = timeline.getDeltaTime();
-	// Update position using velocity
-	entity.updatePosition(entity.getVelocity()->multConst(deltaTime));
+
+	applyGravity(entity);
+
 	// Update velocity using acceleration
-	entity.updateVelocity(entity.getAcceleration()->multConst(deltaTime));
+	entity->updateVelocity(entity->getAcceleration()->multConst(deltaTime));
+	// Update position using velocity
+	entity->updatePosition(entity->getVelocity()->multConst(deltaTime));
+	std::cout << "DT:" << deltaTime << "\n";
+}
+
+/**
+ * Applies the given force to the given entity
+ * @param entity to apply force too
+ * @param forceVector to apply
+ */
+void Physics::applyForce(Entities::Entity *entity, Utils::Vector2D forceVector) {
+	entity->updateAcceleration(forceVector.divideConst(entity->getMass()));
+	std::cout << "applyForce: (" << forceVector.x << ", " << forceVector.y << ")\n";
 }
 
 /**
@@ -34,7 +48,7 @@ void Physics::updateEntityPhysicsVectors(Entities::Entity entity) {
 * 
 * @param entity: The entity to whom gravity is being applied
 */
-void Physics::applyGravity(Entities::Entity entity) {
+void Physics::applyGravity(Entities::Entity *entity) {
 	// Gravity value is multiplied by 01 to make it a downward force
-	entity.updateAcceleration(Utils::Vector2D(0, m_gravity * -1));
+	entity->updateAcceleration(Utils::Vector2D(0, m_gravity));
 }

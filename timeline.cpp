@@ -8,7 +8,11 @@ Timeline::Timeline() {
 }
 
 void Timeline::updateTime() {
-	m_deltaTime = SDL_GetTicks64() - m_previousTicks;
+	unsigned int temp = m_deltaTime;
+	m_deltaTime = (SDL_GetTicks64() - m_previousTicks) / SDL_GetPerformanceFrequency();
+	m_previousTicks = m_deltaTime;
+	
+
 }
 
 unsigned int Timeline::getDeltaTime() {

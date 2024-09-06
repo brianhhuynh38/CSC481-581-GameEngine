@@ -10,6 +10,7 @@
 #include "entity.h"
 #include "stage.h"
 #include "player.h"
+#include "movingEntity.h"
 #include "configIO.h"
 #include "playerController.h"
 #include "entityController.h"
@@ -19,8 +20,10 @@
 Display *display;
 /// The entity that the player is able to control
 Entities::Player *player;
-/// Bullet entity (TEST)
+/// Ball entity (TEST)
 Entities::Entity *ball;
+/// movingBox entity (TEST)
+Entities::Entity *movingBox;
 /// floor entity (TEST)
 Entities::Entity *ground;
 /// The default player controller
@@ -149,9 +152,10 @@ int main(int argc, char* argv[]) {
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
-		5.0
+		0.0f, -50.0f,
+		6.0
 	);
-	// Create temporary ball object
+	// Create ball object (Temp)
 	ball = new Entities::Entity(
 		1.0, 1.0,
 		550.0, 250.0,
@@ -161,18 +165,26 @@ int main(int argc, char* argv[]) {
 		false,
 		true
 	);
-	// Create temporary box object that moves
-	/*ball = new Entities::MovingEntity(
+	// Create box object that moves (Temp)
+	movingBox = new Entities::MovingEntity
+	(
 		1.0, 1.0,
 		550.0, 550.0,
 		10.0,
+		50.0f, 50.0f,
 		"./Assets/Textures/devTexture0.png",
 		false,
 		true,
-	);*/
-	// Create temporary ground object
+		true,
+		false,
+		10,
+		5,
+		800.0,
+		800.0
+	);
+	// Create ground object (Temp)
 	ground = new Entities::Entity(
-		20.0, 12.0,
+		10.0, 1.0,
 		250.0, 550.0,
 		100.0, 50.0,
 		10.0,
@@ -218,6 +230,12 @@ int main(int argc, char* argv[]) {
 		// check player movmentInput (TESTING)
 		playerController->movementInput();
 
+		// Update the physics of all entities
+		entityController->updateEntities();
+
+		// TEST PRINT for player info (DELETE LATER)
+		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
+
 		// Display player and floor texture at their locations
 		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getScale()->x, player->getScale()->y);
 		Render::displayTexture(ground->getTexture(), ground->getPosition()->x, ground->getPosition()->y, ground->getScale()->x, ground->getScale()->y);
@@ -226,8 +244,7 @@ int main(int argc, char* argv[]) {
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
 
-		// Update the physics of all entities
-		entityController->updateEntities();
+		
 
 		// Slow down by 16 ms to maintain approximately 62 fps
 		SDL_Delay(16);
