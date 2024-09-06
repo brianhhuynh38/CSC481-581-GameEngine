@@ -152,6 +152,7 @@ int main(int argc, char* argv[]) {
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
+		0.0f, -50.0f,
 		6.0
 	);
 	// Create ball object (Temp)
@@ -165,11 +166,12 @@ int main(int argc, char* argv[]) {
 		true
 	);
 	// Create box object that moves (Temp)
-	movingBox = new Entities::MovingEntity();
-	/*(
+	movingBox = new Entities::MovingEntity
+	(
 		1.0, 1.0,
 		550.0, 550.0,
 		10.0,
+		50.0f, 50.0f,
 		"./Assets/Textures/devTexture0.png",
 		false,
 		true,
@@ -179,7 +181,7 @@ int main(int argc, char* argv[]) {
 		5,
 		800.0,
 		800.0
-	);*/
+	);
 	// Create ground object (Temp)
 	ground = new Entities::Entity(
 		10.0, 1.0,

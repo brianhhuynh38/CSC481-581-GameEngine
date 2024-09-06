@@ -10,7 +10,7 @@ namespace Entities {
 	 * Constructs the Player and initializes all fields
 	 */
 	Player::Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		const char* textureFilepath, bool isStationary, bool affectedByPhysics, float maxSpeed) {
+		const char* textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
@@ -18,7 +18,7 @@ namespace Entities {
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_jumpVector = new Utils::Vector2D(0.0, -25.0);
+		m_jumpVector = new Utils::Vector2D(jumpVectorX, jumpVectorY);
 
 		m_texture = Render::loadTexture(textureFilepath);
 

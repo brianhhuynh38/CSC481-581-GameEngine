@@ -112,6 +112,7 @@ namespace Stages {
 			"./Assets/Textures/DefaultPlayerTexture1.png",
 			false,
 			true,
+			0.0f, -50.0f,
 			1.0
 		);
 		//m_players.insert();

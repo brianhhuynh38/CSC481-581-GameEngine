@@ -18,6 +18,7 @@ void loadConfigFile(void) {
 		std::string identifier, value;
 		while (std::getline(file, identifier, '=')) {
 			std::getline(file, value);
+			std::cout << "Config Value" << value << "\n";
 			// If gravity, convert to float and set gravity
 			if (identifier == "gravity") {
 				physics.setGravity(std::stof(value));
