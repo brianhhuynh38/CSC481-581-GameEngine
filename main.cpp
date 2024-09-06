@@ -26,6 +26,8 @@ Entities::Entity *ball;
 Entities::Entity *movingBox;
 /// floor entity (TEST)
 Entities::Entity *ground;
+/// platform entity (TEST)
+Entities::Entity *platform;
 /// The default player controller
 Controllers::PlayerController *playerController;
 /// Controller for all entities and their physics
@@ -148,11 +150,11 @@ int main(int argc, char* argv[]) {
 		1.0, 1.0,
 		250.0, 250.0,
 		15.0, 25.0,
-		10.0,
+		50.0,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
-		0.0f, -50.0f,
+		0.0f, -150.0f,
 		6.0
 	);
 	// Create ball object (Temp)
@@ -186,9 +188,20 @@ int main(int argc, char* argv[]) {
 	ground = new Entities::Entity(
 		1.0, 1.0,
 		250.0, 550.0,
-		100.0, 50.0,
+		128.0, 64.0,
 		10.0,
 		"./Assets/Textures/devTexture1.png",
+		true,
+		false
+	);
+
+	// Create second ground object (Temp)
+	platform = new Entities::Entity(
+		1.0, 1.0,
+		350.0, 525.0,
+		64.0, 64.0,
+		10.0,
+		"./Assets/Textures/devTexture3.png",
 		true,
 		false
 	);
@@ -199,7 +212,9 @@ int main(int argc, char* argv[]) {
 	entityController = new EntityController();
 	entityController->addEntity(*player);
 	entityController->addEntity(*ground);
+	entityController->addEntity(*platform);
 	entityController->addEntity(*ball);
+	entityController->addEntity(*movingBox);
 	
 	// Create Timeline
 	timeline = Timeline();
@@ -237,13 +252,15 @@ int main(int argc, char* argv[]) {
 		entityController->updateEntities();
 
 		// TEST PRINT for player info (DELETE LATER)
-		// std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
+		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
 		// Display player and floor texture at their locations
-		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getSize()->x, player->getSize()->y, player->getScale()->x, player->getScale()->y);
-		Render::displayTexture(ground->getTexture(), ground->getPosition()->x, ground->getPosition()->y, ground->getSize()->x, ground->getSize()->y, ground->getScale()->x, ground->getScale()->y);
-		Render::displayTexture(ball->getTexture(), ball->getPosition()->x, ball->getPosition()->y, ball->getSize()->x, ball->getSize()->y, ball->getScale()->x, ball->getScale()->y);
-		
+		Render::displayEntity(*player);
+		Render::displayEntity(*ground);
+		Render::displayEntity(*platform);
+		Render::displayEntity(*ball);
+		Render::displayEntity(*movingBox);
+
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
 

@@ -3,11 +3,12 @@
 class Timeline {
 private:
 	_int64 m_previousTicks;
-	unsigned int m_deltaTime;
+	_int64 m_currentTicks;
+	double m_deltaTime;
 public:
 	Timeline();
 
 	void updateTime();
 
-	unsigned int getDeltaTime();
+	double getDeltaTime();
 };
