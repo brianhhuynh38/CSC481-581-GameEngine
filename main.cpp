@@ -112,7 +112,7 @@ static void capFrameRate(long* then, float* remainder) {
 
 	wait = 16 + *remainder;
 
-	*remainder -= (int)*remainder;
+	*remainder -= (int) *remainder;
 
 	frameTime = SDL_GetTicks() - *then;
 
@@ -231,7 +231,7 @@ int main(int argc, char* argv[]) {
 	entityController->addEntity(*ground);
 	entityController->addEntity(*platform);
 	entityController->addEntity(*ball);
-	entityController->addEntity(*movingBox);
+	entityController->addEntity((Entities::Entity) *movingBox);
 	entityController->addMovingEntity(*movingBox);
 	
 	
@@ -280,11 +280,11 @@ int main(int argc, char* argv[]) {
 		//std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
 		// Display player and floor texture at their locations
-		Render::displayEntity(*player);
+		Render::displayEntity((Entities::Entity) *player);
 		Render::displayEntity(*ground);
 		Render::displayEntity(*platform);
 		Render::displayEntity(*ball);
-		Render::displayEntity(*movingBox);
+		Render::displayEntity((Entities::Entity) *movingBox);
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
