@@ -105,3 +105,11 @@ moving the entity back to where it was, in the `Entity::move` method.
 | -------------------------- | ---------------------------------- |
 | [`collisions.cpp`](./collisions.cpp) | |
 | [`entity.cpp`](./entity.cpp) | [`entity.h`](./entity.h) |
+
+## Homework 2
+
+### [CSC 481/581 - Time Lecture Slides](https://docs.google.com/presentation/d/1EZ9PFmYsufonouzSsVSzEfTW6dvkegJ7/edit#slide=id.p67)
+
+In the first homework, `timeline.cpp` was limited to only being used to calculate physics changes.
+As a result, it was only used in fixed timesteps. This reference is used to make the `Timeline` 
+implementation more fleshed out, allowing for more control over the game engine's timeflow.
