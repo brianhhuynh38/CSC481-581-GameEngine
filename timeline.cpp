@@ -22,6 +22,6 @@ void Timeline::updateTime() {
 	
 }
 
-double Timeline::getDeltaTime() {
+int64_t Timeline::getDeltaTime() {
 	return m_deltaTime;
 }
