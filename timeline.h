@@ -8,7 +8,8 @@ private:
 	_int64 m_startingTime;
 	_int64 m_currentTime;
 	double m_deltaTime;
-	Timeline* timeline;
+	float m_scale;
+	Timeline* m_timeline;
 public:
 	Timeline();
 
@@ -19,4 +20,8 @@ public:
 	void pause();
 
 	void unpause();
+
+	void changeTic();
+
+
 };

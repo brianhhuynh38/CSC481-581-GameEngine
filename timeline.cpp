@@ -1,4 +1,3 @@
-#include <SDL_timer.h>
 #include <iostream>
 #include <mutex>
 #include <chrono>

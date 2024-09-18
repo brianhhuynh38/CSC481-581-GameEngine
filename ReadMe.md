@@ -3,6 +3,14 @@ This is Team 1's game engine repository for CSC 581 - Game Engine Foundaations. 
 compilation instructions, as well as our references for each of the tutorials we used while 
 making this project.
 
+## Table of Contents
+
+- [Starting Instructions]
+	- [Controls]
+- [References]
+	- [Homework 1 References](#hw1)
+	- [Homework 2 References](#hw2)
+
 # Starting Instructions
 
 **Compiler**: C++ 17 standard
@@ -37,7 +45,7 @@ will list each tutorial and each file that it was used to construct/influence th
 Additionally, we will provide a short description detailing its use and impact within our codebase. 
 Each tutorial can be accessed by clicking on its title:
 
-## Homework 1
+## Homework 1 {#hw1}
 
 ### [Parallel Realities Shooter Tutorial - Part 1](https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php)
 
@@ -106,7 +114,7 @@ moving the entity back to where it was, in the `Entity::move` method.
 | [`collisions.cpp`](./collisions.cpp) | |
 | [`entity.cpp`](./entity.cpp) | [`entity.h`](./entity.h) |
 
-## Homework 2
+## Homework 2 {#hw2}
 
 ### [CSC 481/581 - Time Lecture Slides](https://docs.google.com/presentation/d/1EZ9PFmYsufonouzSsVSzEfTW6dvkegJ7/edit#slide=id.p67)
 
