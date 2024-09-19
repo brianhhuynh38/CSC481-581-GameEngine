@@ -8,7 +8,7 @@ private:
 	int64_t m_tic;
 	int64_t m_startingTime;
 	int64_t m_currentTime;
-	int64_t m_deltaTime;
+	double m_deltaTime;
 	float m_timeScale;
 	Timeline* m_timeline;
 public:
@@ -22,7 +22,7 @@ public:
 
 	void updateTime();
 
-	int64_t getDeltaTime();
+	double getDeltaTime();
 
 	int64_t getTime();
 
@@ -34,7 +34,7 @@ public:
 
 	void unreverse();
 
-	void changeTic(_int64 tic);
+	void changeTic(int64_t tic);
 
 	void changeTimeScale(float timeScale);
 };
