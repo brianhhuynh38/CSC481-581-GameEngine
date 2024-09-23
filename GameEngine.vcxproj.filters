@@ -58,6 +58,12 @@
     <Filter Include="Header Files\Controllers">
       <UniqueIdentifier>{bd4a54ea-6686-45cd-b9e3-07f6a9754e46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{830cfdc9-11b8-4302-9d5b-807a2da7ac0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{799b129e-0f66-4e10-995e-71673ae4bb3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -107,6 +113,12 @@
     </ClCompile>
     <ClCompile Include="stage.cpp">
       <Filter>Source Files\Stages</Filter>
+    </ClCompile>
+    <ClCompile Include="client.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +176,12 @@
     </ClInclude>
     <ClInclude Include="configIO.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="client.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="server.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
