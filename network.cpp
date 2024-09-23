@@ -14,8 +14,6 @@
 #include <zhelpers.hpp>
 #endif
 
-
-
 namespace Network {
 	/**
 	 * Handles server networking (from 0MQ tutorial)

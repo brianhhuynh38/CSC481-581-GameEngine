@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <zmq.hpp>
+#include <string>
 
 #include "definitions.h"
 #include "draw.h"
@@ -14,6 +16,7 @@
 #include "configIO.h"
 #include "playerController.h"
 #include "entityController.h"
+#include "client.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -129,6 +132,7 @@ static void capFrameRate(long* then, float* remainder) {
 	*then = SDL_GetTicks();
 }
 
+
 /**
  * The main function where all components are initialized and the gameplay update loop is maintained 
  */
@@ -144,6 +148,16 @@ int main(int argc, char* argv[]) {
 	timeline = Timeline();
 	// Create physics
 	physics = Physics();
+
+	// TODO: Initialize networking
+	zmq::context_t context(1);
+	zmq::socket_t client_socket(context, zmq::socket_type::req);  // Request socket for client-to-server communication (REQ-REP)
+	zmq::socket_t subscriber_socket(context, zmq::socket_type::sub);  // Subscribe socket for receiving updates from server (PUB-SUB)
+
+	// TODO: Connect client to server (server's address will need to be specified)
+	client_socket.connect("tcp://localhost:5555");  // Port 5555 for requests
+	subscriber_socket.connect("tcp://localhost:5556");  // Server's PUB socket on Port 5556
+	subscriber_socket.set(zmq::sockopt::subscribe, "");  // Subscribe to all messages
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();
@@ -234,7 +248,10 @@ int main(int argc, char* argv[]) {
 	entityController->addEntity((Entities::Entity) *movingBox);
 	entityController->addMovingEntity(*movingBox);
 	
-	
+	// TODO: Networking: Initial game state request to the server. Currently errors, FIX (likely in other server or client .cpp files)
+	/*zmq::message_t init_request(5);
+	memcpy( init_request.data(), "Hello", 5);
+	client_socket.send(init_request, zmq::send_flags::none);*/
 
 	// Get current window size
 	int* w = new int(0);
@@ -275,6 +292,18 @@ int main(int argc, char* argv[]) {
 
 		// Update the physics of all entities
 		entityController->updateEntities();
+
+		// TODO: Send player position update to the server
+		/*std::string movement_data = Client::serializePlayerMovement(player);  // Client function to serialize player movement
+		zmq::message_t movement_request(movement_data.c_str(), movement_data.size());
+		client_socket.send(movement_request, zmq::send_flags::none);
+
+		// TODO: Receive game state updates from server
+		zmq::message_t game_state_update;
+		if (subscriber_socket.recv(game_state_update, zmq::recv_flags::dontwait)) {
+			std::string game_state(static_cast<char*>(game_state_update.data()), game_state_update.size());
+			Client::updateGameState(game_state);  // Client function to update player positions from the server
+		}*/
 
 		// TEST PRINT for player info (DELETE LATER)
 		//std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";

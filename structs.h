@@ -53,3 +53,11 @@ typedef struct {
 	// directional vector of hit
 	Utils::Vector2D hitVector;
 } HitInfo;
+
+/**
+ * Struct to store player information
+ */
+typedef struct {
+	float x, y; // Position coordinates
+	float vx, vy; // Velocity
+} PlayerInfo;
