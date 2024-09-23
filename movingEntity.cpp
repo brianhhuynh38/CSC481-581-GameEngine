@@ -85,7 +85,7 @@ namespace Entities {
 	*/
 	void MovingEntity::move() {
 		// Find distance that is travelled within the allotted deltaTime
-		float distance = m_speed * (float) (timeline.getDeltaTime());
+		float distance = m_speed * (float) (timeline.getDeltaTime() / MICROSEC_PER_SEC);
 		// Move the object if it is not frozen and is not paused by the timer
 		if (!m_isStationary && m_currentTimer <= 0) {
 

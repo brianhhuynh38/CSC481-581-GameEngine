@@ -76,7 +76,7 @@ namespace Controllers {
             moveVector.x *= 0.525322;
             moveVector.y *= 0.525322;
         }
-        moveVector.multConst(timeline.getDeltaTime());
+        moveVector.multConst(timeline.getDeltaTime() / MICROSEC_PER_SEC);
 
         player->setVelocity(moveVector.x, moveVector.y);
 

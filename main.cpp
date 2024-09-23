@@ -110,23 +110,25 @@ void initSDL(void) {
 static void capFrameRate(long* then, float* remainder) {
 	long wait, frameTime;
 
-	wait = 16 + *remainder;
+	wait = 16667 + *remainder;
 
 	*remainder -= (int) *remainder;
 
-	frameTime = SDL_GetTicks() - *then;
+	frameTime = timeline.getTime() - *then;
 
 	wait -= frameTime;
 
-	if (wait < 1) {
-		wait = 1;
+	if (wait < 1000) {
+		wait = 1000;
 	}
 
-	SDL_Delay(wait);
+	SDL_Delay(wait/1000);
 
-	*remainder += 0.667;
+	*remainder += 666.667;
 
-	*then = SDL_GetTicks();
+	*then = timeline.getTime();
+
+	std::cout << *then;
 }
 
 /**
@@ -157,8 +159,7 @@ int main(int argc, char* argv[]) {
 	// Initiate current stage
 	//initStage();
 
-	then = SDL_GetTicks();
-
+	then = timeline.getTime();
 	remainder = 0;
 
 	// Create a player Entity (Temp: Make more malleable in the future)
@@ -181,8 +182,8 @@ int main(int argc, char* argv[]) {
 		20.0, 20.0,
 		10.0,
 		"./Assets/Textures/BallTexture.png",
-		false,
-		true
+		true,
+		false
 	);
 	// Create box object that moves (Temp)
 	movingBox = new Entities::MovingEntity
@@ -193,7 +194,7 @@ int main(int argc, char* argv[]) {
 		50.0f, 50.0f,
 		"./Assets/Textures/devTexture0.png",
 		false,
-		true,
+		false,
 		true,
 		false,
 		10,
@@ -247,7 +248,7 @@ int main(int argc, char* argv[]) {
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
 	proportionalScalingActive = false;
 
-	std::cout << "globalScaling: " << globalScaling.x << ", " << globalScaling.y;
+	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y;
 
 	// Basic, primitive game loop
 	// TODO: Add ability to reload everything via terminal at some point
@@ -288,9 +289,6 @@ int main(int argc, char* argv[]) {
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
-
-		// Slow down by 16 ms to maintain approximately 62 fps
-		SDL_Delay(16);
 
 		capFrameRate(&then, &remainder);
 	}
