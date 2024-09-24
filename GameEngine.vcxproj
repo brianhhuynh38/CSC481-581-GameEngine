@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="collisions.cpp" />
     <ClCompile Include="configIO.cpp" />
     <ClCompile Include="draw.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="movingEntity.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
+    <ClCompile Include="server.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
@@ -155,6 +157,7 @@
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="client.h" />
     <ClInclude Include="collisions.h" />
     <ClInclude Include="configIO.h" />
     <ClInclude Include="definitions.h" />
@@ -167,6 +170,7 @@
     <ClInclude Include="physics.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
+    <ClInclude Include="server.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="stageManager.h" />
     <ClInclude Include="structs.h" />
