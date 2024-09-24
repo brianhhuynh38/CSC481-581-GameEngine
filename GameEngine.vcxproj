@@ -149,6 +149,7 @@
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
+    <ClCompile Include="thread.cpp" />
     <ClCompile Include="timeline.cpp" />
     <ClCompile Include="vector2D.cpp" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="stage.h" />
     <ClInclude Include="stageManager.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="thread.h" />
     <ClInclude Include="timeline.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>

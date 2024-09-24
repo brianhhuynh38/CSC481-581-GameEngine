@@ -5,13 +5,13 @@ making this project.
 
 ## Table of Contents
 
-- [Starting Instructions]
-	- [Controls]
+- [Starting Instructions](#instr)
+	- [Controls](#contr)
 - [References]
 	- [Homework 1 References](#hw1)
 	- [Homework 2 References](#hw2)
 
-# Starting Instructions
+# Starting Instructions {#instr}
 
 **Compiler**: C++ 17 standard
 
@@ -29,7 +29,7 @@ There is a `config.ini` file where certain variables can be modified and customi
  - Resolution
  - Gravity
 
-## Controls
+## Controls {#contr}
 
 To exit the engine, press the `ESCAPE` key.
 
