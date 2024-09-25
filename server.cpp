@@ -44,7 +44,7 @@ namespace Server {
     * Broadcasts updated positions of all players to all clients using PUB-SUB pattern
     * Created from tutorials within: https://zguide.zeromq.org/docs/chapter1/, https://zguide.zeromq.org/docs/chapter4/, and https://zguide.zeromq.org/docs/chapter5/
     */ 
-    int main() {
+    int run() {
         std::cout << "Running server.\n";
         // Set up ZMQ context and sockets
         zmq::context_t context(2);

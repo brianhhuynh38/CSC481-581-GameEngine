@@ -3,6 +3,7 @@
 #include <iostream>
 #include <zmq.hpp>
 #include <string>
+#include <mutex>
 
 #include "definitions.h"
 #include "draw.h"
@@ -17,6 +18,7 @@
 #include "playerController.h"
 #include "entityController.h"
 #include "client.h"
+#include "thread.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -267,6 +269,21 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y;
 
+	// Network multithreading
+
+	// Mutex to handle locking, condition variable to handle notifications between threads
+    std::mutex m;
+    std::condition_variable cv;
+
+    // Create thread objects
+    NetworkThread serverThread(0, NULL, &m, &cv);
+    NetworkThread clientThread(1, &serverThread, &m, &cv);
+
+    std::cout << "Starting network threads \n";
+
+    
+    
+
 	// Basic, primitive game loop
 	// TODO: Add ability to reload everything via terminal at some point
 	while (true) {
@@ -295,7 +312,7 @@ int main(int argc, char* argv[]) {
 		entityController->updateEntities();
 
 		// TODO: Send player position update to the server
-		/*std::string movement_data = Client::serializePlayerMovement(player);  // Client function to serialize player movement
+		std::string movement_data = Client::serializePlayerMovement(player);  // Client function to serialize player movement
 		zmq::message_t movement_request(movement_data.c_str(), movement_data.size());
 		client_socket.send(movement_request, zmq::send_flags::none);
 
@@ -304,7 +321,11 @@ int main(int argc, char* argv[]) {
 		if (subscriber_socket.recv(game_state_update, zmq::recv_flags::dontwait)) {
 			std::string game_state(static_cast<char*>(game_state_update.data()), game_state_update.size());
 			Client::updateGameState(game_state);  // Client function to update player positions from the server
-		}*/
+		}
+
+		// Update and run threads (temp)
+		std::thread first(NetworkThread::run, &serverThread);
+		std::thread second(NetworkThread::run, &clientThread);
 
 		// TEST PRINT for player info (DELETE LATER)
 		//std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
@@ -324,6 +345,10 @@ int main(int argc, char* argv[]) {
 
 	delete w;
 	delete h;
+
+	// Make sure both threads are complete before stopping main thread
+	first.join();
+	second.join();
 
 	// Success condition
 	return 0;
