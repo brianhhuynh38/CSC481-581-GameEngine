@@ -29,7 +29,10 @@ void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
 	applyGravity(entity);
 
 	// Update velocity using acceleration
+	//entity->updateVelocity(entity->getAcceleration()->add(0, m_gravity * entity->getMass()).multConst(deltaTimeInSecs));
 	entity->updateVelocity(entity->getAcceleration()->multConst(deltaTimeInSecs));
+
+	std::cout << "Velocity: " << entity->getVelocity()->y;
 	// Update position using velocity
 	entity->updatePosition(entity->getVelocity()->multConst(deltaTimeInSecs));
 }
@@ -52,4 +55,6 @@ void Physics::applyForce(Entities::Entity *entity, Utils::Vector2D forceVector) 
 void Physics::applyGravity(Entities::Entity *entity) {
 	// Gravity value is multiplied by 01 to make it a downward force
 	entity->updateAcceleration(Utils::Vector2D(0, m_gravity * entity->getMass()).multConst(timeline.getDeltaTime() / MICROSEC_PER_SEC));
+	//entity->updateAcceleration(Utils::Vector2D(0, m_gravity * timeline.getDeltaTime() / MICROSEC_PER_SEC));
+	//entity->setAcceleration(entity->getAcceleration()->x, (m_gravity + entity->getAcceleration()->y) * (1.0f - timeline.getDeltaTime() / MICROSEC_PER_SEC));
 }

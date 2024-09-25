@@ -78,7 +78,7 @@ namespace Controllers {
         }
         moveVector.multConst(timeline.getDeltaTime() / MICROSEC_PER_SEC);
 
-        player->setVelocity(moveVector.x, moveVector.y);
+        player->updateVelocity(moveVector);
 
         // move on x axis
         player->move(Utils::Vector2D(moveVector.x, 0));

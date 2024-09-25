@@ -59,6 +59,8 @@ void Timeline::updateTime() {
 	m_deltaTime *= m_reversed ? -1 : 1;
 	// Apply timescaling
 	m_deltaTime *= m_timeScale;
+
+	std::cout << "DeltaTime: " << m_deltaTime << std::endl;
 }
 
 double Timeline::getDeltaTime() {

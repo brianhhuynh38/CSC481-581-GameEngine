@@ -275,9 +275,15 @@ int main(int argc, char* argv[]) {
     std::mutex m;
     std::condition_variable cv;
 
+
     // Create thread objects
     NetworkThread serverThread(0, NULL, &m, &cv);
     NetworkThread clientThread(1, &serverThread, &m, &cv);
+
+
+	// Update and run threads (temp)
+	std::thread first(NetworkThread::run, &serverThread);
+	std::thread second(NetworkThread::run, &clientThread);
 
     std::cout << "Starting network threads \n";
 
@@ -328,7 +334,7 @@ int main(int argc, char* argv[]) {
 		std::thread second(NetworkThread::run, &clientThread);
 
 		// TEST PRINT for player info (DELETE LATER)
-		//std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
+		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
 		// Display player and floor texture at their locations
 		Render::displayEntity((Entities::Entity) *player);
@@ -346,9 +352,9 @@ int main(int argc, char* argv[]) {
 	delete w;
 	delete h;
 
-	// Make sure both threads are complete before stopping main thread
-	first.join();
-	second.join();
+	//// Make sure both threads are complete before stopping main thread
+	//first.join();
+	//second.join();
 
 	// Success condition
 	return 0;

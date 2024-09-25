@@ -81,7 +81,7 @@ namespace Entities {
 	 * @param scaleY The new y value of the scale to set
 	 */
 	void Entity::setScale(float scaleX, float scaleY) {
-		m_scale = new Utils::Vector2D(scaleX, scaleY);
+		*m_scale = Utils::Vector2D(scaleX, scaleY);
 	}
 
 	/**
@@ -106,7 +106,7 @@ namespace Entities {
 	 * @param positionY The new y value of the position to set
 	 */
 	void Entity::setPosition(float positionX, float positionY) {
-		m_position = new Utils::Vector2D(positionX, positionY);
+		*m_position = Utils::Vector2D(positionX, positionY);
 	}
 
 	/**
@@ -123,7 +123,7 @@ namespace Entities {
 	 * @param height to set
 	 */
 	void Entity::setSize(float width, float height) {
-		m_size = new Utils::Vector2D(width, height);
+		*m_size = Utils::Vector2D(width, height);
 	}
 
 	/**
@@ -151,7 +151,7 @@ namespace Entities {
 	* @param velocityY The new y value of the velocity to set
 	*/
 	void Entity::setVelocity(float velocityX, float velocityY) {
-		m_velocity = new Utils::Vector2D(velocityX, velocityY);
+		*m_velocity = Utils::Vector2D(velocityX, velocityY);
 	}
 
 	/**
@@ -179,9 +179,9 @@ namespace Entities {
 	* @param accelerationY The new y value of the acceleration to set
 	*/
 	void Entity::setAcceleration(float accelerationX, float accelerationY) {
-		m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
-		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
-		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
+		*m_acceleration = Utils::Vector2D(accelerationX, accelerationY);
+//		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
+//		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
 	}
 
 	/**

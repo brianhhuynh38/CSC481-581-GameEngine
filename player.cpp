@@ -77,9 +77,14 @@ namespace Entities {
 		if( hInfo.hit ) {
 			//std::cout << "collided\n";
 			// Move back (code below from tutorial. Replace with code that fits our setup)
+			//std::cout << "Player collision pos: " << m_position->x << ", " << m_position->y << "\n";
 			//*m_position = oldPosition;
-			*m_position = m_position->add(movementVector.multConst(-1));
-
+			updatePosition(movementVector.multConst(-1));
+			//updateVelocity((*m_velocity).multConst(-1));
+			//m_position->add(movementVector.multConst(-1));
+			/**m_velocity = m_velocity->add((*m_velocity).multConst(-1));
+			*m_acceleration = m_acceleration->add((*m_acceleration).multConst(-1));*/
+			//std::cout << "Player new pos: " << m_position->x << ", " << m_position->y << "\n";
 
 			// Create colliders iterator
         	std::list<SDL_Rect>::iterator iterCol2;
@@ -127,7 +132,7 @@ namespace Entities {
 	 * @param jumpVector value
 	 */
 	void Player::setJumpVector(Utils::Vector2D jVector) {
-		m_jumpVector = &jVector;
+		*m_jumpVector = jVector;
 	}
 
 	/**
