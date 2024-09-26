@@ -1,5 +1,7 @@
 #include <SDL.h>
 #include <cmath>
+#include <string>
+#include <sstream>
 
 #include "vector2D.h"
 
@@ -77,5 +79,11 @@ namespace Utils {
 		return this->divideConst(getMagnitude());
 	}
 
-
+	std::string Vector2D::toString() {
+		// Create stringstream to stringify vector
+		std::stringstream ss;
+		// Create string in format X,Y
+		ss << x << "," << y << "\n";
+		return ss.str();
+	}
 }

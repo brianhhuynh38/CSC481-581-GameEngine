@@ -28,6 +28,7 @@ namespace Utils {
 
 		Vector2D normalizeVector(void);
 
+		std::string toString();
 	};
 }
 

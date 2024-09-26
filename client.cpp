@@ -20,6 +20,8 @@ namespace Client {
         // Convert player position and movement data to a string
         std::stringstream ss;
         ss << player->getPosition()->x << "," << player->getPosition()->y;
+        ss << player->getVelocity()->x << "," << player->getVelocity()->y;
+        ss << player->getAcceleration()->x << "," << player->getAcceleration()->y;
         return ss.str();
     }
 

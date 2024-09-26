@@ -27,6 +27,13 @@ public:
 	void updateEntities();
 
 	/**
+	* Deserializes a string and adds those entities into the entity controller
+	* 
+	* @param entityListString
+	*/
+	void updateEntitiesByString(std::string entityListString);
+
+	/**
 	* Returns the entities list
 	*/
 	std::list<Entities::Entity> *getEntities();

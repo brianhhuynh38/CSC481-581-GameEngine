@@ -14,6 +14,8 @@ namespace Entities {
 	*/
 	class Entity {
 	protected:
+		/** Unique identifier for each Entity */
+		int m_uuid;
 		/** The scaling vector for the Entity */
 		Utils::Vector2D *m_scale;
 		/** The position the Entity is currently at */
@@ -32,6 +34,8 @@ namespace Entities {
 		/** Max acceleration */
 		float m_acceleration_max;
 
+		/** The filepath to the texture to be used */
+		const char *m_textureFilepath;
 		/** Texture to use for this entity */
 		SDL_Texture *m_texture;
 
@@ -53,6 +57,7 @@ namespace Entities {
 		/**
 		 * Constructs an entity and initializes all pointer fields.
 		 *
+		 * @param uuid The unique id for each entity
 		 * @param scaleX X component of scaling multipliers for rendering
 		 * @param scaleY Y component of scaling multipliers for rendering
 		 * @param positionX The X coordinates where the Entity is located
@@ -64,7 +69,7 @@ namespace Entities {
 		 * @param isStationary Whether the object should move
 		 * @param affectedByPhysics Whether the object is affectedByPhysics
 		 */
-		Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
+		Entity(int uuid, float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
 
 		/**
@@ -198,6 +203,11 @@ namespace Entities {
 		 * @param affectedByPhysics
 		 */
 		void setAffectedByPhysics(bool affectedByPhysics);
+
+		/**
+		* Generates and returns a string containing all entity information
+		*/
+		std::string toString();
 
 		/**
 		 * Deletes objects to free memory allocated to each relevant field

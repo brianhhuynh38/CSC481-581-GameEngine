@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <iostream>
+#include <sstream>
 #include <list>
 #include <algorithm>
 
@@ -14,6 +15,7 @@ namespace Entities {
 	* Default constructor that sets all values to their defaults
 	*/
 	Entity::Entity() {
+		m_uuid = -1;
 		m_scale = new Utils::Vector2D(1.0, 1.0);
 		m_position = new Utils::Vector2D(0.0, 0.0);
 		m_size = new Utils::Vector2D(0.0, 0.0);
@@ -24,7 +26,8 @@ namespace Entities {
 		m_acceleration_max = 10;
 		m_mass = 5;
 
-		m_texture = Render::loadTexture(".\Assets\Textures\MissingTexture.png");
+		m_textureFilepath = ".\Assets\Textures\MissingTexture.png";
+		m_texture = Render::loadTexture(m_textureFilepath);
 
 		m_isStationary = false;
 		m_affectedByPhysics = false;
@@ -47,8 +50,10 @@ namespace Entities {
 	 * @param isStationary Whether the object should move
 	 * @param affectedByPhysics Whether the object is affectedByPhysics
 	 */
-	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
+	Entity::Entity(int uuid, float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
+		m_uuid = uuid;
+
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
@@ -59,6 +64,7 @@ namespace Entities {
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration_max = 10;
 
+		m_textureFilepath = textureFilepath;
 		m_texture = Render::loadTexture(textureFilepath);
 
 		m_isStationary = isStationary;
@@ -272,6 +278,35 @@ namespace Entities {
 	 */
 	void Entity::setAffectedByPhysics(bool affectedByPhysics) {
 		m_affectedByPhysics = affectedByPhysics;
+	}
+
+	std::string Entity::toString() {
+		// Create string to serialize all fields within the Entity
+		// Each field is delineated by a newline
+		std::stringstream ss;
+		// Stringify ID
+		ss << m_uuid << "\n";
+		// Stringify positional and physics vectors
+		ss << getPosition()->toString();
+		ss << getVelocity()->toString();
+		ss << getAcceleration()->toString();
+		// Stringify scale, size, and mass
+		ss << getScale()->toString();
+		ss << getSize()->toString();
+		ss << getMass() << "\n";
+		// Stringify max velocity and acceleration values
+		ss << m_velocity_max << "\n";
+		ss << m_acceleration_max << "\n";
+		// Get filepath to SDLTexture
+		ss << m_textureFilepath << "\n";
+		// Stringifies each SDL_Rect Collider
+		for (SDL_Rect collider : *m_colliders) {
+			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
+		}
+		ss << "\n";
+		// Stringifies each of the bools: stationary, affectedByPhysics, visible
+		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible;
+		return ss.str();
 	}
 
 	/**
