@@ -305,7 +305,7 @@ namespace Entities {
 		}
 		ss << "\n";
 		// Stringifies each of the bools: stationary, affectedByPhysics, visible
-		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible;
+		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible << "\n";
 		return ss.str();
 	}
 

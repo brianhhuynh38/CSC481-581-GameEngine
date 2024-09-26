@@ -79,6 +79,8 @@ namespace Entities {
 		 * @param grounded value
 		 */
 		void setIsGrounded(bool grounded);
+
+		std::string toString();
 	};
 }
 

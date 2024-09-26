@@ -98,6 +98,11 @@ namespace Entities {
 		* Sets the speed at which the entity moves
 		*/
 		void setSpeed(float speed);
+
+		/**
+		* Creates a string containing all information for the MovingEntity
+		*/
+		std::string toString();
 	};
 
 }

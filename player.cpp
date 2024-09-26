@@ -1,5 +1,6 @@
-#include "player.h"
+#include <sstream>
 
+#include "player.h"
 #include "draw.h"
 #include "vector2D.h"
 #include "collisions.h"
@@ -149,5 +150,36 @@ namespace Entities {
 	 */
 	void Player::setIsGrounded(bool grounded) {
 		isGrounded = grounded;
+	}
+
+	std::string Player::toString() {
+		// Create string to serialize all fields within the Entity
+		// Each field is delineated by a newline
+		std::stringstream ss;
+		// Stringify ID
+		ss << m_uuid << "\n";
+		// Stringify positional and physics vectors
+		ss << getPosition()->toString();
+		ss << getVelocity()->toString();
+		ss << getAcceleration()->toString();
+		// Stringify scale, size, and mass
+		ss << getScale()->toString();
+		ss << getSize()->toString();
+		ss << getMass() << "\n";
+		// Stringify max velocity and acceleration values
+		ss << m_velocity_max << "\n";
+		ss << m_acceleration_max << "\n";
+		// Get filepath to SDLTexture
+		ss << m_textureFilepath << "\n";
+		// Stringifies each SDL_Rect Collider
+		for (SDL_Rect collider : *m_colliders) {
+			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
+		}
+		ss << "\n";
+		// Stringifies each of the bools: stationary, affectedByPhysics, visible
+		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible << "\n";
+		//Stringify Player-specific stuff
+		ss << getMaxSpeed() << "," << getIsGrounded() << "," << getJumpVector()->toString();
+		return ss.str();
 	}
 }

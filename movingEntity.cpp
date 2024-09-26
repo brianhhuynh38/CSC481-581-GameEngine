@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <cmath>
+#include <sstream>
 
 #include "movingEntity.h"
 #include "draw.h"
@@ -215,5 +216,39 @@ namespace Entities {
 
 	void MovingEntity::setSpeed(float speed) {
 		m_speed = speed;
+	}
+
+	std::string MovingEntity::toString() {
+		// Create string to serialize all fields within the Entity
+		// Each field is delineated by a newline
+		std::stringstream ss;
+		// Stringify ID
+		ss << m_uuid << "\n";
+		// Stringify positional and physics vectors
+		ss << getPosition()->toString();
+		ss << getVelocity()->toString();
+		ss << getAcceleration()->toString();
+		// Stringify scale, size, and mass
+		ss << getScale()->toString();
+		ss << getSize()->toString();
+		ss << getMass() << "\n";
+		// Stringify max velocity and acceleration values
+		ss << m_velocity_max << "\n";
+		ss << m_acceleration_max << "\n";
+		// Get filepath to SDLTexture
+		ss << m_textureFilepath << "\n";
+		// Stringifies each SDL_Rect Collider
+		for (SDL_Rect collider : *m_colliders) {
+			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
+		}
+		ss << "\n";
+		// Stringifies each of the bools: stationary, affectedByPhysics, visible
+		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible << "\n";
+		// Stringify MovingEntity-specific stuff
+		ss << isContinuous() << "," << isReverse() << "\n";
+		ss << m_pauseTimer << "," << m_currentTimer << "," << getSpeed() << "\n";
+		ss << m_startPosition.toString();
+		ss << m_endPosition.toString();
+		return ss.str();
 	}
 }
