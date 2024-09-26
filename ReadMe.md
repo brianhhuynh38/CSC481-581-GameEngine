@@ -19,7 +19,7 @@ This project uses a Visual Studio solution file to organize and compile. The lib
 within the project for convenience. The following are the relative filepaths used for the  
 `SDL2`, `SDL2_image`, and `libzmq-mt-4_3_5` libraries in Project properties:
 
-**Include Directories**:`$(ProjectDir)\Libs\[LibraryName]\include`
+**Include Directories**: `$(ProjectDir)\Libs\[LibraryName]\include`
 
 **Library Directories**: `$(ProjectDir)\Libs\[LibraryName]\lib\x64`
 
