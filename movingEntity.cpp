@@ -243,7 +243,7 @@ namespace Entities {
 		}
 		ss << "\n";
 		// Stringifies each of the bools: stationary, affectedByPhysics, visible
-		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible << "\n";
+		ss << m_isStationary << "\n" << m_affectedByPhysics << "\n" << m_isVisible << "\n";
 		// Stringify MovingEntity-specific stuff
 		ss << isContinuous() << "," << isReverse() << "\n";
 		ss << m_pauseTimer << "," << m_currentTimer << "," << getSpeed() << "\n";

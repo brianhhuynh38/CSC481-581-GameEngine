@@ -114,17 +114,14 @@
     <ClCompile Include="stage.cpp">
       <Filter>Source Files\Stages</Filter>
     </ClCompile>
-    <ClCompile Include="thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="client.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="thread.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="thread.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,8 +183,8 @@
     <ClInclude Include="client.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="server.h">
-      <Filter>Header Files\Network</Filter>
+    <ClInclude Include="thread.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

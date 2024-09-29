@@ -23,8 +23,8 @@ void Physics::setGravity(float gravity) {
 void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
 	// Get delta time to find and update velocity and acceleration
 	double deltaTimeInSecs = timeline.getDeltaTime() / MICROSEC_PER_SEC;
-	std::cout << "Delta Time from Function: " << timeline.getDeltaTime() << "\n";
-	std::cout << "Delta Time in Seconds: " << deltaTimeInSecs << "\n";
+	/*std::cout << "Delta Time from Function: " << timeline.getDeltaTime() << "\n";
+	std::cout << "Delta Time in Seconds: " << deltaTimeInSecs << "\n";*/
 
 	applyGravity(entity);
 
@@ -32,7 +32,7 @@ void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
 	//entity->updateVelocity(entity->getAcceleration()->add(0, m_gravity * entity->getMass()).multConst(deltaTimeInSecs));
 	entity->updateVelocity(entity->getAcceleration()->multConst(deltaTimeInSecs));
 
-	std::cout << "Velocity: " << entity->getVelocity()->y;
+	/*std::cout << "Velocity: " << entity->getVelocity()->y;*/
 	// Update position using velocity
 	entity->updatePosition(entity->getVelocity()->multConst(deltaTimeInSecs));
 }
@@ -44,7 +44,7 @@ void Physics::updateEntityPhysicsVectors(Entities::Entity *entity) {
  */
 void Physics::applyForce(Entities::Entity *entity, Utils::Vector2D forceVector) {
 	entity->updateAcceleration(forceVector.divideConst(entity->getMass()));
-	std::cout << "applyForce: (" << forceVector.x << ", " << forceVector.y << ")\n";
+	/*std::cout << "applyForce: (" << forceVector.x << ", " << forceVector.y << ")\n";*/
 }
 
 /**

@@ -50,9 +50,9 @@ namespace Entities {
 	 * @param isStationary Whether the object should move
 	 * @param affectedByPhysics Whether the object is affectedByPhysics
 	 */
-	Entity::Entity(int uuid, float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
+	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
-		m_uuid = uuid;
+		m_uuid = -1;
 
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
@@ -305,7 +305,7 @@ namespace Entities {
 		}
 		ss << "\n";
 		// Stringifies each of the bools: stationary, affectedByPhysics, visible
-		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible << "\n";
+		ss << m_isStationary << "\n" << m_affectedByPhysics << "\n" << m_isVisible << "\n";
 		return ss.str();
 	}
 

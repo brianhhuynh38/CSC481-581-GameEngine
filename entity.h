@@ -57,7 +57,6 @@ namespace Entities {
 		/**
 		 * Constructs an entity and initializes all pointer fields.
 		 *
-		 * @param uuid The unique id for each entity
 		 * @param scaleX X component of scaling multipliers for rendering
 		 * @param scaleY Y component of scaling multipliers for rendering
 		 * @param positionX The X coordinates where the Entity is located
@@ -69,7 +68,7 @@ namespace Entities {
 		 * @param isStationary Whether the object should move
 		 * @param affectedByPhysics Whether the object is affectedByPhysics
 		 */
-		Entity(int uuid, float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
+		Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
 
 		/**

@@ -1,6 +1,7 @@
 #pragma once
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
+#include <string>
 
 namespace Utils {
 

@@ -1,11 +1,14 @@
-#include <zmq.hpp>
 #include <iostream>
 #include <string>
 #include "entity.h"
 #include "player.h"
 #include <unordered_map>
-#include "server.h"
 #include "structs.h"
+#include <chrono>
+#include <thread>
+
+#include <zmq.hpp>
+#include <zmq_addon.hpp>
 
 namespace Client {
     // Map to store players by their ID from the client
@@ -68,6 +71,55 @@ namespace Client {
         }
     }
 
-    // Client main loop is handled within main.cpp. TODO fix functionality and un-comment out
-    // Sends movement updates to the server using REQ-REP pattern.
+    /**
+    * Sets up client parameters and interactions
+    * @param subscriber Subscriber to setup
+    * @param request Request to setup
+    */
+    int startup(zmq::socket_t *subscriber, zmq::socket_t *request) {
+        subscriber->connect("tcp://localhost:5555");
+        request->connect("tcp://localhost:5556");
+
+        // Send message to server and wait to receive client identifier
+        request->send(zmq::str_buffer("Requesting client identifier"));
+
+        // Sleep for 2 seconds to guarantee connection
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+
+        // Receive response from server 
+        zmq::message_t reply;
+        request->recv(reply, zmq::recv_flags::none);
+        std::cout << "Received client identifier: " << reply.to_string() << "," << reply.to_string().length() << "\n";
+        //assert((reply.to_string() == "Client_1"));
+        // Convert the client identifier to an integer
+        // int clientNumber = stoi;
+        //sscanf_s(reply.to_string().c_str(), "%d", &clientNumber);
+
+        // Set the client identifier
+        //subscriber->set(zmq::sockopt::subscribe, "Client");
+
+        // Set the client identifier (SECTION 5)
+        subscriber->set(zmq::sockopt::subscribe, reply.to_string());
+
+        return 0;
+    }
+
+    /**
+    * Run the networking communication setup
+    * @param subscriber Subscriber to use
+    */
+    int run(zmq::socket_t* subscriber, zmq::socket_t* request) {
+        // Receive messages from the server as a subscriber
+        std::vector<zmq::message_t> recv_msgs;
+        zmq::recv_result_t result =
+            zmq::recv_multipart(*(subscriber), std::back_inserter(recv_msgs), zmq::recv_flags::dontwait);
+        //assert(result && "recv failed");
+        //assert(*result == 2);
+
+        if (recv_msgs.size() > 0) {
+            std::cout << recv_msgs[0].to_string() << recv_msgs[1].to_string() << std::endl;
+        }
+
+        return 0;
+    }
 }

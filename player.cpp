@@ -177,9 +177,9 @@ namespace Entities {
 		}
 		ss << "\n";
 		// Stringifies each of the bools: stationary, affectedByPhysics, visible
-		ss << m_isStationary << "," << m_affectedByPhysics << "," << m_isVisible << "\n";
+		ss << m_isStationary << "\n" << m_affectedByPhysics << "\n" << m_isVisible << "\n";
 		//Stringify Player-specific stuff
-		ss << getMaxSpeed() << "," << getIsGrounded() << "," << getJumpVector()->toString();
+		ss << getMaxSpeed() << "\n" << getIsGrounded() << "\n" << getJumpVector()->toString();
 		return ss.str();
 	}
 }

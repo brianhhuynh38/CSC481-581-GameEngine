@@ -81,7 +81,7 @@ void initSDL(void) {
 
 	// If negative error code, exit with failure status
 	if (int status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
-		std::cout << "SDL failed to start up:" << status;
+		std::cout << "SDL failed to start up:" << status << "\n";
 		exit(1);
 	}
 
@@ -91,7 +91,7 @@ void initSDL(void) {
 		resolutionWidth, resolutionHeight, windowFlags);
 	// Exit if the window fails to open
 	if (!display->window) {
-		std::cout << "The window was unable to open: " << SDL_GetError();
+		std::cout << "The window was unable to open: " << SDL_GetError() << "\n";
 		exit(1);
 	}
 
@@ -101,7 +101,7 @@ void initSDL(void) {
 	display->renderer = SDL_CreateRenderer(display->window, -1, rendererFlags);
 	// Exit if the renderer fails to be created
 	if (!display->renderer) {
-		std::cout << "The renderer failed to be created: " << SDL_GetError();
+		std::cout << "The renderer failed to be created: " << SDL_GetError() << "\n";
 	}
 	// Allows the use of JPG and PNG files by initializing them in SDL
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
@@ -133,7 +133,7 @@ static void capFrameRate(long* then, float* remainder) {
 
 	*then = timeline.getTime();
 
-	std::cout << *then;
+	//std::cout << *then;
 }
 
 
@@ -154,7 +154,15 @@ int main(int argc, char* argv[]) {
 	physics = Physics();
 
 	// TODO: Initialize networking
-	
+	// initialize the zmq context with a single IO thread
+	zmq::context_t context{ 1 };
+	// construct a SUB (request) socket and connect to interface
+	zmq::socket_t subscriber{ context, zmq::socket_type::sub };
+	// construct a REQ (request) socket and connect to interface
+	zmq::socket_t request{ context, zmq::socket_type::req };
+
+	// Update request and subscriber. Put on a new thread
+	Client::startup(&subscriber, &request);
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();
@@ -252,14 +260,14 @@ int main(int argc, char* argv[]) {
 	int* w = new int(0);
 	int* h = new int(0);
 	SDL_GetWindowSizeInPixels(display->window, w, h);
-	std::cout << "WindowSize " << *w << ", " << *h;
+	std::cout << "WindowSize " << *w << ", " << *h << "\n";
 
 	// Sets global scaling to 80 by default (1280x720), 
 	// but sets it to not be on proportional scaling by default
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
 	proportionalScalingActive = false;
 
-	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y;
+	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
 	// Network multithreading
 
@@ -268,15 +276,15 @@ int main(int argc, char* argv[]) {
     std::condition_variable cv;
 
     // Create thread objects
-    NetworkThread serverThread(0, NULL, &m, &cv);
-    NetworkThread clientThread(1, &serverThread, &m, &cv);
+    //NetworkThread serverThread(0, NULL, &m, &cv);
+    //NetworkThread clientThread(1, &serverThread, &m, &cv);
 
 
 	// Update and run threads (temp)
-	std::thread first(NetworkThread::run, &serverThread);
-	std::thread second(NetworkThread::run, &clientThread);
+	//std::thread first(NetworkThread::run, &serverThread);
+	//std::thread second(NetworkThread::run, &clientThread);
 
-    std::cout << "Starting network threads \n";
+    //std::cout << "Starting network threads \n";
 
 
 	// Basic, primitive game loop
@@ -306,18 +314,19 @@ int main(int argc, char* argv[]) {
 		// Update the physics of all entities
 		entityController->updateEntities();
 
-		// TODO: Send client information update to the server
-		
-
 		// TODO: Receive game state updates from server
 		
+		// Respawn Player
+		if (player->getPosition()->y > 1000) {
+			player->setPosition(250.0f, 400.0f);
+		}
 
 		// Update and run threads (temp)
-		std::thread first(NetworkThread::run, &serverThread);
-		std::thread second(NetworkThread::run, &clientThread);
+		//std::thread first(NetworkThread::run, &serverThread);
+		//std::thread second(NetworkThread::run, &clientThread);
 
 		// TEST PRINT for player info (DELETE LATER)
-		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
+		// std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
 		// Display player and floor texture at their locations
 		Render::displayEntity((Entities::Entity) *player);
@@ -328,6 +337,10 @@ int main(int argc, char* argv[]) {
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
+
+		// TODO: Send client information update to the server
+		// Update request and subscriber
+		Client::run(&subscriber, &request);
 
 		capFrameRate(&then, &remainder);
 	}

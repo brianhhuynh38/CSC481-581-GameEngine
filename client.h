@@ -22,6 +22,19 @@ namespace Client {
 	* @param gameState The serialized game state string received from the server.
 	*/
     void updateGameState(const std::string& game_state);
+
+	/**
+	* Sets up client parameters and interactions
+	* @param subscriber Subscriber to setup
+	* @param request Request to setup
+	*/
+	int startup(zmq::socket_t* subscriber, zmq::socket_t* request);
+
+	/**
+	* Run the networking communication setup
+	* @param subscriber Subscriber to use
+	*/
+	int run(zmq::socket_t* subscriber, zmq::socket_t* request);
 }
 
 #endif

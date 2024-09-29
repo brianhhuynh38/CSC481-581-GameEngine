@@ -144,7 +144,6 @@
     <ClCompile Include="movingEntity.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
-    <ClCompile Include="server.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
@@ -171,7 +170,6 @@
     <ClInclude Include="physics.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
-    <ClInclude Include="server.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="stageManager.h" />
     <ClInclude Include="structs.h" />
