@@ -24,7 +24,7 @@ bool NetworkThread::isBusy()
 
 void NetworkThread::run()
 {
-    if (i == 0)
+    if (i == 0) // Run server thread first
     {
         try
         {
@@ -43,7 +43,7 @@ void NetworkThread::run()
             std::cerr << "Thread " << i << " caught exception." << std::endl;
         }
     }
-    else // id == 1
+    else // Client threads
     {
         while (other->isBusy())
         {
