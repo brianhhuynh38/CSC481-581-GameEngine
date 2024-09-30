@@ -30,6 +30,8 @@ namespace Utils {
 		Vector2D normalizeVector(void);
 
 		std::string toString();
+
+		static Vector2D* fromString(std::stringstream& ss);
 	};
 }
 

@@ -76,9 +76,10 @@ namespace Client {
     * @param subscriber Subscriber to setup
     * @param request Request to setup
     */
-    int startup(zmq::socket_t *subscriber, zmq::socket_t *request) {
+    int startup(zmq::socket_t *subscriber, zmq::socket_t *request, zmq::socket_t *publisher) {
         subscriber->connect("tcp://localhost:5555");
         request->connect("tcp://localhost:5556");
+        publisher->connect("tcp://localhost:5557");
 
         // Send message to server and wait to receive client identifier
         request->send(zmq::str_buffer("Requesting client identifier"));
@@ -99,7 +100,7 @@ namespace Client {
         //subscriber->set(zmq::sockopt::subscribe, "Client");
 
         // Set the client identifier (SECTION 5)
-        subscriber->set(zmq::sockopt::subscribe, reply.to_string());
+        subscriber->set(zmq::sockopt::subscribe, "Client"/*reply.to_string()*/);
 
         return 0;
     }
@@ -108,7 +109,7 @@ namespace Client {
     * Run the networking communication setup
     * @param subscriber Subscriber to use
     */
-    int run(zmq::socket_t* subscriber, zmq::socket_t* request) {
+    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player player) {
         // Receive messages from the server as a subscriber
         std::vector<zmq::message_t> recv_msgs;
         zmq::recv_result_t result =
@@ -119,6 +120,10 @@ namespace Client {
         if (recv_msgs.size() > 0) {
             std::cout << recv_msgs[0].to_string() << recv_msgs[1].to_string() << std::endl;
         }
+
+        zmq::message_t playerInfo("Server\n" + player.toString());
+
+        publisher->send(playerInfo, zmq::send_flags::none);
 
         return 0;
     }

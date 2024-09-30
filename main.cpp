@@ -156,13 +156,15 @@ int main(int argc, char* argv[]) {
 	// TODO: Initialize networking
 	// initialize the zmq context with a single IO thread
 	zmq::context_t context{ 1 };
-	// construct a SUB (request) socket and connect to interface
-	zmq::socket_t subscriber{ context, zmq::socket_type::sub };
-	// construct a REQ (request) socket and connect to interface
-	zmq::socket_t request{ context, zmq::socket_type::req };
+	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
+	zmq::socket_t serverToClientSubscriber{ context, zmq::socket_type::sub };
+	// construct a REQ (request) socket to receive client identification information from the server
+	zmq::socket_t clientToServerRequest{ context, zmq::socket_type::req };
+	// construct a PUB (publish) socket to send player information to the server
+	zmq::socket_t clientToServerPublisher{ context, zmq::socket_type::pub };
 
 	// Update request and subscriber. Put on a new thread
-	Client::startup(&subscriber, &request);
+	Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher);
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();
@@ -340,7 +342,7 @@ int main(int argc, char* argv[]) {
 
 		// TODO: Send client information update to the server
 		// Update request and subscriber
-		Client::run(&subscriber, &request);
+		Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, *player);
 
 		capFrameRate(&then, &remainder);
 	}

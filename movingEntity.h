@@ -103,6 +103,11 @@ namespace Entities {
 		* Creates a string containing all information for the MovingEntity
 		*/
 		std::string toString();
+
+		/**
+		* Takes a string containing information for a MovingEntity and creates one
+		*/
+		MovingEntity* fromString(const std::string& data);
 	};
 
 }

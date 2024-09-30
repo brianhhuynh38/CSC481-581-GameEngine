@@ -28,13 +28,13 @@ namespace Client {
 	* @param subscriber Subscriber to setup
 	* @param request Request to setup
 	*/
-	int startup(zmq::socket_t* subscriber, zmq::socket_t* request);
+	int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher);
 
 	/**
 	* Run the networking communication setup
 	* @param subscriber Subscriber to use
 	*/
-	int run(zmq::socket_t* subscriber, zmq::socket_t* request);
+	int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player player);
 }
 
 #endif

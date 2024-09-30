@@ -86,4 +86,20 @@ namespace Utils {
 		ss << x << "," << y << "\n";
 		return ss.str();
 	}
+
+	Vector2D* Vector2D::fromString(std::stringstream& ss) {
+		std::string line;
+		std::getline(ss, line);
+
+		std::stringstream lineStream(line);
+		std::string xStr, yStr;
+
+		std::getline(lineStream, xStr, ',');
+		std::getline(lineStream, yStr, ',');
+
+		float x = std::stof(xStr);
+		float y = std::stof(yStr);
+
+		return new Vector2D(x, y);
+	}
 }

@@ -80,7 +80,15 @@ namespace Entities {
 		 */
 		void setIsGrounded(bool grounded);
 
+		/**
+		* Creates a string containing all information for the Player
+		*/
 		std::string toString();
+
+		/**
+		* Takes a string containing information for a MovingEntity and creates one
+		*/
+		Player* fromString(const std::string& data);
 	};
 }
 

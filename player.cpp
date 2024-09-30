@@ -182,4 +182,56 @@ namespace Entities {
 		ss << getMaxSpeed() << "\n" << getIsGrounded() << "\n" << getJumpVector()->toString();
 		return ss.str();
 	}
+
+	Player* Player::fromString(const std::string& data) {
+		std::stringstream ss(data);
+		std::string line;
+
+		// Helper functions
+		auto getFloat = [&]() { std::getline(ss, line); return std::stof(line); };
+		auto getInt = [&]() { std::getline(ss, line); return std::stoi(line); };
+		auto getBool = [&]() { return getInt() != 0; };
+
+		std::getline(ss, line);
+		int uuid = getInt(); // Use to identify the object
+
+		Utils::Vector2D* position = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D* velocity = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D* acceleration = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D* scale = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D* size = Utils::Vector2D::fromString(ss);
+
+		float mass = getFloat();
+		float velocity_max = getFloat();
+		float acceleration_max = getFloat();
+
+		std::getline(ss, line);
+		std::string textureFilePath = line;
+
+		std::list<SDL_Rect>* colliders = new std::list<SDL_Rect>();
+		std::getline(ss, line);
+		std::stringstream colliderStream(line);
+		while (std::getline(colliderStream, line, '\t')) {
+			SDL_Rect rect;
+			sscanf(line.c_str(), "%d,%d,%d,%d", &rect.x, &rect.y, &rect.w, &rect.h);
+			colliders->push_back(rect);
+		}
+
+		bool isStationary = getBool();
+		bool affectedByPhysics = getBool();
+		bool isVisible = getBool();
+		float maxSpeed = getFloat();
+		bool isGrounded = getBool();
+
+		Utils::Vector2D* jumpVector = Utils::Vector2D::fromString(ss);
+
+		Player* entity = new Player(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
+			textureFilePath.c_str(), isStationary, affectedByPhysics, jumpVector->x, jumpVector->y, maxSpeed);
+
+		// Set other fields if needed
+		entity->setIsGrounded(isGrounded);
+		
+
+		return entity;
+	}
 }
