@@ -73,6 +73,14 @@ namespace Entities {
 		m_colliders->emplace_back(SDL_Rect() = {(int) positionX, (int) positionY, (int) (scaleX * width), (int) (scaleY * height)});
 		m_isVisible = true; // TODO: For future use, currently not doing anything
 	}
+
+	/**
+		* Returns the entity's UUID
+		*/
+	int Entity::getUUID() {
+		return m_uuid;
+	}
+
 	/**
 	 * Returns the scale ratio of the entity
 	 * @returns The scale ratio of the entity as a 2D vector

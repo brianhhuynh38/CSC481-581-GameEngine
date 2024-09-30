@@ -213,7 +213,7 @@ namespace Entities {
 		std::stringstream colliderStream(line);
 		while (std::getline(colliderStream, line, '\t')) {
 			SDL_Rect rect;
-			sscanf(line.c_str(), "%d,%d,%d,%d", &rect.x, &rect.y, &rect.w, &rect.h);
+			sscanf_s(line.c_str(), "%d,%d,%d,%d", &rect.x, &rect.y, &rect.w, &rect.h);
 			colliders->push_back(rect);
 		}
 

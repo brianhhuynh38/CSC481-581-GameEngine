@@ -118,7 +118,7 @@ namespace Client {
         //assert(*result == 2);
 
         if (recv_msgs.size() > 0) {
-            std::cout << recv_msgs[0].to_string() << recv_msgs[1].to_string() << std::endl;
+            std::cout << recv_msgs[0].to_string() << "\n";
         }
 
         zmq::message_t playerInfo("Server\n" + player.toString());
