@@ -88,7 +88,7 @@ namespace Entities {
 		/**
 		* Takes a string containing information for a MovingEntity and creates one
 		*/
-		Player* fromString(const std::string& data);
+		static Player* fromString(const std::string& data);
 	};
 }
 

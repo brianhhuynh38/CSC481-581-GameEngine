@@ -72,6 +72,11 @@ namespace Entities {
 			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
 
 		/**
+		* Returns the entity's UUID
+		*/
+		int getUUID();
+
+		/**
 		 * Returns the scale
 		 */
 		Utils::Vector2D *getScale(void);

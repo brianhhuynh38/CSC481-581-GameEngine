@@ -63,6 +63,11 @@ namespace Entities {
 		void move();
 
 		/**
+		* Moves the entity given delta time 
+		*/
+		void moveByTime(double deltaTime);
+
+		/**
 		* Sets the position of the entity given a percentage float
 		* 
 		* @param progress: The percentage of the way from the start to the end (0-1.0)
