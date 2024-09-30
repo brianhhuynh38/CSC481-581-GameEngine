@@ -15,6 +15,8 @@ private:
 	std::list<Entities::Entity> *m_entities;
 	/** The list of all entities */
 	std::list<Entities::MovingEntity> *m_movingEntities;
+	/** The map of all player entities that are not controlled by this client */
+	std::map<int, Entities::Entity>* m_opposingPlayers;
 public:
 	/**
 	* The constructor for EntityController

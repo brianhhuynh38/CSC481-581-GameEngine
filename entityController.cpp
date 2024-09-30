@@ -1,3 +1,5 @@
+#include <map>
+
 #include "entityController.h"
 #include "global.h"
 #include "draw.h"
@@ -6,6 +8,7 @@ EntityController::EntityController() {
 	// creates empty entities list
 	m_entities = new std::list<Entities::Entity>();
 	m_movingEntities = new std::list<Entities::MovingEntity>();
+	m_opposingPlayers = new std::map<int, Entities::Entity>();
 }
 
 void EntityController::updateEntities() {
