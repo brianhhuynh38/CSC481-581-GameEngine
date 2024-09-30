@@ -29,6 +29,14 @@ There is a `config.ini` file where certain variables can be modified and customi
  - Resolution
  - Gravity
 
+As of Homework 2, this implementation uses a multiproject setup within the solution. Right click 
+the solution in the solution explorer, then add the `NetworkServer` project to add to the solution.
+The GameEngine project acts as the Client to the server, so it can be executed multiple times to create 
+multiple clients.
+
+Right click on the GameEngine -> Debug -> Start New Instance in order to create another 
+client.
+
 ## Controls
 
 To exit the engine, press the `ESCAPE` key.
