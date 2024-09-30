@@ -136,11 +136,32 @@ We are currently using the following pages of the documentation for reference:
 - [ZeroMQ Guide - Chapter 4](https://zguide.zeromq.org/docs/chapter4/)
 - [ZeroMQ Guide - Chapter 5](https://zguide.zeromq.org/docs/chapter5/)
 
+These were used to gain a basic understanding on what ZMQ is supposed to accomplish.
 
 |        `.cpp` Files        |            Header Files            |
 | -------------------------- | ---------------------------------- |
-| [`server.cpp`](./server.cpp) | [`server.h`](./server.h) |
-| [`client.cpp`](./client.cpp) | [`client.h`](./client.h) |
-| [`main.cpp`](./main.cpp) | |
+| [`networkServer.cpp`]() | [`networkServer.h`]() |
+| [`NetworkClient.cpp`]() | [`NetworkClient.h`]() |
 
+### [ZeroMQ Documentation](https://zeromq.org/socket-api/?language=cpp&library=cppzmq#publish-subscribe-pattern)
 
+This documentation served as our primary reference for developing a PUB-SUB messaging method 
+for our Section 2 client and server implementation. The basic example provided was used for 
+familiarizing ourself with the code, then was adapted to fit the implementation for Section 2.
+This changed the implementation drastically, so not much of the example implementation remains.
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+| [`networkServer.cpp`]() | [`networkServer.h`]() |
+| [`NetworkClient.cpp`]() | [`NetworkClient.h`]() |
+
+### [CSC 481/581 `ThreadExample.cpp`](https://moodle-courses2425.wolfware.ncsu.edu/pluginfile.php/499841/mod_resource/content/4/ThreadExample.cpp)
+
+The threading example provided on Moodle was used as a reference for our implementations of our thread. Mostly 
+for observing the interactions of the mutex lock and conditional variable and how they interact with the threads 
+to properly block and determine the order of what has to be accomplished.
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+|  |  |
+|  |  |
