@@ -190,13 +190,14 @@ namespace Entities {
 
 		std::string ssString = ss.str();
 
-		std::cout << "SS inside Player toString: " << ssString << "\n";
 		return ssString;
 	}
 
 	Player* Player::fromString(const std::string& data) {
 		std::stringstream ss(data);
 		std::string line;
+
+		std::cout << "Entering FromString: " << data << "\n";
 
 		// Helper functions
 		auto getFloat = [&]() { std::getline(ss, line); return std::stof(line); };
@@ -205,7 +206,6 @@ namespace Entities {
 
 		std::getline(ss, line);
 		int uuid = getInt(); // Use to identify the object
-		std::cout << "UUID: " << uuid << "\n";
 
 		Utils::Vector2D* position = Utils::Vector2D::fromString(ss);
 		Utils::Vector2D* velocity = Utils::Vector2D::fromString(ss);
@@ -219,11 +219,7 @@ namespace Entities {
 
 		std::getline(ss, line);
 
-		std::cout << "The line from fromString before assigning: " << line << "\n";
-
 		std::string textureFilePath = line;
-
-		std::cout << "Filepath inside fromString: " << textureFilePath << "\n";
 
 		std::list<SDL_Rect>* colliders = new std::list<SDL_Rect>();
 		std::getline(ss, line);

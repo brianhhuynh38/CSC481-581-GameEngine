@@ -196,7 +196,7 @@ int main(int argc, char* argv[]) {
 		true,
 		false
 	);
-	ground->setUUID(-2);
+	ball->setUUID(-2);
 	// Create ground object (Temp)
 	ground = new Entities::Entity(
 		1.0, 1.0,

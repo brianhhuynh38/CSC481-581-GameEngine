@@ -334,8 +334,8 @@ namespace Entities {
 		// Stringifies each of the bools: stationary, affectedByPhysics, visible
 		ss << m_isStationary << "\n" << m_affectedByPhysics << "\n" << m_isVisible << "\n";
 		// Stringify MovingEntity-specific stuff
-		ss << isContinuous() << "," << isReverse() << "\n";
-		ss << m_pauseTimer << "," << m_currentTimer << "," << getSpeed() << "\n";
+		ss << isContinuous() << "\n" << isReverse() << "\n";
+		ss << m_pauseTimer << "\n" << m_currentTimer << "\n" << getSpeed() << "\n";
 		ss << m_startPosition.toString();
 		ss << m_endPosition.toString();
 		return ss.str();
@@ -344,6 +344,8 @@ namespace Entities {
 	MovingEntity* MovingEntity::fromString(const std::string& data) {
 		std::stringstream ss(data);
 		std::string line;
+
+		std::cout << "Entering MovingEntity fromString:\n" << data << "\n";
 
 		// Helper functions
 		auto getFloat = [&]() { std::getline(ss, line); return std::stof(line); };

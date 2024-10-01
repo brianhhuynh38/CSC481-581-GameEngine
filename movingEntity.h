@@ -112,7 +112,7 @@ namespace Entities {
 		/**
 		* Takes a string containing information for a MovingEntity and creates one
 		*/
-		MovingEntity* fromString(const std::string& data);
+		static MovingEntity* fromString(const std::string& data);
 	};
 
 }

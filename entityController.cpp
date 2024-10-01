@@ -1,7 +1,6 @@
 #include <map>
 #include <iostream>
 #include <sstream>
-#include <vector>
 
 #include "entityController.h"
 #include "player.h"
@@ -50,32 +49,35 @@ void EntityController::updateEntitiesByString(std::string entityListString) {
 	// Dispose of first identifier line
 	std::getline(ss, temp);
 
-	// Helper functions
-	// auto getFloat = [&]() { std::getline(ss, line); return std::stof(line); };
-	// auto getInt = [&]() { std::getline(ss, line); return std::stoi(line); };
-	// auto getBool = [&]() { return getInt() != 0; };
-
 	// Separate players and moving entities
 	std::getline(ss, playersLine, '+');
 	std::getline(ss, movingLine, '+');
 	// Setup stringstreams for each part
 	std::stringstream ssPlayer(playersLine);
 	std::stringstream ssMoving(movingLine);
-	// Vectors to store individual entity lines
-	std::vector<std::string> playerEntityLines;
-	std::vector<std::string> movingEntityLines;
 
-	
+	std::cout << "Print out the EntityController list sizes:\n" << "Players: " << m_opposingPlayers->size() << "\n" << "Movers: " << m_movingEntities->size() << "\n";
 
+	// Get rid of throwaway lines
+	std::getline(ssPlayer, temp, '*');
+	std::getline(ssMoving, temp, '*');
+
+	// Insert player data except for data for this client
 	while (std::getline(ssPlayer, temp, '*')) {
-		insertOpposingPlayer(*Entities::Player::fromString(temp));
+		// Construct player from string
+		Entities::Player p = *Entities::Player::fromString(temp);
+		// If the player is not the one this client controls, do not update
+		if (p.getUUID() != m_playerID) {
+			insertOpposingPlayer(p);
+			insertEntity(p);
+		}
 	}
 
+	// Insert moving entity data
 	while (std::getline(ssMoving, temp, '*')) {
-		movingEntityLines.push_back(temp);
+		// Insert the moving entity into the list
+		insertMovingEntity(*Entities::MovingEntity::fromString(temp));
 	}
-
-	// use insert methods below to insert or assign updates (do NOT add/update your own player, only opposing players)
 }
 
 std::map<int, Entities::Entity> *EntityController::getEntities() {

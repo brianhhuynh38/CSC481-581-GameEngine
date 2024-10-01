@@ -78,7 +78,7 @@ namespace Client {
             //std::cout << recv_msgs[0].to_string() << "\n";
         }
 
-        std::cout << "Player info on client: " << player.toString() << "\n";
+        //std::cout << "Player info on client: " << player.toString() << "\n";
 
         zmq::message_t playerInfo("Server\n" + player.toString());
 
