@@ -55,7 +55,7 @@ namespace Client {
         //subscriber->set(zmq::sockopt::subscribe, "Client");
 
         // Set the client identifier (SECTION 5)
-        subscriber->set(zmq::sockopt::subscribe, "Client"/*reply.to_string()*/);
+        subscriber->set(zmq::sockopt::subscribe, "");
 
         return 0;
     }
@@ -66,20 +66,40 @@ namespace Client {
     */
     int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player *&player, EntityController*& entityController) {
         // Receive messages from the server as a subscriber
-        std::vector<zmq::message_t> recv_msgs;
-        zmq::recv_result_t result =
-            zmq::recv_multipart(*(subscriber), std::back_inserter(recv_msgs), zmq::recv_flags::dontwait);
+        zmq::message_t serverInfo;
+        subscriber->recv(serverInfo, zmq::recv_flags::dontwait);
 
-        if (recv_msgs.size() > 0) {
-            entityController->updateEntitiesByString(recv_msgs[0].to_string());
-            //std::cout << recv_msgs[0].to_string() << "\n";
+
+        if (!serverInfo.empty()) {
+            std::stringstream ss;
+            ss.clear();
+            ss.str(serverInfo.to_string());
+
+            // Read the first line to extract the clock value
+            std::string firstLine;
+            std::getline(ss, firstLine);
+
+            // Now, extract the clock from the first line
+            std::stringstream clockStream(firstLine);
+            int64_t clock;
+            if (!(clockStream >> clock)) {
+                std::cerr << "Failed to parse clock value." << std::endl;
+                return -1;
+            }
+
+            // Calculate the delay (SUICIDE-SNAIL SOLUTION)
+            const auto delay = std::clock() - clock;
+            if (delay > MAX_ALLOWED_DELAY) {
+                std::cerr << "E: subscriber cannot keep up, aborting. Delay=" << delay << std::endl;
+                return -1;
+            }
+
+            entityController->updateEntitiesByString(serverInfo.to_string());
         }
 
         //std::cout << "Player info to send to server: " << player->toString() << "\n";
-
         zmq::message_t playerInfo("Server\n" + player->toString());
-
-        publisher->send(playerInfo, zmq::send_flags::none);
+        publisher->send(playerInfo, zmq::send_flags::dontwait);
 
         return 0;
     }

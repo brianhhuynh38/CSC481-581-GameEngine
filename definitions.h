@@ -25,3 +25,5 @@
 
 // max keyboard keys available to press
 #define MAX_KEYBOARD_KEYS 350
+
+#define MAX_ALLOWED_DELAY 1000 // msecs

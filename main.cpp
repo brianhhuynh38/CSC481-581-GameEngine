@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 
 	// TODO: Initialize networking
 	// initialize the zmq context with a single IO thread
-	zmq::context_t context{ 1 };
+	zmq::context_t context{ 2 };
 	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
 	zmq::socket_t serverToClientSubscriber{ context, zmq::socket_type::sub };
 	// construct a REQ (request) socket to receive client identification information from the server
