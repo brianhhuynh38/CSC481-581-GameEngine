@@ -20,7 +20,10 @@ void EntityController::updateEntities() {
 	std::map<int, Entities::Entity>::iterator iter;
 	// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
 	for (iter = m_entities->begin(); iter != m_entities->end(); ++iter) {
-		if (iter->second.getAffectedByPhysics()) {
+		int entityId = iter->first; // Get the ID of the current entity
+
+		// Check if the entity is affected by physics and is not an opposing player
+		if (iter->second.getAffectedByPhysics() && m_opposingPlayers->find(entityId) == m_opposingPlayers->end()) {
 			physics.updateEntityPhysicsVectors(&iter->second);
 			//std::cout << "phys";
 		}
@@ -39,6 +42,7 @@ void EntityController::updateEntities() {
 	* @param entityListString
 	*/
 void EntityController::updateEntitiesByString(std::string entityListString) {
+	std::cout << "EntityListString: " << entityListString << "\n";
 	// Delimit by section
 	std::stringstream ss(entityListString);
 	// Strings for storing player and moving data

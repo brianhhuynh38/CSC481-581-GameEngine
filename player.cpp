@@ -24,7 +24,7 @@ namespace Entities {
 		std::cout << "Player constructor parameter: " << textureFilepath << "\n";
 		m_textureFilepath = textureFilepath;
 		std::cout << "Player string value: " << m_textureFilepath << "\n";
-		m_texture = Render::loadTexture(textureFilepath);
+		//m_texture = Render::loadTexture(textureFilepath);
 
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
@@ -100,7 +100,7 @@ namespace Entities {
 				iterCol2->x = m_position->x;
 				iterCol2->y = m_position->y;
 		
-				std::cout << "COLLIDED coordinates: " << iterCol2->x << "," << iterCol2->y << "\n";
+				//std::cout << "COLLIDED coordinates: " << iterCol2->x << "," << iterCol2->y << "\n";
 			}
 
 			// set as grounded if 
@@ -207,11 +207,11 @@ namespace Entities {
 		std::getline(ss, line);
 		int uuid = getInt(); // Use to identify the object
 
-		Utils::Vector2D* position = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* velocity = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* acceleration = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* scale = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* size = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D position = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D velocity = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D acceleration = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D scale = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D size = Utils::Vector2D::fromString(ss);
 
 		float mass = getFloat();
 		float velocity_max = getFloat();
@@ -236,10 +236,10 @@ namespace Entities {
 		float maxSpeed = getFloat();
 		bool isGrounded = getBool();
 
-		Utils::Vector2D* jumpVector = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D jumpVector = Utils::Vector2D::fromString(ss);
 
-		Player* entity = new Player(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
-			textureFilePath, isStationary, affectedByPhysics, jumpVector->x, jumpVector->y, maxSpeed);
+		Player* entity = new Player(scale.x, scale.y, position.x, position.y, size.x, size.y, mass,
+			textureFilePath, isStationary, affectedByPhysics, jumpVector.x, jumpVector.y, maxSpeed);
 
 		// Set other fields if needed
 		entity->setIsGrounded(isGrounded);

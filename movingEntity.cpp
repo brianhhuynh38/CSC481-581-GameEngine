@@ -345,7 +345,7 @@ namespace Entities {
 		std::stringstream ss(data);
 		std::string line;
 
-		std::cout << "Entering MovingEntity fromString:\n" << data << "\n";
+		//std::cout << "Entering MovingEntity fromString:\n" << data << "\n";
 
 		// Helper functions
 		auto getFloat = [&]() { std::getline(ss, line); return std::stof(line); };
@@ -355,11 +355,11 @@ namespace Entities {
 		std::getline(ss, line);
 		int uuid = getInt(); // Use to identify the object
 
-		Utils::Vector2D* position = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* velocity = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* acceleration = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* scale = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* size = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D position = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D velocity = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D acceleration = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D scale = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D size = Utils::Vector2D::fromString(ss);
 
 		float mass = getFloat();
 		float velocity_max = getFloat();
@@ -387,12 +387,12 @@ namespace Entities {
 		int currentTimer = getInt();
 		float speed = getFloat();
 
-		Utils::Vector2D* startPosition = Utils::Vector2D::fromString(ss);
-		Utils::Vector2D* endPosition = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D startPosition = Utils::Vector2D::fromString(ss);
+		Utils::Vector2D endPosition = Utils::Vector2D::fromString(ss);
 
-		MovingEntity* entity = new MovingEntity(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
+		MovingEntity* entity = new MovingEntity(scale.x, scale.y, position.x, position.y, size.x, size.y, mass,
 			textureFilePath, isStationary, affectedByPhysics,
-			continuous, reverse, pauseTimer, speed, endPosition->x, endPosition->y);
+			continuous, reverse, pauseTimer, speed, endPosition.x, endPosition.y);
 
 		// Set other fields if needed
 		entity->setUUID(uuid);

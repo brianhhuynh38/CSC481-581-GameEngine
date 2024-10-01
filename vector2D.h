@@ -31,7 +31,7 @@ namespace Utils {
 
 		std::string toString();
 
-		static Vector2D* fromString(std::stringstream& ss);
+		static Vector2D fromString(std::stringstream& ss);
 	};
 }
 

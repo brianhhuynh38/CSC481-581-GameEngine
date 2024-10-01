@@ -88,23 +88,24 @@ namespace Utils {
 		return ss.str();
 	}
 
-	Vector2D* Vector2D::fromString(std::stringstream& ss) {
-		std::string line;
+	Vector2D Vector2D::fromString(std::stringstream& ss) {
+		std::string line, xStr, yStr;
 		std::getline(ss, line);
 
+		//std::cout << "Printing Vector2D Test LINE: " << line << "\n";
+
 		std::stringstream lineStream(line);
-		std::string xStr, yStr;
 
 		std::getline(lineStream, xStr, ',');
 		std::getline(lineStream, yStr, '\n');
 
 		//std::cout << "Printing Vector2D Test: " << xStr << "," << yStr << "\n";
 
-		//std::cout << "Printing Vector2D Test LINE: " << line << "\n";
-
 		float x = std::stof(xStr);
 		float y = std::stof(yStr);
 
-		return new Vector2D(x, y);
+		//std::cout << "Last Vector2D Test: " << (new Vector2D(x, y))->toString() << "\n";
+
+		return Vector2D(x, y);
 	}
 }

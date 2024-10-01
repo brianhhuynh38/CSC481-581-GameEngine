@@ -46,9 +46,8 @@ namespace Client {
         player = Entities::Player::fromString(playerString);
 
         //std::cout << "FULLY CREATED ENTITY ON CLIENT: \n" << player->toString() << "\n";
-
-        entityController->insertEntity((Entities::Entity)*player);
         entityController->setPlayerID(player->getUUID());
+        entityController->insertEntity((Entities::Entity)*player);
 
         playerController = new Controllers::PlayerController(player);
 
