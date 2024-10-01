@@ -11,7 +11,7 @@ namespace Entities {
 	 * Constructs the Player and initializes all fields
 	 */
 	Player::Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		const char* textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
@@ -21,6 +21,9 @@ namespace Entities {
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_jumpVector = new Utils::Vector2D(jumpVectorX, jumpVectorY);
 
+		std::cout << "Player constructor parameter: " << textureFilepath << "\n";
+		m_textureFilepath = textureFilepath;
+		std::cout << "Player string value: " << m_textureFilepath << "\n";
 		m_texture = Render::loadTexture(textureFilepath);
 
 		m_isStationary = isStationary;
@@ -97,7 +100,7 @@ namespace Entities {
 				iterCol2->x = m_position->x;
 				iterCol2->y = m_position->y;
 		
-				//std::cout << "COLLIDED coordinates: " << iterCol2->x << "," << iterCol2->y << "\n";
+				std::cout << "COLLIDED coordinates: " << iterCol2->x << "," << iterCol2->y << "\n";
 			}
 
 			// set as grounded if 
@@ -171,6 +174,10 @@ namespace Entities {
 		ss << m_acceleration_max << "\n";
 		// Get filepath to SDLTexture
 		ss << m_textureFilepath << "\n";
+
+		//std::cout << "Filepath inside Player toString: " << m_textureFilepath << "\n";
+		
+
 		// Stringifies each SDL_Rect Collider
 		for (SDL_Rect collider : *m_colliders) {
 			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
@@ -180,7 +187,11 @@ namespace Entities {
 		ss << m_isStationary << "\n" << m_affectedByPhysics << "\n" << m_isVisible << "\n";
 		//Stringify Player-specific stuff
 		ss << getMaxSpeed() << "\n" << getIsGrounded() << "\n" << getJumpVector()->toString();
-		return ss.str();
+
+		std::string ssString = ss.str();
+
+		std::cout << "SS inside Player toString: " << ssString << "\n";
+		return ssString;
 	}
 
 	Player* Player::fromString(const std::string& data) {
@@ -194,6 +205,7 @@ namespace Entities {
 
 		std::getline(ss, line);
 		int uuid = getInt(); // Use to identify the object
+		std::cout << "UUID: " << uuid << "\n";
 
 		Utils::Vector2D* position = Utils::Vector2D::fromString(ss);
 		Utils::Vector2D* velocity = Utils::Vector2D::fromString(ss);
@@ -206,7 +218,12 @@ namespace Entities {
 		float acceleration_max = getFloat();
 
 		std::getline(ss, line);
+
+		std::cout << "The line from fromString before assigning: " << line << "\n";
+
 		std::string textureFilePath = line;
+
+		std::cout << "Filepath inside fromString: " << textureFilePath << "\n";
 
 		std::list<SDL_Rect>* colliders = new std::list<SDL_Rect>();
 		std::getline(ss, line);
@@ -226,11 +243,12 @@ namespace Entities {
 		Utils::Vector2D* jumpVector = Utils::Vector2D::fromString(ss);
 
 		Player* entity = new Player(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
-			textureFilePath.c_str(), isStationary, affectedByPhysics, jumpVector->x, jumpVector->y, maxSpeed);
+			textureFilePath, isStationary, affectedByPhysics, jumpVector->x, jumpVector->y, maxSpeed);
 
 		// Set other fields if needed
 		entity->setIsGrounded(isGrounded);
-		
+		entity->setUUID(uuid);
+		entity->setTexture(textureFilePath);
 
 		return entity;
 	}

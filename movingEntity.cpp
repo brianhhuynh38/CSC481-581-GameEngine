@@ -58,7 +58,7 @@ namespace Entities {
 	* @param endPosY: The y component of the position at the end of the object's path
 	*/
 	MovingEntity::MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		const char* textureFilepath, bool isStationary, bool affectedByPhysics,
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics,
 		bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY) {
 		// Entity parts
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
@@ -67,6 +67,7 @@ namespace Entities {
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_mass = mass;
+		m_textureFilepath = textureFilepath;
 		m_texture = Render::loadTexture(textureFilepath);
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
@@ -388,10 +389,11 @@ namespace Entities {
 		Utils::Vector2D* endPosition = Utils::Vector2D::fromString(ss);
 
 		MovingEntity* entity = new MovingEntity(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
-			textureFilePath.c_str(), isStationary, affectedByPhysics,
+			textureFilePath, isStationary, affectedByPhysics,
 			continuous, reverse, pauseTimer, speed, endPosition->x, endPosition->y);
 
 		// Set other fields if needed
+		entity->setUUID(uuid);
 
 		return entity;
 	}

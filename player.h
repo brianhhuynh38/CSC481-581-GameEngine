@@ -34,7 +34,7 @@ namespace Entities {
 		 * @param maxSpeed The maximum speed at whihc the player can move
 		 */
 		Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-			const char* textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
+			std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
 			float maxSpeed);
 
 		/**

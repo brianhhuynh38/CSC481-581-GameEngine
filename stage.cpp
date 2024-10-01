@@ -31,13 +31,13 @@ namespace Stages {
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
 	void Stage::drawEntities(void) {
-		// Create entity list iterator
-		std::list<Entities::Entity>::iterator iter;
-		std::list<Entities::Entity> entities = *entityController->getEntities();
-		// Draws each entity
-		for (iter = entities.begin(); iter != entities.end(); ++iter) {
-			Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getSize()->x, iter->getSize()->y, iter->getScale()->x, iter->getScale()->y);
-		}
+		//// Create entity list iterator
+		//std::list<Entities::Entity>::iterator iter;
+		//std::list<Entities::Entity> entities = *entityController->getEntities();
+		//// Draws each entity
+		//for (iter = entities.begin(); iter != entities.end(); ++iter) {
+		//	Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getSize()->x, iter->getSize()->y, iter->getScale()->x, iter->getScale()->y);
+		//}
 	}
 
 	/**

@@ -27,7 +27,7 @@ namespace Render {
 	 * @param filename for texture to load
 	 * @return texture in SDL_Texture format
 	 */
-	SDL_Texture* loadTexture(const char* filename);
+	SDL_Texture* loadTexture(std::string filename);
 
 	/**
 	 * Displays given texture at the given coordinates.

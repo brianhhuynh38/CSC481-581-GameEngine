@@ -57,21 +57,21 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
  * This was referenced from the SDL2 tutorial:
  * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
  */
-HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities) {
+HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::map<int, Entities::Entity> *entities) {
     // Create list iterator
-	std::list<Entities::Entity>::iterator iterEnt;
+	std::map<int, Entities::Entity>::iterator iterEnt;
 
     // Create hit responce for return
     HitInfo hInfo{false};
 
     // Loop through entities, use their colliders to check the collisions, using checkCollision method
-    for (iterEnt = (*entities).begin(); iterEnt != (*entities).end(); ++iterEnt) { // Iterate through all entities
+    for (iterEnt = entities->begin(); iterEnt != entities->end(); ++iterEnt) { // Iterate through all entities
 
         // Create colliders iterator
         std::list<SDL_Rect>::iterator iterCol;
 
         // Get colliders of entity
-        std::list<SDL_Rect> *entityCollisions = (*iterEnt).getColliders();
+        std::list<SDL_Rect> *entityCollisions = iterEnt->second.getColliders();
 
         // Loop through colliders from 'entities'
         for (iterCol = entityCollisions->begin(); iterCol != entityCollisions->end(); ++iterCol) { // Iterate through all of the colliders of the entity
@@ -80,7 +80,7 @@ HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Ent
             std::list<SDL_Rect>::iterator iterColOther;
 
             // Get colliders of entity to check against checked object
-            std::list<SDL_Rect> *entityCollisions = (*iterEnt).getColliders();
+            std::list<SDL_Rect> *entityCollisions = iterEnt->second.getColliders();
 
             for (iterColOther = collisions->begin(); iterColOther != collisions->end(); ++iterColOther) { // Iterate through all of the colliders of the entity
                 if (&(*iterCol) != &(*iterColOther)) {

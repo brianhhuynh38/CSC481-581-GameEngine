@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #include "vector2D.h"
 
@@ -95,7 +96,11 @@ namespace Utils {
 		std::string xStr, yStr;
 
 		std::getline(lineStream, xStr, ',');
-		std::getline(lineStream, yStr, ',');
+		std::getline(lineStream, yStr, '\n');
+
+		//std::cout << "Printing Vector2D Test: " << xStr << "," << yStr << "\n";
+
+		//std::cout << "Printing Vector2D Test LINE: " << line << "\n";
 
 		float x = std::stof(xStr);
 		float y = std::stof(yStr);

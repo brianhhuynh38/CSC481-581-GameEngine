@@ -54,7 +54,7 @@ namespace Entities {
 		* @param endPosY The y component of the end position
 		*/
 		MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-			const char* textureFilepath, bool isStationary, bool affectedByPhysics, 
+			std::string textureFilepath, bool isStationary, bool affectedByPhysics,
 			bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY);
 
 		/**

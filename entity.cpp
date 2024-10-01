@@ -26,7 +26,7 @@ namespace Entities {
 		m_acceleration_max = 10;
 		m_mass = 5;
 
-		m_textureFilepath = ".\Assets\Textures\MissingTexture.png";
+		m_textureFilepath = "./Assets/Textures/MissingTexture.png";
 		m_texture = Render::loadTexture(m_textureFilepath);
 
 		m_isStationary = false;
@@ -51,7 +51,7 @@ namespace Entities {
 	 * @param affectedByPhysics Whether the object is affectedByPhysics
 	 */
 	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
-		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics) {
 		m_uuid = -1;
 
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
@@ -65,7 +65,7 @@ namespace Entities {
 		m_acceleration_max = 10;
 
 		m_textureFilepath = textureFilepath;
-		m_texture = Render::loadTexture(textureFilepath);
+		m_texture = Render::loadTexture(m_textureFilepath);
 
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
@@ -79,6 +79,10 @@ namespace Entities {
 		*/
 	int Entity::getUUID() {
 		return m_uuid;
+	}
+
+	void Entity::setUUID(int uuid) {
+		m_uuid = uuid;
 	}
 
 	/**
@@ -226,7 +230,7 @@ namespace Entities {
 	* Sets the texture by trying to load the file at the given filepath
 	* @param textureFilepath The location of the texture to load
 	*/
-	void Entity::setTexture(char* textureFilepath) {
+	void Entity::setTexture(std::string textureFilepath) {
 		try {
 			m_texture = Render::loadTexture(textureFilepath);
 		}

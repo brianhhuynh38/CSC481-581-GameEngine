@@ -5,6 +5,7 @@
 #include "global.h"
 #include "structs.h"
 #include "draw.h"
+#include <cassert>
 
 
 namespace Render {
@@ -46,12 +47,25 @@ namespace Render {
 	 * @param filename for texture to load
 	 * @return texture in SDL_Texture format
 	 */
-	SDL_Texture* loadTexture(const char* filename) {
+	SDL_Texture* loadTexture(std::string filename) {
 		SDL_Texture* texture;
 		// Logs loading percents when loading in the given file
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-		// Loads texture into the renderer
-		texture = IMG_LoadTexture(display->renderer, filename);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
+
+		std::cout << "FileName: " << filename << "\n";
+		//assert(filename == "./Assets/Textures/DefaultPlayerTexture1.png");
+
+		// Tries to load in texture
+		try {
+			// Loads texture into the renderer
+			texture = IMG_LoadTexture(display->renderer, filename.c_str());
+		}
+		catch (int e) {
+			// If the filename cannot be found, or is corrupted, load in missing texture instead
+			std::cout << "Failed to load texture: " << filename << "\nLoading missing texture instead...";
+			texture = IMG_LoadTexture(display->renderer, "./Assets/Textures/MissingTexture.png");
+		}
+		
 		return texture;
 	}
 

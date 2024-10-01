@@ -163,9 +163,6 @@ int main(int argc, char* argv[]) {
 	// construct a PUB (publish) socket to send player information to the server
 	zmq::socket_t clientToServerPublisher{ context, zmq::socket_type::pub };
 
-	// Update request and subscriber. Put on a new thread
-	Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher);
-
 	// Loads in config file to read and get configured gravity
 	loadConfigFile();
 	
@@ -183,18 +180,12 @@ int main(int argc, char* argv[]) {
 
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
-	player = new Entities::Player(
-		1.0, 1.0,
-		250.0, 250.0,
-		15.0, 25.0,
-		50.0,
-		"./Assets/Textures/DefaultPlayerTexture1.png",
-		false,
-		true,
-		0.0f, -150.0f,
-		6.0
-	);
-	// Create ball object (Temp)
+	
+	entityController = new EntityController();
+	// Update request and subscriber. Put on a new thread
+	Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
+
+
 	ball = new Entities::Entity
 	(
 		1.0, 1.0,
@@ -205,23 +196,7 @@ int main(int argc, char* argv[]) {
 		true,
 		false
 	);
-	// Create box object that moves (Temp)
-	movingBox = new Entities::MovingEntity
-	(
-		1.0, 1.0,
-		550.0, 550.0,
-		10.0,
-		50.0f, 50.0f,
-		"./Assets/Textures/devTexture0.png",
-		false,
-		false,
-		true,
-		false,
-		10,
-		500,
-		800.0,
-		800.0
-	);
+	ground->setUUID(-2);
 	// Create ground object (Temp)
 	ground = new Entities::Entity(
 		1.0, 1.0,
@@ -232,6 +207,7 @@ int main(int argc, char* argv[]) {
 		true,
 		false
 	);
+	ground->setUUID(-3);
 
 	// Create second ground object (Temp)
 	platform = new Entities::Entity(
@@ -243,20 +219,12 @@ int main(int argc, char* argv[]) {
 		true,
 		false
 	);
+	platform->setUUID(-4);
 
-	// Create player controller for player (temp for testing)
-	playerController = new Controllers::PlayerController(player);
-	//Create entity controller
-	entityController = new EntityController();
-	entityController->addEntity((Entities::Entity) *player);
-	entityController->addEntity(*ground);
-	entityController->addEntity(*platform);
-	entityController->addEntity(*ball);
-	entityController->addEntity((Entities::Entity) *movingBox);
-	entityController->addMovingEntity(*movingBox);
-	
-	// TODO: Networking
-	
+	// Client side non-moving entities
+	entityController->insertEntity(*ground);
+	entityController->insertEntity(*platform);
+	entityController->insertEntity(*ball);
 
 	// Get current window size
 	int* w = new int(0);
@@ -271,80 +239,65 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
-	// Network multithreading
-
-	// Mutex to handle locking, condition variable to handle notifications between threads
-    std::mutex m;
-    std::condition_variable cv;
-
-    // Create thread objects
-    //NetworkThread serverThread(0, NULL, &m, &cv);
-    //NetworkThread clientThread(1, &serverThread, &m, &cv);
-
-
-	// Update and run threads (temp)
-	//std::thread first(NetworkThread::run, &serverThread);
-	//std::thread second(NetworkThread::run, &clientThread);
-
-    //std::cout << "Starting network threads \n";
-
-
+	// TODO Multithreading
 	// Basic, primitive game loop
 	// TODO: Add ability to reload everything via terminal at some point
 	while (true) {
-		// Updates to get a new deltaTime
-		timeline.updateTime();
+		if (playerController) {
+			// TODO: Send client information update to the server
+			// Update request and subscriber
+			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, *player, entityController);
 
-		// Prepares scene for rendering
-		Render::prepareScene();
+			// Updates to get a new deltaTime
+			timeline.updateTime();
 
-		// Updates the keyboard inputs
-		SDL_PumpEvents();
-		// Handles player input, including exit
-		Input::takeInput();
+			// Prepares scene for rendering
+			Render::prepareScene();
 
-		// Run logic and draw scene
-		//display->delegate.logic();
-	    //display->delegate.draw();
+			// Updates the keyboard inputs
+			SDL_PumpEvents();
+			// Handles player input, including exit
+			Input::takeInput();
 
-		// check player movmentInput (TESTING)
-		playerController->movementInput();
+			// Run logic and draw scene
+			//display->delegate.logic();
+			//display->delegate.draw();
 
-		// check player actionInput (TESTING)
-		playerController->actionInput();
+			// check player movmentInput (TESTING)
+			playerController->movementInput();
 
-		// Update the physics of all entities
-		entityController->updateEntities();
+			// check player actionInput (TESTING)
+			playerController->actionInput();
 
-		// TODO: Receive game state updates from server
-		
-		// Respawn Player
-		if (player->getPosition()->y > 1000) {
-			player->setPosition(250.0f, 400.0f);
+			// Update the physics of all entities
+			entityController->updateEntities();
+
+			// TODO: Receive game state updates from server
+
+			// Respawn Player
+			if (player->getPosition()->y > 1000) {
+				player->setPosition(250.0f, 400.0f);
+			}
+
+			// Display all entities
+			std::map<int, Entities::Entity>::iterator iterEnt;
+
+			// Loop through entities and display them all
+			for (iterEnt = entityController->getEntities()->begin(); iterEnt != entityController->getEntities()->end(); ++iterEnt) {
+				Render::displayEntity((Entities::Entity) iterEnt->second);
+			}
+
+			/*Render::displayEntity((Entities::Entity)*player);
+			Render::displayEntity(*ground);
+			Render::displayEntity(*platform);
+			Render::displayEntity(*ball);*/
+			//Render::displayEntity((Entities::Entity)*movingBox);
+
+			// Renders the scene gven the parameters identified in prepareScene()
+			Render::presentScene();
+
+			capFrameRate(&then, &remainder);
 		}
-
-		// Update and run threads (temp)
-		//std::thread first(NetworkThread::run, &serverThread);
-		//std::thread second(NetworkThread::run, &clientThread);
-
-		// TEST PRINT for player info (DELETE LATER)
-		// std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
-
-		// Display player and floor texture at their locations
-		Render::displayEntity((Entities::Entity) *player);
-		Render::displayEntity(*ground);
-		Render::displayEntity(*platform);
-		Render::displayEntity(*ball);
-		Render::displayEntity((Entities::Entity) *movingBox);
-
-		// Renders the scene gven the parameters identified in prepareScene()
-		Render::presentScene();
-
-		// TODO: Send client information update to the server
-		// Update request and subscriber
-		Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, *player);
-
-		capFrameRate(&then, &remainder);
 	}
 
 	delete w;
