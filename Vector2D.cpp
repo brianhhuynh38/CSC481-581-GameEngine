@@ -90,22 +90,42 @@ namespace Utils {
 
 	Vector2D Vector2D::fromString(std::stringstream& ss) {
 		std::string line, xStr, yStr;
-		std::getline(ss, line);
 
-		//std::cout << "Printing Vector2D Test LINE: " << line << "\n";
+		// Try to read the entire line first
+		if (!std::getline(ss, line)) {
+			throw std::invalid_argument("Invalid input: could not read the line.");
+		}
 
+		// Debug: Output the line read from the stringstream
+		//std::cout << "Line read: " << line << "\n";
+
+		// Create a stringstream from the line for further parsing
 		std::stringstream lineStream(line);
 
-		std::getline(lineStream, xStr, ',');
-		std::getline(lineStream, yStr, '\n');
+		// Extract the x and y components, separated by a comma
+		if (!std::getline(lineStream, xStr, ',')) {
+			throw std::invalid_argument("Invalid input: could not parse x value.");
+		}
 
-		//std::cout << "Printing Vector2D Test: " << xStr << "," << yStr << "\n";
+		if (!std::getline(lineStream, yStr)) {
+			throw std::invalid_argument("Invalid input: could not parse y value.");
+		}
 
-		float x = std::stof(xStr);
-		float y = std::stof(yStr);
+		// Debug: Output the extracted x and y strings
+		//std::cout << "Extracted xStr: " << xStr << ", yStr: " << yStr << "\n";
 
-		//std::cout << "Last Vector2D Test: " << (new Vector2D(x, y))->toString() << "\n";
+		// Convert the strings to floats
+		try {
+			float x = std::stof(xStr);
+			float y = std::stof(yStr);
 
-		return Vector2D(x, y);
+			// Debug: Output the parsed float values
+			//std::cout << "Parsed x: " << x << ", y: " << y << "\n";
+
+			return Vector2D(x, y);
+		}
+		catch (const std::exception& e) {
+			throw std::invalid_argument("Invalid input: could not convert to float.");
+		}
 	}
 }

@@ -12,6 +12,7 @@ namespace Entities {
 	 */
 	Player::Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
+
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
@@ -21,9 +22,7 @@ namespace Entities {
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_jumpVector = new Utils::Vector2D(jumpVectorX, jumpVectorY);
 
-		std::cout << "Player constructor parameter: " << textureFilepath << "\n";
 		m_textureFilepath = textureFilepath;
-		std::cout << "Player string value: " << m_textureFilepath << "\n";
 		//m_texture = Render::loadTexture(textureFilepath);
 
 		m_isStationary = isStationary;
@@ -196,8 +195,6 @@ namespace Entities {
 	Player* Player::fromString(const std::string& data) {
 		std::stringstream ss(data);
 		std::string line;
-
-		std::cout << "Entering FromString: " << data << "\n";
 
 		// Helper functions
 		auto getFloat = [&]() { std::getline(ss, line); return std::stof(line); };

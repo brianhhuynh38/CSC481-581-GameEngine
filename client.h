@@ -22,7 +22,7 @@ namespace Client {
 	* Run the networking communication setup
 	* @param subscriber Subscriber to use
 	*/
-	int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player player, EntityController*& entityController);
+	int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player*& player, EntityController*& entityController);
 }
 
 #endif

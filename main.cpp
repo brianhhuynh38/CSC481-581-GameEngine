@@ -246,7 +246,7 @@ int main(int argc, char* argv[]) {
 		if (playerController) {
 			// TODO: Send client information update to the server
 			// Update request and subscriber
-			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, *player, entityController);
+			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
 
 			// Updates to get a new deltaTime
 			timeline.updateTime();

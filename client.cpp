@@ -64,22 +64,20 @@ namespace Client {
     * Run the networking communication setup
     * @param subscriber Subscriber to use
     */
-    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player player, EntityController*& entityController) {
+    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player *&player, EntityController*& entityController) {
         // Receive messages from the server as a subscriber
         std::vector<zmq::message_t> recv_msgs;
         zmq::recv_result_t result =
             zmq::recv_multipart(*(subscriber), std::back_inserter(recv_msgs), zmq::recv_flags::dontwait);
-        //assert(result && "recv failed");
-        //assert(*result == 2);
 
         if (recv_msgs.size() > 0) {
             entityController->updateEntitiesByString(recv_msgs[0].to_string());
             //std::cout << recv_msgs[0].to_string() << "\n";
         }
 
-        //std::cout << "Player info on client: " << player.toString() << "\n";
+        //std::cout << "Player info to send to server: " << player->toString() << "\n";
 
-        zmq::message_t playerInfo("Server\n" + player.toString());
+        zmq::message_t playerInfo("Server\n" + player->toString());
 
         publisher->send(playerInfo, zmq::send_flags::none);
 
