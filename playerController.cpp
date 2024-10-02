@@ -80,10 +80,16 @@ namespace Controllers {
 
         player->updateVelocity(moveVector);
 
+        if (player->getIsGrounded() == true && moveVector.y > 0) {
+            moveVector.y = 0;
+        }
+
+        std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
+
         // move on x axis
-        player->move(Utils::Vector2D(moveVector.x, 0));
+        player->move(Utils::Vector2D(moveVector.x, NULL));
         // move on y axis
-        player->move(Utils::Vector2D(0, moveVector.y));
+        player->move(Utils::Vector2D(NULL, moveVector.y));
         
     }
 

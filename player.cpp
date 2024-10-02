@@ -38,28 +38,34 @@ namespace Entities {
 	 * @param movementVector The vector that is changes the player's movement
 	 */
 	void Player::move(Utils::Vector2D movementVector) {
-		Utils::Vector2D oldPosition = *m_position;
+		Utils::Vector2D moveVector;
 
 		// quick fix for geting to fast 
 		
 		float maxMove = 10;
-		if (movementVector.x > maxMove) {
-			movementVector.x = maxMove;
+		if (movementVector.x != NULL) {
+			if (movementVector.x > maxMove) {
+				movementVector.x = maxMove;
+			}
+			else if (movementVector.x < -maxMove) {
+				movementVector.x = -maxMove;
+			}
+			moveVector = Utils::Vector2D(movementVector.x, 0);
 		}
-		else if (movementVector.x < -maxMove) {
-			movementVector.x = -maxMove;
-		}
-		if (movementVector.y > maxMove) {
-			movementVector.y = maxMove;
-		}
-		else if (movementVector.y < -maxMove) {
-			movementVector.y = -maxMove;
+		else if (movementVector.y != NULL) {
+			if (movementVector.y > maxMove) {
+				movementVector.y = maxMove;
+			}
+			else if (movementVector.y < -maxMove) {
+				movementVector.y = -maxMove;
+			}
+			moveVector = Utils::Vector2D(0, movementVector.y);
 		}
 
 		// update velocity
-		*m_acceleration = movementVector;
-
-		*m_position = m_position->add(movementVector);
+		//*m_acceleration = moveVector;
+		updateVelocity(moveVector);
+		updatePosition(moveVector);
 
 		// Create colliders iterator
         std::list<SDL_Rect>::iterator iterCol;
@@ -78,24 +84,24 @@ namespace Entities {
 
 		// If the object collided with something
 		if( hInfo.hit ) {
-			//std::cout << "collided\n";
-			// Move back (code below from tutorial. Replace with code that fits our setup)
-			//std::cout << "Player collision pos: " << m_position->x << ", " << m_position->y << "\n";
-			//*m_position = oldPosition;
-			updatePosition(movementVector.multConst(-1));
-			//updateVelocity((*m_velocity).multConst(-1));
-			//m_position->add(movementVector.multConst(-1));
-			/**m_velocity = m_velocity->add((*m_velocity).multConst(-1));
-			*m_acceleration = m_acceleration->add((*m_acceleration).multConst(-1));*/
-			//std::cout << "Player new pos: " << m_position->x << ", " << m_position->y << "\n";
+			if (movementVector.x != NULL) { // x-axis collision
+				std::cout << "X-HIT\n";
+				updatePosition(moveVector.multConst(-1));
+				setVelocity(0, getVelocity()->x);
+			}
+			if (movementVector.y != NULL) { // y-axis collision
+				std::cout << "Y-HIT\n";
+				updatePosition( Utils::Vector2D(0, getVelocity()->multConst(-1 * (timeline.getDeltaTime() / MICROSEC_PER_SEC)).y - moveVector.y));
+				setVelocity(getVelocity()->x, 0);
+
+			}
+			
 
 			// Create colliders iterator
         	std::list<SDL_Rect>::iterator iterCol2;
 
 			for (iterCol2 = m_colliders->begin(); iterCol2 != m_colliders->end(); ++iterCol2) {
-				// Move the colliders the calculated distance
-				//iterCol2->x = oldPosition.x;
-				//iterCol2->y = oldPosition.y;
+
 				iterCol2->x = m_position->x;
 				iterCol2->y = m_position->y;
 		
@@ -103,7 +109,7 @@ namespace Entities {
 			}
 
 			// set as grounded if 
-			isGrounded = m_velocity->y > 0;
+			isGrounded = m_acceleration->y > 0;
 		}
 	}
 

@@ -272,6 +272,8 @@ int main(int argc, char* argv[]) {
 			// Update the physics of all entities
 			entityController->updateEntities();
 
+			std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
+
 			// TODO: Receive game state updates from server
 
 			// Respawn Player

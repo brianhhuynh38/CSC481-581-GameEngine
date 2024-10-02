@@ -116,6 +116,7 @@ namespace Entities {
 	 */
 	void Entity::updatePosition(Utils::Vector2D position) {
 		*m_position = m_position->add(position);
+		std::cout << "Pos += " << position.x << ", " << position.y << "\n";
 	}
 
 	/**
@@ -125,6 +126,7 @@ namespace Entities {
 	 */
 	void Entity::setPosition(float positionX, float positionY) {
 		*m_position = Utils::Vector2D(positionX, positionY);
+		std::cout << "Pos = " << positionX << ", " << positionY << "\n";
 	}
 
 	/**
@@ -161,6 +163,7 @@ namespace Entities {
 		vel.x = std::max(std::min(vel.x, m_velocity_max), -m_velocity_max);
 		vel.y = std::max(std::min(vel.y, m_velocity_max), -m_velocity_max);
 		*m_velocity = vel;
+		std::cout << "Vel += " << velocity.x << ", " << velocity.y << "\n";
 	}
 
 	/**
@@ -170,6 +173,7 @@ namespace Entities {
 	*/
 	void Entity::setVelocity(float velocityX, float velocityY) {
 		*m_velocity = Utils::Vector2D(velocityX, velocityY);
+		std::cout << "Vel = " << velocityX << ", " << velocityY << "\n";
 	}
 
 	/**
@@ -189,6 +193,7 @@ namespace Entities {
 		acc.x = std::max(std::min(acc.x, m_acceleration_max), -m_acceleration_max);
 		acc.y = std::max(std::min(acc.y, m_acceleration_max), -m_acceleration_max);
 		*m_acceleration = acc;
+		std::cout << "Acc += " << acceleration.x << ", " << acceleration.y << "\n";
 	}
 
 	/**
@@ -200,6 +205,7 @@ namespace Entities {
 		*m_acceleration = Utils::Vector2D(accelerationX, accelerationY);
 //		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
 //		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
+		std::cout << "Acc = " << accelerationX << ", " << accelerationY << "\n";
 	}
 
 	/**
