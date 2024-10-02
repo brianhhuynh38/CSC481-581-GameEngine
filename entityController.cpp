@@ -42,7 +42,7 @@ void EntityController::updateEntities() {
 	* @param entityListString
 	*/
 void EntityController::updateEntitiesByString(std::string entityListString) {
-	std::cout << "EntityListString: " << entityListString << "\n";
+	//std::cout << "EntityListString: " << entityListString << "\n";
 	// Delimit by section
 	std::stringstream ss(entityListString);
 	// Strings for storing player and moving data
@@ -60,7 +60,7 @@ void EntityController::updateEntitiesByString(std::string entityListString) {
 	std::stringstream ssPlayer(playersLine);
 	std::stringstream ssMoving(movingLine);
 
-	std::cout << "Print out the EntityController list sizes:\n" << "Players: " << m_opposingPlayers->size() << "\n" << "Movers: " << m_movingEntities->size() << "\n";
+	//std::cout << "Print out the EntityController list sizes:\n" << "Players: " << m_opposingPlayers->size() << "\n" << "Movers: " << m_movingEntities->size() << "\n";
 
 	// Get rid of throwaway lines
 	std::getline(ssPlayer, temp, '*');

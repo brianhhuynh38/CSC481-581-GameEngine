@@ -50,9 +50,10 @@ namespace Render {
 	SDL_Texture* loadTexture(std::string filename) {
 		SDL_Texture* texture;
 		// Logs loading percents when loading in the given file
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
+		// REACTIVATE THIS EVENTUALLY TO FIX LOADING
+		//SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
 
-		std::cout << "FileName: " << filename << "\n";
+		//std::cout << "FileName: " << filename << "\n";
 		//assert(filename == "./Assets/Textures/DefaultPlayerTexture1.png");
 
 		// Tries to load in texture
