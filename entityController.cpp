@@ -29,11 +29,11 @@ void EntityController::updateEntities() {
 		}
 	}
 
-	std::map<int, Entities::MovingEntity>::iterator movIter;
-	// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
-	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
-		movIter->second.move();
-	}
+	//std::map<int, Entities::MovingEntity>::iterator movIter;
+	//// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
+	//for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
+	//	movIter->second.move();
+	//}
 }
 
 /**

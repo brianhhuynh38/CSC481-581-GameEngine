@@ -27,3 +27,5 @@
 #define MAX_KEYBOARD_KEYS 350
 
 #define MAX_ALLOWED_DELAY 1000 // msecs
+
+#define ZMQ_MSG_DELAY 2 // Temporary measure for zmq message overload

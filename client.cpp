@@ -15,6 +15,10 @@
 namespace Client {
     // Map to store players by their ID from the client
     std::unordered_map<std::string, PlayerInfo> players;
+    // A timer used to delay the message being sent (A temporary measure because ZMQ_LINGER seems
+    // to be deprecated with the version we're using (4.3.5))
+    // In retrospect, maybe shoulda used 4.3.2
+    int messageDelayCounter = 0;
 
     /**
     * Sets up client parameters and interactions
@@ -97,9 +101,15 @@ namespace Client {
             entityController->updateEntitiesByString(serverInfo.to_string());
         }
 
-        //std::cout << "Player info to send to server: " << player->toString() << "\n";
-        zmq::message_t playerInfo("Server\n" + player->toString());
-        publisher->send(playerInfo, zmq::send_flags::dontwait);
+        if (messageDelayCounter >= ZMQ_MSG_DELAY) {
+            std::cout << "Sending message...\n";
+            //std::cout << "Player info to send to server: " << player->toString() << "\n";
+            zmq::message_t playerInfo("Server\n" + player->toString());
+            publisher->send(playerInfo, zmq::send_flags::dontwait);
+            messageDelayCounter = 0;
+        }
+        
+        messageDelayCounter++;
 
         return 0;
     }
