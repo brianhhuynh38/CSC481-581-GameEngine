@@ -45,11 +45,6 @@ Utils::Vector2D globalScaling;
 /// Determines if proportional scaling is active
 bool proportionalScalingActive;
 
-/// The resolution width the window is set to
-int resolutionWidth;
-/// The resolution Height the window is set to
-int resolutionHeight;
-
 /// The physics system
 Physics physics;
 /// The timeline used to keep track of time intervals
@@ -71,7 +66,7 @@ void memoryCleanUp() {
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
  *
  */
-void initSDL(void) {
+void initSDL(ConfigSettings settings) {
 	// Define SDL rendering flags
 	int rendererFlags, windowFlags;
 	// Renderer uses hardware acceleration
@@ -88,7 +83,7 @@ void initSDL(void) {
 	// Create window that is centered
 	// TODO: Might change later to not automatically use default resolution and have it adjust
 	display->window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		resolutionWidth, resolutionHeight, windowFlags);
+		settings.resolutionWidth, settings.resolutionHeight, windowFlags);
 	// Exit if the window fails to open
 	if (!display->window) {
 		std::cout << "The window was unable to open: " << SDL_GetError() << "\n";
@@ -163,11 +158,13 @@ int main(int argc, char* argv[]) {
 	// construct a PUB (publish) socket to send player information to the server
 	zmq::socket_t clientToServerPublisher{ context, zmq::socket_type::pub };
 
+	ConfigSettings settings = ConfigSettings();
+
 	// Loads in config file to read and get configured gravity
-	loadConfigFile();
+	loadConfigFile(&settings);
 	
 	// Initialize SDL components
-	initSDL();
+	initSDL(settings);
 
 	// Runs memoryCleanUp() if the application exits
 	std::atexit(memoryCleanUp);
