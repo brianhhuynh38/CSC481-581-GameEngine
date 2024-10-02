@@ -1,5 +1,6 @@
 #include "vector2D.h"
 #include "entity.h"
+#include "timeline.h"
 
 #pragma once
 
@@ -15,11 +16,13 @@ public:
 	Physics();
 
 	void setGravity(float gravity);
+	
+    float getGravity();
 
 	/**
 	* Updates all physics vectors for each entity through simple physics calculations and timeline usage
 	*/
-	void updateEntityPhysicsVectors(Entities::Entity *entity);
+	void updateEntityPhysicsVectors(Timeline *timeline, Entities::Entity *entity);
 
 	/**
 	 * Applies the given force to the given entity
@@ -31,6 +34,6 @@ public:
 	/**
 	* Applies gravity to all entities' acceleration vectors
 	*/
-	void applyGravity(Entities::Entity *entity);
+	void applyGravity(Entities::Entity *entity, Timeline *timeline);
 
 };

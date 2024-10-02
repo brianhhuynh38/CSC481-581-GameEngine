@@ -7,15 +7,16 @@
 #include "global.h"
 #include "draw.h"
 
-EntityController::EntityController() {
+EntityController::EntityController(Physics *physics) {
 	// creates empty entities list
 	m_entities = new std::map<int, Entities::Entity>();
 	m_movingEntities = new std::map<int, Entities::MovingEntity>();
 	m_opposingPlayers = new std::map<int, Entities::Entity>();
 	m_playerID = -100;
+	this->physics = physics;
 }
 
-void EntityController::updateEntities() {
+void EntityController::updateEntities(Timeline *timeline) {
 	// Create list iterator
 	std::map<int, Entities::Entity>::iterator iter;
 	// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
@@ -24,7 +25,7 @@ void EntityController::updateEntities() {
 
 		// Check if the entity is affected by physics and is not an opposing player
 		if (iter->second.getAffectedByPhysics() && m_opposingPlayers->find(entityId) == m_opposingPlayers->end()) {
-			physics.updateEntityPhysicsVectors(&iter->second);
+			physics->updateEntityPhysicsVectors(timeline, &iter->second);
 			//std::cout << "phys";
 		}
 	}

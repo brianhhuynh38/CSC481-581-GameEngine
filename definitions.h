@@ -28,4 +28,4 @@
 
 #define MAX_ALLOWED_DELAY 1000 // msecs
 
-#define ZMQ_MSG_DELAY 2 // Temporary measure for zmq message overload
+#define ZMQ_MSG_DELAY 5 // Temporary measure for zmq message overload

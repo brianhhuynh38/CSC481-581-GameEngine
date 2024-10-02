@@ -21,7 +21,7 @@ void loadConfigFile(ConfigSettings *settings) {
 			std::cout << "Config Value" << value << "\n";
 			// If gravity, convert to float and set gravity
 			if (identifier == "gravity") {
-				physics.setGravity(std::stof(value));
+				settings->gravity = std::stof(value);
 			} // Get resolution width
 			else if (identifier == "resolutionWidth") {
 				std::cout << value;

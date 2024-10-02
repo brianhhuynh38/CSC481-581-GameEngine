@@ -23,32 +23,11 @@
 // Global variables
 /// The Display struct used to initialize renderer and window
 Display *display;
-/// The entity that the player is able to control
-Entities::Player *player;
-/// Ball entity (TEST)
-Entities::Entity *ball;
-/// movingBox entity (TEST)
-Entities::MovingEntity *movingBox;
-/// floor entity (TEST)
-Entities::Entity *ground;
-/// platform entity (TEST)
-Entities::Entity *platform;
-/// The default player controller
-Controllers::PlayerController *playerController;
 /// Controller for all entities and their physics
-EntityController* entityController;
-/// The InputHandler struct used to keep track of keypresses and other input.
-InputHandler inputHandler;
-
 /// Global scale factor
 Utils::Vector2D globalScaling;
 /// Determines if proportional scaling is active
 bool proportionalScalingActive;
-
-/// The physics system
-Physics physics;
-/// The timeline used to keep track of time intervals
-Timeline timeline;
 
 /**
  * Frees any allocated memory on application exit
@@ -56,8 +35,8 @@ Timeline timeline;
 void memoryCleanUp() {
 	delete display;
 	// Free memory for player
-	player->destroy();
-	delete player;
+	//player->destroy();
+	//delete player;
 }
 
 /**
@@ -107,14 +86,14 @@ void initSDL(ConfigSettings settings) {
  * This references the tutorial linked to on the SDL wiki here :
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
  */
-static void capFrameRate(long* then, float* remainder) {
+static void capFrameRate(Timeline *timeline, long* then, float* remainder) {
 	long wait, frameTime;
 
 	wait = 16667 + *remainder;
 
 	*remainder -= (int) *remainder;
 
-	frameTime = timeline.getTime() - *then;
+	frameTime = timeline->getTime() - *then;
 
 	wait -= frameTime;
 
@@ -126,7 +105,7 @@ static void capFrameRate(long* then, float* remainder) {
 
 	*remainder += 666.667;
 
-	*then = timeline.getTime();
+	*then = timeline->getTime();
 
 	//std::cout << *then;
 }
@@ -136,18 +115,17 @@ static void capFrameRate(long* then, float* remainder) {
  * The main function where all components are initialized and the gameplay update loop is maintained 
  */
 int main(int argc, char* argv[]) {
-	
 	long then;
 	float remainder;
 	
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	display = new Display;
 
-	// Create Timeline
-	timeline = Timeline();
+	/// The timeline used to keep track of time intervals
+	Timeline *timeline = new Timeline();
 	// Create physics
-	physics = Physics();
-
+	Physics *physics = new Physics();
+	
 	// TODO: Initialize networking
 	// initialize the zmq context with a single IO thread
 	zmq::context_t context{ 2 };
@@ -159,6 +137,8 @@ int main(int argc, char* argv[]) {
 	zmq::socket_t clientToServerPublisher{ context, zmq::socket_type::pub };
 
 	ConfigSettings settings = ConfigSettings();
+	// Set physics configured gravity
+	//physics->setGravity(settings.gravity);
 
 	// Loads in config file to read and get configured gravity
 	loadConfigFile(&settings);
@@ -172,18 +152,27 @@ int main(int argc, char* argv[]) {
 	// Initiate current stage
 	//initStage();
 
-	then = timeline.getTime();
+	then = timeline->getTime();
 	remainder = 0;
 
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
+	EntityController* entityController = new EntityController(physics);
 	
-	entityController = new EntityController();
+	// The entity that the player is able to control
+	Entities::Player* player;
+	
+	// The default player controller
+	Controllers::PlayerController* playerController;
+
 	// Update request and subscriber. Put on a new thread
 	Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
 
+	InputHandler* inputHandler = new InputHandler();
 
-	ball = new Entities::Entity
+	Input* input = new Input(inputHandler);
+
+	Entities::Entity* ball = new Entities::Entity
 	(
 		1.0, 1.0,
 		550.0, 250.0,
@@ -195,7 +184,7 @@ int main(int argc, char* argv[]) {
 	);
 	ball->setUUID(-2);
 	// Create ground object (Temp)
-	ground = new Entities::Entity(
+	Entities::Entity* ground = new Entities::Entity(
 		1.0, 1.0,
 		250.0, 550.0,
 		128.0, 64.0,
@@ -207,7 +196,7 @@ int main(int argc, char* argv[]) {
 	ground->setUUID(-3);
 
 	// Create second ground object (Temp)
-	platform = new Entities::Entity(
+	Entities::Entity* platform = new Entities::Entity(
 		1.0, 1.0,
 		350.0, 525.0,
 		64.0, 64.0,
@@ -227,7 +216,7 @@ int main(int argc, char* argv[]) {
 	int* w = new int(0);
 	int* h = new int(0);
 	SDL_GetWindowSizeInPixels(display->window, w, h);
-	std::cout << "WindowSize " << *w << ", " << *h << "\n";
+	std::cout << "WindowSize " << *w << "x" << *h << "\n";
 
 	// Sets global scaling to 80 by default (1280x720), 
 	// but sets it to not be on proportional scaling by default
@@ -246,7 +235,7 @@ int main(int argc, char* argv[]) {
 			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
 
 			// Updates to get a new deltaTime
-			timeline.updateTime();
+			timeline->updateTime();
 
 			// Prepares scene for rendering
 			Render::prepareScene();
@@ -254,22 +243,20 @@ int main(int argc, char* argv[]) {
 			// Updates the keyboard inputs
 			SDL_PumpEvents();
 			// Handles player input, including exit
-			Input::takeInput();
-
-			// Run logic and draw scene
-			//display->delegate.logic();
-			//display->delegate.draw();
+			input->takeInput();
 
 			// check player movmentInput (TESTING)
-			playerController->movementInput();
+			playerController->movementInput(timeline, inputHandler);
 
 			// check player actionInput (TESTING)
-			playerController->actionInput();
+			playerController->actionInput(inputHandler);
+
+			playerController->updatePlayerPhysics(timeline, physics);
 
 			// Update the physics of all entities
-			entityController->updateEntities();
+			entityController->updateEntities(timeline);
 
-			std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
+			//std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
 
 			// TODO: Receive game state updates from server
 
@@ -280,22 +267,20 @@ int main(int argc, char* argv[]) {
 
 			// Display all entities
 			std::map<int, Entities::Entity>::iterator iterEnt;
+			// Get entity map
+			std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
 
 			// Loop through entities and display them all
-			for (iterEnt = entityController->getEntities()->begin(); iterEnt != entityController->getEntities()->end(); ++iterEnt) {
+			for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
 				Render::displayEntity((Entities::Entity) iterEnt->second);
 			}
 
-			/*Render::displayEntity((Entities::Entity)*player);
-			Render::displayEntity(*ground);
-			Render::displayEntity(*platform);
-			Render::displayEntity(*ball);*/
-			//Render::displayEntity((Entities::Entity)*movingBox);
+			Render::displayEntity((Entities::Entity) *player);
 
 			// Renders the scene gven the parameters identified in prepareScene()
 			Render::presentScene();
 
-			capFrameRate(&then, &remainder);
+			capFrameRate(timeline, &then, &remainder);
 		}
 	}
 

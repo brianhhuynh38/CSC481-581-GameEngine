@@ -5,6 +5,7 @@
 
 // Stores configuration settings
 typedef struct ConfigSettings {
+	float gravity;
 	/// The resolution width the window is set to
 	int resolutionWidth;
 	/// The resolution Height the window is set to

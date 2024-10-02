@@ -1,9 +1,11 @@
 #include "entity.h"
 #include "movingEntity.h"
+#include "player.h"
+#include "physics.h"
+#include "timeline.h"
 #include <list>
 #include <SDL.h>
 #include <iostream>
-#include "player.h"
 #include <map>
 
 #pragma once
@@ -21,16 +23,18 @@ private:
 	std::map<int, Entities::Entity>* m_opposingPlayers;
 	/** The ID the client is using */
 	int m_playerID;
+	/** Physics handler pointer */
+	Physics *physics;
 public:
 	/**
 	* The constructor for EntityController
 	*/
-	EntityController();
+	EntityController(Physics *physics);
 
 	/**
 	* Updates each entity's logic and physics
 	*/
-	void updateEntities();
+	void updateEntities(Timeline *timeline);
 
 	/**
 	* Deserializes a string and adds those entities into the entity controller

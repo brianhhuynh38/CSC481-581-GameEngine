@@ -19,18 +19,13 @@ extern Utils::Vector2D globalScaling;
 extern bool proportionalScalingActive;
 
 /** Handles control inputs to move the player */
-extern InputHandler inputHandler;
+//extern InputHandler inputHandler;
 /** The timeline used to manage time used for physics calculations */
-extern Timeline timeline;
+//extern Timeline timeline;
 /** The space where physics calculations are done in relations to Entities */
-extern Physics physics;
+//extern Physics physics;
 /** controls entity logic */
-extern EntityController *entityController;
-
-
-
-// Temporary
-extern Entities::Player *player;
+//extern EntityController *entityController;
 
 
 #endif

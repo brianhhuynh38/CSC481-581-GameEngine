@@ -57,15 +57,15 @@ namespace Entities {
 			std::string textureFilepath, bool isStationary, bool affectedByPhysics,
 			bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY);
 
-		/**
-		* Forcibly moves the entity left or right
-		*/
-		void move();
+		///**
+		//* Forcibly moves the entity left or right
+		//*/
+		//void move();
 
-		/**
-		* Moves the entity given delta time 
-		*/
-		void moveByTime(double deltaTime);
+		///**
+		//* Moves the entity given delta time 
+		//*/
+		//void moveByTime(double deltaTime);
 
 		/**
 		* Sets the position of the entity given a percentage float

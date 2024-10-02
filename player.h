@@ -37,12 +37,6 @@ namespace Entities {
 			std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
 			float maxSpeed);
 
-		/**
-		 * Moves the player given a movement vector
-		 * 
-		 * @param movementVector The vector used to move by adding to velocity
-		 */
-		void move(Utils::Vector2D movementVector);
 
 		/**
 		 * Returns the max speed of the entity
