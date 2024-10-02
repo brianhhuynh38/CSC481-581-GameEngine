@@ -20,24 +20,14 @@ namespace Controllers {
         // gets maxSpeed from player
         float speed = player->getMaxSpeed();
         Utils::Vector2D moveVector = Utils::Vector2D(0,0);
-        moveVector.y = player->getAcceleration()->y;
+        moveVector.y = player->getVelocity()->y;
 
         // horizontal movement
         if (inputHandler.keyboard[SDL_SCANCODE_RIGHT] == 1) {
-            if (useAcceleration) {
-                moveVector.x += speed;
-            }
-            else {
-                moveVector.x = speed;
-            }
+            moveVector.x += speed;
         }
         if (inputHandler.keyboard[SDL_SCANCODE_LEFT] == 1) {
-            if (useAcceleration) {
-                moveVector.x -= speed;
-            }
-            else {
-                moveVector.x = -speed;
-            }
+            moveVector.x -= speed;
         }
 
         // vertical movement (platformer)
@@ -47,8 +37,10 @@ namespace Controllers {
             }
             // Jump
             if (inputHandler.keyboard[SDL_SCANCODE_UP] == 1 && player->getIsGrounded()) {
+                //physics.applyForce(player, player->getJumpVector()->multConst(1000));
                 moveVector.y = player->getJumpVector()->y;
                 player->setIsGrounded(false);
+                std::cout << "JUMP!\n"; // testing
             }
         }
         else {
@@ -76,14 +68,12 @@ namespace Controllers {
             moveVector.x *= 0.525322;
             moveVector.y *= 0.525322;
         }
-        moveVector.multConst(timeline.getDeltaTime());
 
-        player->setVelocity(moveVector.x, moveVector.y);
+        moveVector = moveVector.multConst(timeline.getDeltaTime() / MICROSEC_PER_SEC);
 
-        // move on x axis
-        player->move(Utils::Vector2D(moveVector.x, 0));
-        // move on y axis
-        player->move(Utils::Vector2D(0, moveVector.y));
+        movePlayer(moveVector);
+
+
         
     }
 
@@ -115,5 +105,51 @@ namespace Controllers {
 
     void PlayerController::setPlayer(Entities::Player *p) {
         this->player = p;
+    }
+
+    /**
+     * Moves the player by a given amount by manipulating its velocity vector
+     * @param movementVector The vector that is changes the player's movement
+     */
+    void PlayerController::movePlayer(Utils::Vector2D movementVector) {
+        
+        int moveMultiplier = 10; // temporary fix
+
+        // quick fix for geting to fast 
+
+        float maxMove = 64;
+        if (movementVector.x > maxMove) {
+            movementVector.x = maxMove;
+        }
+        else if (movementVector.x < -maxMove) {
+            movementVector.x = -maxMove;
+        }
+        if (movementVector.y > maxMove) {
+            movementVector.y = maxMove;
+        }
+        else if (movementVector.y < -maxMove) {
+            movementVector.y = -maxMove;
+        }
+
+
+        // update acceleration/velocity of player
+        if (movementVector.x != 0) { // moving on x-axis
+            player->updateAcceleration(Utils::Vector2D(movementVector.x * moveMultiplier, 0));
+            player->updateVelocity(Utils::Vector2D(movementVector.x * moveMultiplier, 0));
+            //setVelocity(movementVector.x * moveMultiplier, getVelocity()->y);
+            std::cout << "test " << movementVector.x << "\n";
+            
+        }
+        else { // decelerate on x-axis if no horizontal movement input given
+            player->updateAcceleration(Utils::Vector2D(player->getAcceleration()->x * -1, 0));
+            player->updateVelocity(Utils::Vector2D(player->getVelocity()->x * -1, 0));
+            //player->setAcceleration(0, NULL);
+            //player->setVelocity(0, NULL);
+        }
+
+        if (movementVector.y != 0) { // moving on y-axis
+            player->updateAcceleration(Utils::Vector2D(0, movementVector.y));
+
+        }
     }
 }

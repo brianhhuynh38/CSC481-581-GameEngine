@@ -15,7 +15,7 @@ namespace Entities {
 		/** Max speed at which the player moves */
         float m_maxSpeed;
 		/** Whether or not the player is on the ground. */
-		bool isGrounded = false;
+		//bool m_isGrounded = false; // moved to entity
 		/** Initial velocity vector to apply when jumping */
 		Utils::Vector2D *m_jumpVector;
 	public:
@@ -42,7 +42,7 @@ namespace Entities {
 		 * 
 		 * @param movementVector The vector used to move by adding to velocity
 		 */
-		void move(Utils::Vector2D movementVector);
+		//void move(Utils::Vector2D movementVector);
 
 		/**
 		 * Returns the max speed of the entity
@@ -67,18 +67,6 @@ namespace Entities {
 		 * @param jumpVector value
 		 */
 		void setJumpVector(Utils::Vector2D jVector);
-
-		/**
-		 * Returns true if on ground
-		 * @return true if on ground
-		 */
-		bool getIsGrounded();
-
-		/**
-		 * sets players isGrounded value to the given
-		 * @param grounded value
-		 */
-		void setIsGrounded(bool grounded);
 	};
 }
 

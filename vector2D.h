@@ -28,6 +28,8 @@ namespace Utils {
 
 		Vector2D normalizeVector(void);
 
+		//char* toString(void);
+
 	};
 }
 

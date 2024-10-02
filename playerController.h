@@ -43,6 +43,8 @@ namespace Controllers {
 
         void setPlayer(Entities::Player *p);
 
+        void movePlayer(Utils::Vector2D movementVector);
+
         bool getCanPress();
 
         void setCanPress(bool canPress);

@@ -77,5 +77,7 @@ namespace Utils {
 		return this->divideConst(getMagnitude());
 	}
 
-
+	//char* Vector2D::toString(){
+	//	return (x << ", " << y);
+	//}
 }

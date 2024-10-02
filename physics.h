@@ -33,4 +33,9 @@ public:
 	*/
 	void applyGravity(Entities::Entity *entity);
 
+	/**
+     * Helper function for checking for any collisions that may have occured
+	 */
+	void collisionCheck(Entities::Entity *entity, Utils::Vector2D movementVector);
+
 };

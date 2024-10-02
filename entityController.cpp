@@ -14,6 +14,7 @@ void EntityController::updateEntities() {
 	for (iter = (*m_entities).begin(); iter != (*m_entities).end(); ++iter) {
 		if ((*iter).getAffectedByPhysics()) {
 			physics.updateEntityPhysicsVectors(&(*iter));
+			std::cout << "G2: " << (*iter).getIsGrounded() << "\n";
 			//std::cout << "phys";
 		}
 	}

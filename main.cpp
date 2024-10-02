@@ -115,7 +115,9 @@ static void capFrameRate(long* then, float* remainder) {
 
 	*remainder += 0.667;
 
-	*then = SDL_GetTicks();
+	*then = timeline.getTime();
+
+	//std::cout << *then;
 }
 
 /**
@@ -147,15 +149,15 @@ int main(int argc, char* argv[]) {
 	// Create a player Entity (Temp: Make more malleable in the future)
 	// TODO: Base starting position off window size percentage
 	player = new Entities::Player(
-		1.0, 1.0,
-		250.0, 250.0,
-		15.0, 25.0,
-		50.0,
+		1.0, 1.0,     // scale
+		250.0, 450.0, // positon
+		15.0, 25.0,   // width & height
+		20.0,        // mass
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
 		true,
-		0.0f, -150.0f,
-		6.0
+		0.0f, -250.0f, // jump vector
+		32.0 // max speed
 	);
 	// Create ball object (Temp)
 	ball = new Entities::Entity(
@@ -251,6 +253,22 @@ int main(int argc, char* argv[]) {
 		// Update the physics of all entities
 		entityController->updateEntities();
 
+		//// TODO: Send player position update to the server
+		//std::string movement_data = Client::serializePlayerMovement(player);  // Client function to serialize player movement
+		//zmq::message_t movement_request(movement_data.c_str(), movement_data.size());
+		//client_socket.send(movement_request, zmq::send_flags::none);
+
+		//// TODO: Receive game state updates from server
+		//zmq::message_t game_state_update;
+		//if (subscriber_socket.recv(game_state_update, zmq::recv_flags::dontwait)) {
+		//	std::string game_state(static_cast<char*>(game_state_update.data()), game_state_update.size());
+		//	Client::updateGameState(game_state);  // Client function to update player positions from the server
+		//}
+
+		//// Update and run threads (temp)
+		//std::thread serverThread(NetworkThread::run, &serverThread);
+		//std::thread clientThread(NetworkThread::run, &clientThread);
+
 		// TEST PRINT for player info (DELETE LATER)
 		std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
 
@@ -271,6 +289,13 @@ int main(int argc, char* argv[]) {
 
 		capFrameRate(&then, &remainder);
 	}
+
+	delete w;
+	delete h;
+
+	// Make sure both threads are complete before stopping main thread
+	//serverThread.join();
+	//clientThread.join();
 
 	// Success condition
 	return 0;

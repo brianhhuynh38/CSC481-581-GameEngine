@@ -6,6 +6,7 @@
 #include "entity.h"
 #include "vector2D.h"
 #include "draw.h"
+#include "collisions.h"
 
 
 namespace Entities {
@@ -19,15 +20,16 @@ namespace Entities {
 		m_size = new Utils::Vector2D(0.0, 0.0);
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 10;
+		m_velocity_max = 128;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration_max = 10;
+		m_acceleration_max = 128;
 		m_mass = 5;
 
 		m_texture = Render::loadTexture(".\Assets\Textures\MissingTexture.png");
 
 		m_isStationary = false;
-		m_affectedByPhysics = false;
+		m_affectedByPhysics = false; 
+		m_isGrounded = false;
 		m_colliders = new std::list<SDL_Rect>();
 		m_colliders->emplace_back(SDL_Rect() = {0, 0, 1, 1});
 		m_isVisible = true; // TODO: For future use, currently not doing anything
@@ -55,14 +57,15 @@ namespace Entities {
 		m_mass = mass;
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 10;
+		m_velocity_max = 64;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration_max = 10;
+		m_acceleration_max = 64;
 
 		m_texture = Render::loadTexture(textureFilepath);
 
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
+		m_isGrounded = false;
 		m_colliders = new std::list<SDL_Rect>();
 		m_colliders->emplace_back(SDL_Rect() = {(int) positionX, (int) positionY, (int) (scaleX * width), (int) (scaleY * height)});
 		m_isVisible = true; // TODO: For future use, currently not doing anything
@@ -98,6 +101,7 @@ namespace Entities {
 	 */
 	void Entity::updatePosition(Utils::Vector2D position) {
 		*m_position = m_position->add(position);
+		std::cout << "pos += (" << position.x << ", " << position.y << ")\n";
 	}
 
 	/**
@@ -143,6 +147,7 @@ namespace Entities {
 		vel.x = std::max(std::min(vel.x, m_velocity_max), -m_velocity_max);
 		vel.y = std::max(std::min(vel.y, m_velocity_max), -m_velocity_max);
 		*m_velocity = vel;
+		std::cout << "vel += (" << velocity.x << ", " << velocity.y << ")\n";
 	}
 
 	/**
@@ -151,7 +156,14 @@ namespace Entities {
 	* @param velocityY The new y value of the velocity to set
 	*/
 	void Entity::setVelocity(float velocityX, float velocityY) {
-		m_velocity = new Utils::Vector2D(velocityX, velocityY);
+		if (velocityX != NULL) {
+			(*m_velocity).x = velocityX;
+		}
+		if (velocityY != NULL) {
+			(*m_velocity).y = velocityY;
+		}
+		//m_velocity = new Utils::Vector2D(velocityX, velocityY);
+		std::cout << "vel = (" << m_velocity->x << ", " << m_velocity->y << ")\n";
 	}
 
 	/**
@@ -171,6 +183,7 @@ namespace Entities {
 		acc.x = std::max(std::min(acc.x, m_acceleration_max), -m_acceleration_max);
 		acc.y = std::max(std::min(acc.y, m_acceleration_max), -m_acceleration_max);
 		*m_acceleration = acc;
+		std::cout << "acc += (" << acceleration.x << ", " << acceleration.y << ")\n";
 	}
 
 	/**
@@ -179,9 +192,15 @@ namespace Entities {
 	* @param accelerationY The new y value of the acceleration to set
 	*/
 	void Entity::setAcceleration(float accelerationX, float accelerationY) {
-		m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
-		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
-		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
+		if (accelerationX != NULL) {
+			(*m_acceleration).x = accelerationX;
+		}
+		if (accelerationY != NULL) {
+			(*m_acceleration).y = accelerationY;
+		}
+		//m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
+		
+		std::cout << "acc = (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
 	}
 
 	/**
@@ -273,6 +292,24 @@ namespace Entities {
 	void Entity::setAffectedByPhysics(bool affectedByPhysics) {
 		m_affectedByPhysics = affectedByPhysics;
 	}
+
+	/**
+	 * Returns true if on ground
+	 * @return true if on ground
+	 */
+	bool Entity::getIsGrounded() {
+		return m_isGrounded;
+	}
+
+	/**
+	 * sets entity isGrounded value to the given
+	 * @param grounded value
+	 */
+	void Entity::setIsGrounded(bool grounded) {
+		this->m_isGrounded = grounded;
+		std::cout << "G0: " << this->m_isGrounded << "\n";
+	}
+
 
 	/**
 	* Deletes memory allocated via "new" for each of the fields

@@ -1,4 +1,5 @@
 #include "vector2D.h"
+//#include "collisions.h"
 #include <SDL.h>
 #include <list>
 
@@ -43,6 +44,8 @@ namespace Entities {
 		bool m_affectedByPhysics;
 		/** Whether or not the entity should be visably rendered on screen (lets you hide entities)*/
 		bool m_isVisible;
+		/** Whether or not the entity is on the ground. */
+		bool m_isGrounded;
 	public:
 
 		/**
@@ -198,6 +201,18 @@ namespace Entities {
 		 * @param affectedByPhysics
 		 */
 		void setAffectedByPhysics(bool affectedByPhysics);
+
+		/**
+		 * Returns true if on ground
+		 * @return true if on ground
+		 */
+		bool getIsGrounded(void);
+
+		/**
+		 * sets entities isGrounded value to the given
+		 * @param grounded value
+		 */
+		void setIsGrounded(bool grounded);
 
 		/**
 		 * Deletes objects to free memory allocated to each relevant field
