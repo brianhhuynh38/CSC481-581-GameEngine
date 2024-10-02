@@ -17,10 +17,6 @@ extern Display* display;
 extern Utils::Vector2D globalScaling;
 /** Dictates whether proportional scaling is active */
 extern bool proportionalScalingActive;
-/* The resolution width the window is set to */
-extern int resolutionWidth;
-/* The resolution Height the window is set to */
-extern int resolutionHeight;
 
 /** Handles control inputs to move the player */
 extern InputHandler inputHandler;
