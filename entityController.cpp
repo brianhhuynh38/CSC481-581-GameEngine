@@ -79,8 +79,11 @@ void EntityController::updateEntitiesByString(std::string entityListString) {
 
 	// Insert moving entity data
 	while (std::getline(ssMoving, temp, '*')) {
+		//std::cout << "MovingEntity list size: " << m_movingEntities->size() << "\n";
+		Entities::MovingEntity m = *Entities::MovingEntity::fromString(temp);
 		// Insert the moving entity into the list
-		insertMovingEntity(*Entities::MovingEntity::fromString(temp));
+		insertMovingEntity(m);
+		insertEntity(m);
 	}
 }
 
