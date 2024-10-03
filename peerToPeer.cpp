@@ -64,15 +64,7 @@ namespace PeerToPeer {
         ss << "tcp://localhost:" << portNum;
 
         p2ppublisher->bind(ss.str());
-        //p2ppublisher->connect("tcp://localhost:5558");
-        //p2psubscriber->connect("tcp://localhost:5558");
-
-        //std::cout << "FULLY CREATED ENTITY ON CLIENT: \n" << player->toString() << "\n";
         entityController->setPlayerID(player->getUUID());
-        //entityController->insertEntity((Entities::Entity)*player);
-
-        // Set the client identifier
-        //subscriber->set(zmq::sockopt::subscribe, "Client");
 
         // Set the client identifier (SECTION 5)
         subscriber->set(zmq::sockopt::subscribe, "");
@@ -122,8 +114,6 @@ namespace PeerToPeer {
         // PEER TO PEER
         zmq::message_t playerInfo("Client\n" + player->toString());
 
-        //std::cout << "Print SENDing message: " << playerInfo.to_string() << "\n";
-
         // Iterate through opposing players
 		std::map<int, Entities::Entity>::iterator iter;
         std::map<int, Entities::Entity> playerMap = *entityController->getOpposingPlayers();
@@ -150,7 +140,6 @@ namespace PeerToPeer {
                 entityController->insertOpposingPlayer(updatedPlayer);
                 entityController->insertEntity(updatedPlayer);
                 std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
-                //entityController->updateEntitiesByString(clientInfo.to_string());
             }
         }
         return 0;

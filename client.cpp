@@ -15,10 +15,6 @@
 namespace Client {
     // Map to store players by their ID from the client
     std::unordered_map<std::string, PlayerInfo> players;
-    // A timer used to delay the message being sent (A temporary measure because ZMQ_LINGER seems
-    // to be deprecated with the version we're using (4.3.5))
-    // In retrospect, maybe shoulda used 4.3.2
-    int messageDelayCounter = 0;
 
     /**
     * Sets up client parameters and interactions
@@ -30,11 +26,7 @@ namespace Client {
         zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
         int linger = 0;
         zmq_setsockopt(subscriber, ZMQ_LINGER, &linger, sizeof(linger));
-        //int backlog = 0;
-        //zmq_setsockopt(subscriber, ZMQ_BACKLOG, &backlog, sizeof(backlog));
-        /*int rcvhwm = 1;
-        zmq_setsockopt(subscriber, ZMQ_RCVHWM, &rcvhwm, sizeof(rcvhwm));*/
-        //zmq_bind(subscriber, "tcp://localhost:5555");
+
         subscriber->connect("tcp://localhost:5555");
         request->connect("tcp://localhost:5556");
         publisher->connect("tcp://localhost:5557");
@@ -52,20 +44,10 @@ namespace Client {
 
         // Should continue from after uuid
         std::string playerString = reply.to_string();
-        //playerString.erase(0, playerString.find("\n") + 1);
-
-        //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n";
-
         player = Entities::Player::fromString(playerString);
 
-        //std::cout << "FULLY CREATED ENTITY ON CLIENT: \n" << player->toString() << "\n";
         entityController->setPlayerID(player->getUUID());
-        //entityController->insertEntity((Entities::Entity)*player);
 
-        // Set the client identifier
-        //subscriber->set(zmq::sockopt::subscribe, "Client");
-
-        // Set the client identifier (SECTION 5)
         subscriber->set(zmq::sockopt::subscribe, "");
 
         return 0;
@@ -96,28 +78,21 @@ namespace Client {
             int64_t clock;
             if (!(clockStream >> clock)) {
                 std::cerr << "Failed to parse clock value." << std::endl;
-               // return -1;
+               return -1;
             }
 
             // Calculate the delay (SUICIDE-SNAIL SOLUTION)
             const auto delay = std::clock() - clock;
             if (delay > MAX_ALLOWED_DELAY) {
                 std::cerr << "E: subscriber cannot keep up, aborting. Delay=" << delay << std::endl;
-               // return -1;
+               return -1;
             }
 
             entityController->updateEntitiesByString(serverInfo.to_string(), 1);
         }
 
-        //if (messageDelayCounter >= ZMQ_MSG_DELAY) {
-            //std::cout << "Sending message...\n";
-            //std::cout << "Player info to send to server: " << player->toString() << "\n";
-            zmq::message_t playerInfo("Server\n" + player->toString());
-            publisher->send(playerInfo, zmq::send_flags::dontwait);
-            messageDelayCounter = 0;
-        //}
-        
-        messageDelayCounter++;
+        zmq::message_t playerInfo("Server\n" + player->toString());
+        publisher->send(playerInfo, zmq::send_flags::dontwait);
 
         return 0;
     }

@@ -28,14 +28,16 @@ within the project for convenience. The following are the relative filepaths use
 There is a `config.ini` file where certain variables can be modified and customized:
  - Resolution
  - Gravity
+ - Network Type: (1 = Client-To-Server, 2 = Peer-to-Peer)
 
 As of Homework 2, this implementation uses a multiproject setup within the solution. Right click 
 the solution in the solution explorer, then add the `NetworkServer` project to add to the solution.
-The GameEngine project acts as the Client to the server, so it can be executed multiple times to create 
+The `GameEngine` project acts as the Client to the server, so it can be executed multiple times to create 
 multiple clients.
 
-Right click on the GameEngine -> Debug -> Start New Instance in order to create another 
+Right click on the `GameEngine -> Debug -> Start New Instance` in order to create another 
 client.
+
 
 ## Controls
 
@@ -45,7 +47,17 @@ To control the player, use the `ARROW KEYS` for movement, use `UP ARROW` for jum
 
 To activate proportional resolution, use the `MINUS KEY` (Base resolution is 1280x720)
 
-Press `E` for nothing (future interact button)
+The timeline's timescale can be modified by using the `8 KEY`, `9 KEY`, `0 KEY`:
+
+|        Key        |            Timescales            |
+| -------------------------- | ---------------------------------- |
+|  `8 KEY`  | `0.5x` |
+|  `9 KEY`  | `1.0x`        |
+| `0 KEY` |    `2.0x`     |
+
+The player can also be paused and unpaused with the `P KEY`
+
+Press `E` for Action Button (if applicable to current game)
 
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
@@ -169,7 +181,8 @@ The threading example provided on Moodle was used as a reference for our impleme
 for observing the interactions of the mutex lock and conditional variable and how they interact with the threads 
 to properly block and determine the order of what has to be accomplished.
 
+We ended up doing a very simplistic threading example in main that splits Entities and Players into separate calculations.
+
 |        `.cpp` Files        |            Header Files            |
 | -------------------------- | ---------------------------------- |
-|  |  |
-|  |  |
+| [`main.cpp`](./main.cpp) |  |

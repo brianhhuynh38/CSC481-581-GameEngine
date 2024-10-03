@@ -243,9 +243,6 @@ int main(int argc, char* argv[]) {
 	std::thread entityThread([&]() {
 		while (true) {
 			// EntityController thread
-			
-			// Debugging
-			//std::cout << "BBBBBBBBBBBB\nBBBBBBBBBBBBB\nBBBBBBBBBBBBB\n";
 
 			// Update the physics of all entities
 			entityController->updateEntities(timeline);
@@ -257,17 +254,16 @@ int main(int argc, char* argv[]) {
 	std::thread playerThread([&]() {
 		while (true) {
 			// PlayerController thread
-			
-			// Debugging
-			//std::cout << "AAA\nAAA\n";
 
 			// Updates to get a new deltaTime
 			timeline->updateTime();
 
+			// Handle movement inputs and actions
 			playerController->movementInput(inputHandler);
 
 			playerController->actionInput(inputHandler);
 
+			// Handle physics
 			playerController->updatePlayerPhysics(physics);
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(16));
