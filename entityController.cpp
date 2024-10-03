@@ -73,7 +73,10 @@ void EntityController::updateEntitiesByString(std::string entityListString, int 
 		Entities::Player p = *Entities::Player::fromString(temp);
 		// If the player is not the one this client controls, do not update
 		// 
-		if (p.getUUID() != m_playerID && (networkType == 2 && (getOpposingPlayers()->find(p.getUUID())) == getOpposingPlayers()->end())) {
+		if (
+			(p.getUUID() != m_playerID && (networkType == 2 && (getOpposingPlayers()->find(p.getUUID())) == getOpposingPlayers()->end())) ||
+			(p.getUUID() != m_playerID && (networkType == 1))
+		) {
 			insertOpposingPlayer(p);
 			insertEntity(p);
 		}
