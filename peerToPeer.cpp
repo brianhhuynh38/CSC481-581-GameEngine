@@ -11,21 +11,21 @@
 #include <zmq_addon.hpp>
 #include "entityController.h"
 #include "playerController.h"
+#include "configIO.h"
 
-namespace Client {
+namespace PeerToPeer {
     // Map to store players by their ID from the client
     std::unordered_map<std::string, PlayerInfo> players;
-    // A timer used to delay the message being sent (A temporary measure because ZMQ_LINGER seems
-    // to be deprecated with the version we're using (4.3.5))
-    // In retrospect, maybe shoulda used 4.3.2
-    int messageDelayCounter = 0;
 
     /**
     * Sets up client parameters and interactions
     * @param subscriber Subscriber to setup
     * @param request Request to setup
     */
-    int startup(zmq::socket_t *subscriber, zmq::socket_t *request, zmq::socket_t *publisher, Entities::Player *&player, EntityController *&entityController, Controllers::PlayerController *&playerController) {
+    int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher,
+    zmq::socket_t* p2psubscriber, Entities::Player*& player, EntityController*& entityController,
+    Controllers::PlayerController*& playerController, ConfigSettings config) {
+        // Set socket options
         int conflate = 1;
         zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
         int linger = 0;
@@ -37,17 +37,17 @@ namespace Client {
         //zmq_bind(subscriber, "tcp://localhost:5555");
         subscriber->connect("tcp://localhost:5555");
         request->connect("tcp://localhost:5556");
-        publisher->connect("tcp://localhost:5557");
-
+        
+        zmq::message_t msg(std::to_string(config.networkType));
         // Send message to server and wait to receive client identifier
-        request->send(zmq::str_buffer("Requesting client identifier"));
+        request->send(msg, zmq::send_flags::none);
 
         // Sleep for 2 seconds to guarantee connection
         std::this_thread::sleep_for(std::chrono::seconds(2));
 
         // Receive response from server 
         zmq::message_t reply;
-        request->recv(reply, zmq::recv_flags::none);
+        request->recv(reply);
         //std::cout << "Received client identifier: " << reply.to_string() << "\n";
 
         // Should continue from after uuid
@@ -58,6 +58,15 @@ namespace Client {
 
         player = Entities::Player::fromString(playerString);
 
+        int portNum = 5558 + player->getUUID();
+
+        std::stringstream ss;
+        ss << "tcp://localhost:" << portNum;
+
+        p2ppublisher->bind(ss.str());
+        //p2ppublisher->connect("tcp://localhost:5558");
+        //p2psubscriber->connect("tcp://localhost:5558");
+
         //std::cout << "FULLY CREATED ENTITY ON CLIENT: \n" << player->toString() << "\n";
         entityController->setPlayerID(player->getUUID());
         //entityController->insertEntity((Entities::Entity)*player);
@@ -67,6 +76,7 @@ namespace Client {
 
         // Set the client identifier (SECTION 5)
         subscriber->set(zmq::sockopt::subscribe, "");
+        p2psubscriber->set(zmq::sockopt::subscribe, "");
 
         return 0;
     }
@@ -75,7 +85,7 @@ namespace Client {
     * Run the networking communication setup
     * @param subscriber Subscriber to use
     */
-    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* publisher, Entities::Player *&player, EntityController*& entityController) {
+    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player, EntityController*& entityController) {
         // Receive messages from the server as a subscriber
         zmq::message_t serverInfo;
         zmq_connect(subscriber, "tcp://localhost:5555");
@@ -96,29 +106,53 @@ namespace Client {
             int64_t clock;
             if (!(clockStream >> clock)) {
                 std::cerr << "Failed to parse clock value." << std::endl;
-               // return -1;
+                // return -1;
             }
 
             // Calculate the delay (SUICIDE-SNAIL SOLUTION)
             const auto delay = std::clock() - clock;
             if (delay > MAX_ALLOWED_DELAY) {
                 std::cerr << "E: subscriber cannot keep up, aborting. Delay=" << delay << std::endl;
-               // return -1;
+                // return -1;
             }
 
-            entityController->updateEntitiesByString(serverInfo.to_string(), 1);
+            entityController->updateEntitiesByString(serverInfo.to_string(), 2);
         }
 
-        //if (messageDelayCounter >= ZMQ_MSG_DELAY) {
-            //std::cout << "Sending message...\n";
-            //std::cout << "Player info to send to server: " << player->toString() << "\n";
-            zmq::message_t playerInfo("Server\n" + player->toString());
-            publisher->send(playerInfo, zmq::send_flags::dontwait);
-            messageDelayCounter = 0;
-        //}
-        
-        messageDelayCounter++;
+        // PEER TO PEER
+        zmq::message_t playerInfo("Client\n" + player->toString());
 
+        //std::cout << "Print SENDing message: " << playerInfo.to_string() << "\n";
+
+        // Iterate through opposing players
+		std::map<int, Entities::Entity>::iterator iter;
+        std::map<int, Entities::Entity> playerMap = *entityController->getOpposingPlayers();
+		// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
+		for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
+			int entityId = iter->first; // Get the ID of the current entity
+            std::cout << "Hello, playerMap is populated\n";
+            // Calculate port and connect with both
+            int portNum = 5558 + entityId;
+            std::stringstream ss;
+            ss << "tcp://localhost:" << portNum;
+            p2ppublisher->connect(ss.str());
+            p2psubscriber->connect(ss.str());
+            //send messages
+            p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+            // Receive client info
+            zmq::message_t clientInfo;
+            p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+            if (!clientInfo.empty()) {
+                std::cout << "Print peer's player info: " << clientInfo.to_string() << "\n";
+                // Create player from string and update their information
+                Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
+                // Update the player using the string 
+                entityController->insertOpposingPlayer(updatedPlayer);
+                entityController->insertEntity(updatedPlayer);
+                std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
+                //entityController->updateEntitiesByString(clientInfo.to_string());
+            }
+        }
         return 0;
     }
 }

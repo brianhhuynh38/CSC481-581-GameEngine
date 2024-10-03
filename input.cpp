@@ -38,6 +38,12 @@ void Input::takeInput() {
 
 	// checks change to scaling/constant size input (-)
 	checkKeyState(SDL_SCANCODE_MINUS, keyboardState);
+	// checks pause and unpause
+	checkKeyState(SDL_SCANCODE_P, keyboardState);
+	// check for timescale changes (0.5)
+	checkKeyState(SDL_SCANCODE_8, keyboardState);
+	checkKeyState(SDL_SCANCODE_9, keyboardState);
+	checkKeyState(SDL_SCANCODE_0, keyboardState);
 }
 
 /**

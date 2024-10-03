@@ -89,10 +89,30 @@ HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::map<int, Entities:
                 }
                 if ((&(*iterCol) != &(*iterColOther)) && SDL_HasIntersection(&(*iterCol), &(*iterColOther))) {
                     
+                    // Calculate penetration depth
+                    int overlapX = std::min(iterCol->x + iterCol->w, iterColOther->x + iterColOther->w) -
+                        std::max(iterCol->x, iterColOther->x);
+                    int overlapY = std::min(iterCol->y + iterCol->h, iterColOther->y + iterColOther->h) -
+                        std::max(iterCol->y, iterColOther->y);
+
+                    // Determine the penetration depth
+                    Utils::Vector2D penetrationDepth;
+
+                    if (overlapX < overlapY) {
+                        penetrationDepth.x = overlapX;
+                        penetrationDepth.y = 0; // No vertical penetration
+                    }
+                    else {
+                        penetrationDepth.x = 0; // No horizontal penetration
+                        penetrationDepth.y = overlapY;
+                    }
+
                     Utils::Vector2D direction = Utils::Vector2D(iterColOther->x, iterColOther->y).add(Utils::Vector2D(-iterCol->x, -iterCol->y));
                     
                     hInfo.hit = true;
                     hInfo.hitVector = direction;
+                    hInfo.collisionRect = *iterColOther;
+                    hInfo.penetrationDepth = penetrationDepth;
                     return hInfo;
                 }
             }

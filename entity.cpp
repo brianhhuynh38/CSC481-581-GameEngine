@@ -21,9 +21,9 @@ namespace Entities {
 		m_size = new Utils::Vector2D(0.0, 0.0);
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 10;
+		m_velocity_max = 1000;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration_max = 10;
+		m_acceleration_max = 200;
 		m_mass = 5;
 
 		m_textureFilepath = "./Assets/Textures/MissingTexture.png";
@@ -60,9 +60,9 @@ namespace Entities {
 		m_mass = mass;
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 10;
+		m_velocity_max = 80;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration_max = 10;
+		m_acceleration_max = 80;
 
 		m_textureFilepath = textureFilepath;
 		m_texture = Render::loadTexture(m_textureFilepath);

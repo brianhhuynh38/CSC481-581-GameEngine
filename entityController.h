@@ -41,7 +41,7 @@ public:
 	* 
 	* @param entityListString
 	*/
-	void updateEntitiesByString(std::string entityListString);
+	void updateEntitiesByString(std::string entityListString, int networkType);
 
 	/**
 	* Sets the player ID that is ignored when receiving information from the server
@@ -52,6 +52,11 @@ public:
 	* Returns the entities list
 	*/
 	std::map<int, Entities::Entity> *getEntities();
+
+	/**
+	* Returns the map of opposing players
+	*/
+	std::map<int, Entities::Entity>* getOpposingPlayers();
 
 	/**
 	* Adds the given entity to the entities list

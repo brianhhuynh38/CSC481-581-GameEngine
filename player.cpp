@@ -78,6 +78,7 @@ namespace Entities {
 	 */
 	void Player::setIsGrounded(bool grounded) {
 		isGrounded = grounded;
+		//std::cout << "isGrounded: " << grounded << "\n";
 	}
 
 	std::string Player::toString() {

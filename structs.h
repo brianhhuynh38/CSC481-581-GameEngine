@@ -52,6 +52,10 @@ typedef struct {
 	bool hit;
 	// directional vector of hit
 	Utils::Vector2D hitVector;
+	// directional vector of hit
+	SDL_Rect collisionRect;
+
+	Utils::Vector2D penetrationDepth;
 } HitInfo;
 
 /**

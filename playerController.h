@@ -26,7 +26,7 @@ namespace Controllers {
         /** Reference to entity controller for detecting collisions between the player and other entities */
         EntityController* entityController;
         /** Player timeline that controls player time */
-        Timeline m_timeline;
+        Timeline *m_timeline;
 
         /** 2D movement vector to be applied to the player */
         //Utils::Vector2D movementVector = Utils::Vector2D(0,0);
@@ -36,24 +36,24 @@ namespace Controllers {
          * @param player pointer to player to control
          * @param entityController: Pointer to EntityController to obtain list of entities
          */
-        PlayerController(Entities::Player* player, EntityController* entityController);
+        PlayerController(Entities::Player* player, EntityController* entityController, Timeline* timeline);
 
         /**
         * Updates the player physics and movement vector changes
         */
-        void updatePlayerPhysics(Timeline* timeline, Physics* physics);
+        void updatePlayerPhysics(Physics* physics);
 
         /**
          * Moves the player given a movement vector
          *
          * @param movementVector The vector used to move by adding to velocity
          */
-        void movePlayer(Utils::Vector2D movementVector, Timeline* timeline);
+        void movePlayer(Utils::Vector2D movementVector);
 
         /**
          * Checks for movement inputs from keys and applies movement to player
          */
-        void movementInput(Timeline* timeline, InputHandler* inputHandler);
+        void movementInput(InputHandler* inputHandler);
 
         /**
          * Checks for action inputs from keys

@@ -17,7 +17,7 @@ Timeline::Timeline() {
 	m_paused = false;
 	m_reversed = false;
 	// Tic value for main Timeline
-	m_tic = 62;
+	m_tic = 62; // 62
 	// Set anchor to NULL for default main Timeline
 	m_anchor = NULL;
 	// Timeline will move at normal speed (1x speed) 
@@ -61,6 +61,8 @@ void Timeline::updateTime() {
 	m_deltaTime *= m_timeScale;
 
 	/*std::cout << "DeltaTime: " << m_deltaTime << std::endl;*/
+
+
 }
 
 double Timeline::getDeltaTime() {
@@ -100,6 +102,10 @@ bool Timeline::isReversed() {
 
 void Timeline::changeTic(int64_t tic) {
 	m_tic = tic;
+}
+
+float Timeline::getTimeScale() {
+	return m_timeScale;
 }
 
 void Timeline::changeTimeScale(float timeScale) {

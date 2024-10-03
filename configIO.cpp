@@ -21,6 +21,7 @@ void loadConfigFile(ConfigSettings *settings) {
 			std::cout << "Config Value" << value << "\n";
 			// If gravity, convert to float and set gravity
 			if (identifier == "gravity") {
+				std::cout << "Gravity: " << value << "\n";
 				settings->gravity = std::stof(value);
 			} // Get resolution width
 			else if (identifier == "resolutionWidth") {
@@ -30,6 +31,10 @@ void loadConfigFile(ConfigSettings *settings) {
 			else if (identifier == "resolutionHeight") {
 				std::cout << value;
 				settings->resolutionHeight = std::stoi(value);
+			}
+			else if (identifier == "networkType") {
+				std::cout << "Network Type: " << value << "\n";
+				settings->networkType = std::stoi(value);
 			}
 		}
 	}

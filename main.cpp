@@ -18,6 +18,7 @@
 #include "playerController.h"
 #include "entityController.h"
 #include "client.h"
+#include "peerToPeer.h"
 #include "thread.h"
 
 // Global variables
@@ -89,13 +90,11 @@ void initSDL(ConfigSettings settings) {
 static void capFrameRate(Timeline *timeline, long* then, float* remainder) {
 	long wait, frameTime;
 
-	wait = 16667 + *remainder;
-
-	*remainder -= (int) *remainder;
+	const int targetFrameTime = 16667;
 
 	frameTime = timeline->getTime() - *then;
 
-	wait -= frameTime;
+	wait = targetFrameTime - frameTime + static_cast<int>(*remainder);
 
 	if (wait < 1000) {
 		wait = 1000;
@@ -103,11 +102,9 @@ static void capFrameRate(Timeline *timeline, long* then, float* remainder) {
 
 	SDL_Delay(wait/1000);
 
-	*remainder += 666.667;
+	*remainder += (wait % 1000) / 1000.0f;
 
 	*then = timeline->getTime();
-
-	//std::cout << *then;
 }
 
 
@@ -136,13 +133,20 @@ int main(int argc, char* argv[]) {
 	// construct a PUB (publish) socket to send player information to the server
 	zmq::socket_t clientToServerPublisher{ context, zmq::socket_type::pub };
 
-	ConfigSettings settings = ConfigSettings();
-	// Set physics configured gravity
-	//physics->setGravity(settings.gravity);
+	// PEER TO PEER
 
+	// construct a PUB (publish) socket to send player information to the server
+	zmq::socket_t peerToPeerPublisher{ context, zmq::socket_type::pub };
+	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
+	zmq::socket_t peerToPeerSubscriber{ context, zmq::socket_type::sub };
+
+	ConfigSettings settings = ConfigSettings();
+	
 	// Loads in config file to read and get configured gravity
 	loadConfigFile(&settings);
-	
+
+	// Set physics configured gravity
+	physics->setGravity(settings.gravity);
 	// Initialize SDL components
 	initSDL(settings);
 
@@ -166,7 +170,15 @@ int main(int argc, char* argv[]) {
 	Controllers::PlayerController* playerController;
 
 	// Update request and subscriber. Put on a new thread
-	Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
+	if (settings.networkType == 2) {
+		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController, playerController, settings);
+	}
+	else {
+		Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
+	}
+	
+
+	playerController = new Controllers::PlayerController(player, entityController, timeline);
 
 	InputHandler* inputHandler = new InputHandler();
 
@@ -225,71 +237,103 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
-	// TODO Multithreading
-	// Basic, primitive game loop
-	// TODO: Add ability to reload everything via terminal at some point
-	while (true) {
-		if (playerController) {
-			// TODO: Send client information update to the server
-			// Update request and subscriber
-			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
+	std::mutex *m;
+	std::condition_variable* cv;
 
-			// Updates to get a new deltaTime
-			timeline->updateTime();
-
-			// Prepares scene for rendering
-			Render::prepareScene();
-
-			// Updates the keyboard inputs
-			SDL_PumpEvents();
-			// Handles player input, including exit
-			input->takeInput();
-
-			// check player movmentInput (TESTING)
-			playerController->movementInput(timeline, inputHandler);
-
-			// check player actionInput (TESTING)
-			playerController->actionInput(inputHandler);
-
-			playerController->updatePlayerPhysics(timeline, physics);
+	std::thread entityThread([&]() {
+		while (true) {
+			// EntityController thread
+			
+			// Debugging
+			//std::cout << "BBBBBBBBBBBB\nBBBBBBBBBBBBB\nBBBBBBBBBBBBB\n";
 
 			// Update the physics of all entities
 			entityController->updateEntities(timeline);
 
-			//std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
-
-			// TODO: Receive game state updates from server
-
-			// Respawn Player
-			if (player->getPosition()->y > 1000) {
-				player->setPosition(250.0f, 400.0f);
-			}
-
-			// Display all entities
-			std::map<int, Entities::Entity>::iterator iterEnt;
-			// Get entity map
-			std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
-
-			// Loop through entities and display them all
-			for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
-				Render::displayEntity((Entities::Entity) iterEnt->second);
-			}
-
-			Render::displayEntity((Entities::Entity) *player);
-
-			// Renders the scene gven the parameters identified in prepareScene()
-			Render::presentScene();
-
-			capFrameRate(timeline, &then, &remainder);
+			std::this_thread::sleep_for(std::chrono::milliseconds(16));
 		}
+	});
+
+	std::thread playerThread([&]() {
+		while (true) {
+			// PlayerController thread
+			
+			// Debugging
+			//std::cout << "AAA\nAAA\n";
+
+			// Updates to get a new deltaTime
+			timeline->updateTime();
+
+			playerController->movementInput(inputHandler);
+
+			playerController->actionInput(inputHandler);
+
+			playerController->updatePlayerPhysics(physics);
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+		}
+	});
+
+	/*std::thread networkThread([&]() {
+		while (true) {
+			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+		}
+	});*/
+
+	// TODO Multithreading
+	// Basic, primitive game loop
+	// TODO: Add ability to reload everything via terminal at some point
+	while (true) {
+		// TODO: Send client information update to the server
+		// Update request and subscriber
+		if (settings.networkType == 2) {
+			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController);
+		}
+		else {
+			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
+		}
+
+		// Prepares scene for rendering
+		Render::prepareScene();
+
+		// Updates the keyboard inputs
+		SDL_PumpEvents();
+		// Handles player input, including exit
+		input->takeInput();
+
+		//std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
+
+		// Respawn Player
+		if (player->getPosition()->y > 1000) {
+			player->setPosition(250.0f, 400.0f);
+		}
+
+		// Display all entities
+		std::map<int, Entities::Entity>::iterator iterEnt;
+		// Get entity map
+		std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
+
+		// Loop through entities and display them all
+		for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
+			Render::displayEntity((Entities::Entity) iterEnt->second);
+		}
+
+		Render::displayEntity((Entities::Entity) *player);
+
+		// Renders the scene gven the parameters identified in prepareScene()
+		Render::presentScene();
+
+		//SDL_Delay(16);
+		capFrameRate(timeline, &then, &remainder);
 	}
+
+	entityThread.join();
+	playerThread.join();
 
 	delete w;
 	delete h;
-
-	//// Make sure both threads are complete before stopping main thread
-	//first.join();
-	//second.join();
 
 	// Success condition
 	return 0;

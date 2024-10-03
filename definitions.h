@@ -9,7 +9,7 @@
 #define ASPECT_H 9
 
 // Time-related constants
-#define MICROSEC_PER_SEC 1000000
+#define MICROSEC_PER_SEC 1000000.0
 
 // Max number of tile types
 #define MAX_TILE_TYPES 8

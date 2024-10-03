@@ -5,6 +5,7 @@
 #include "global.h"
 #include "SDL.h"
 #include "collisions.h"
+#include "definitions.h"
 #include "physics.h"
 #include "structs.h"
 #include "input.h"
@@ -15,118 +16,121 @@ namespace Controllers {
      * Constructor for PlayerController
      * @param *player pointer to player to control
      */
-    PlayerController::PlayerController(Entities::Player *player, EntityController *entityController){
+    PlayerController::PlayerController(Entities::Player *player, EntityController *entityController, Timeline *timeline){
         this->player = player;
         this->entityController = entityController;
+        this->m_timeline = timeline;
     }
 
-    void PlayerController::updatePlayerPhysics(Timeline *timeline, Physics *physics) {
-        physics->updateEntityPhysicsVectors(timeline, player);
+    void PlayerController::updatePlayerPhysics(Physics *physics) {
+         physics->updateEntityPhysicsVectors(m_timeline, player);
     }
 
     /**
      * Checks for movement inputs from keys and applies movement to player
      */
-    void PlayerController::movementInput(Timeline *timeline, InputHandler *inputHandler) {
-        // gets maxSpeed from player
-        float speed = player->getMaxSpeed();
-        Utils::Vector2D moveVector = Utils::Vector2D(0,0);
-        moveVector.y = player->getAcceleration()->y;
+    void PlayerController::movementInput(InputHandler *inputHandler) {
+        if (canPressInput) {
+            // gets maxSpeed from player
+            float speed = player->getMaxSpeed();
+            Utils::Vector2D moveVector = Utils::Vector2D(0, 0);
+            moveVector.y = player->getAcceleration()->y;
 
-        // horizontal movement
-        if (inputHandler->keyboard[SDL_SCANCODE_RIGHT] == 1) {
-            if (useAcceleration) {
-                moveVector.x += speed;
-            }
-            else {
-                moveVector.x = speed;
-            }
-        }
-        if (inputHandler->keyboard[SDL_SCANCODE_LEFT] == 1) {
-            if (useAcceleration) {
-                moveVector.x -= speed;
-            }
-            else {
-                moveVector.x = -speed;
-            }
-        }
-
-        // vertical movement (platformer)
-        if (platformerMovement) {
-            if (inputHandler->keyboard[SDL_SCANCODE_DOWN] == 1) {
-
-            }
-            // Jump
-            if (inputHandler->keyboard[SDL_SCANCODE_UP] == 1 && player->getIsGrounded()) {
-                moveVector.y = player->getJumpVector()->y;
-                player->setIsGrounded(false);
-            }
-        }
-        else {
-            // vertical movement (top down)
-            if (inputHandler->keyboard[SDL_SCANCODE_DOWN] == 1) {
+            // horizontal movement
+            if (inputHandler->keyboard[SDL_SCANCODE_RIGHT] == 1) {
                 if (useAcceleration) {
-                    moveVector.y += speed;
+                    moveVector.x += speed;
                 }
                 else {
-                    moveVector.y = speed;
+                    moveVector.x = speed;
                 }
             }
-            if (inputHandler->keyboard[SDL_SCANCODE_UP] == 1) {
+            if (inputHandler->keyboard[SDL_SCANCODE_LEFT] == 1) {
                 if (useAcceleration) {
-                    moveVector.y -= speed;
+                    moveVector.x -= speed;
                 }
                 else {
-                    moveVector.y = -speed;
+                    moveVector.x = -speed;
                 }
             }
+
+            // vertical movement (platformer)
+            if (platformerMovement) {
+                if (inputHandler->keyboard[SDL_SCANCODE_DOWN] == 1) {
+
+                }
+                // Jump
+                if (inputHandler->keyboard[SDL_SCANCODE_UP] == 1 && player->getIsGrounded()) {
+                    moveVector.y = player->getJumpVector()->y;
+                    player->setIsGrounded(false);
+                }
+            }
+            else {
+                // vertical movement (top down)
+                if (inputHandler->keyboard[SDL_SCANCODE_DOWN] == 1) {
+                    if (useAcceleration) {
+                        moveVector.y += speed;
+                    }
+                    else {
+                        moveVector.y = speed;
+                    }
+                }
+                if (inputHandler->keyboard[SDL_SCANCODE_UP] == 1) {
+                    if (useAcceleration) {
+                        moveVector.y -= speed;
+                    }
+                    else {
+                        moveVector.y = -speed;
+                    }
+                }
+            }
+
+            // if moving diagonally, multiplies vectors xy values by cos(45deg)
+            if (!platformerMovement && moveVector.x != 0 && moveVector.y != 0) {
+                moveVector.x *= 0.525322;
+                moveVector.y *= 0.525322;
+            }
+            moveVector.multConst(m_timeline->getDeltaTime() / MICROSEC_PER_SEC);
+
+            player->updateVelocity(moveVector);
+
+
+            //std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
+
+            // move on x axis
+            movePlayer(Utils::Vector2D(moveVector.x, NULL));
+            // move on y axis
+            movePlayer(Utils::Vector2D(NULL, moveVector.y));
         }
-
-        // if moving diagonally, multiplies vectors xy values by cos(45deg)
-        if (!platformerMovement && moveVector.x != 0 && moveVector.y != 0) {
-            moveVector.x *= 0.525322;
-            moveVector.y *= 0.525322;
-        }
-        moveVector.multConst(timeline->getDeltaTime() / MICROSEC_PER_SEC);
-
-        player->updateVelocity(moveVector);
-
-
-        //std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
-
-        // move on x axis
-        movePlayer(Utils::Vector2D(moveVector.x, NULL), timeline);
-        // move on y axis
-        movePlayer(Utils::Vector2D(NULL, moveVector.y), timeline);
-        
     }
 
     /**
      * Moves the player by a given amount by manipulating its velocity vector
      * @param movementVector The vector that is changes the player's movement
      */
-    void PlayerController::movePlayer(Utils::Vector2D movementVector, Timeline *timeline) {
+    void PlayerController::movePlayer(Utils::Vector2D movementVector) {
         Utils::Vector2D moveVector;
         // quick fix for geting to fast 
+        // float maxMove = 10;
+        float deltaTimeInSecs = static_cast<float>(m_timeline->getDeltaTime()) / MICROSEC_PER_SEC;
 
-        float maxMove = 10;
         if (movementVector.x != NULL) {
-            if (movementVector.x > maxMove) {
+            /*if (movementVector.x > maxMove) {
                 movementVector.x = maxMove;
             }
             else if (movementVector.x < -maxMove) {
                 movementVector.x = -maxMove;
-            }
-            moveVector = Utils::Vector2D(movementVector.x, 0);
+            }*/
+            moveVector = Utils::Vector2D(movementVector.x * deltaTimeInSecs, 0);
         }
         else if (movementVector.y != NULL) {
-            if (movementVector.y > maxMove) {
+            /*if (movementVector.y > maxMove) {
                 movementVector.y = maxMove;
             }
             else if (movementVector.y < -maxMove) {
                 movementVector.y = -maxMove;
-            }
-            moveVector = Utils::Vector2D(0, movementVector.y);
+            }*/
+            moveVector = Utils::Vector2D(0, movementVector.y * deltaTimeInSecs);
         }
 
         // update velocity
@@ -156,15 +160,16 @@ namespace Controllers {
             if (movementVector.x != NULL) { // x-axis collision
                 //std::cout << "X-HIT\n";
                 player->updatePosition(moveVector.multConst(-1));
-                player->setVelocity(0, player->getVelocity()->x);
+                //player->setAcceleration(0, player->getAcceleration()->y);
+                //player->setVelocity(0, player->getVelocity()->y);
             }
             if (movementVector.y != NULL) { // y-axis collision
                 //std::cout << "Y-HIT\n";
-                player->updatePosition(Utils::Vector2D(0, player->getVelocity()->multConst(-1 * (timeline->getDeltaTime() / MICROSEC_PER_SEC)).y - moveVector.y));
-                player->setVelocity(player->getVelocity()->x, 0);
-
+                player->updatePosition(Utils::Vector2D(0, player->getVelocity()->multConst(-1 * deltaTimeInSecs).y - moveVector.y));
+                //player->setAcceleration(player->getAcceleration()->x, 0);
+                //player->setVelocity(player->getVelocity()->x, 0);
             }
-
+            
             // Create colliders iterator
             std::list<SDL_Rect>::iterator iterCol2;
 
@@ -177,7 +182,7 @@ namespace Controllers {
             }
 
             // set as grounded if 
-            player->setIsGrounded(player->getAcceleration()->y > 0);
+            player->setIsGrounded(player->getAcceleration()->y >= 0);
         }
     }
 
@@ -193,7 +198,7 @@ namespace Controllers {
      * Checks for action inputs from keys
      */
     void PlayerController::actionInput(InputHandler *inputHandler) {
-        setCanPress(false);
+        // Action
         if (inputHandler->keyboard[SDL_SCANCODE_E] == 2) {
             std::cout << "ACTION PRESSED\n";  // TESTING!!!
         }
@@ -206,6 +211,31 @@ namespace Controllers {
             
             std::cout << "SCALING BUTTON PRESSED\n";  // TESTING!!!
         }
+        // Pauses and unpauses the Player Timeline
+        if (inputHandler->keyboard[SDL_SCANCODE_P] == 2) {
+            if (m_timeline->isPaused()) {
+                std::cout << "Unpause\n";
+                m_timeline->unpause();
+				canPressInput = true;
+            } else {
+				std::cout << "Pause\n";
+				m_timeline->pause();
+                canPressInput = false;
+            }
+        }
+        // Change timescale for player
+        if (inputHandler->keyboard[SDL_SCANCODE_8] == 2) {
+			std::cout << "Timescale 0.5\n";
+            m_timeline->changeTimeScale(0.5f);
+        }
+		if (inputHandler->keyboard[SDL_SCANCODE_9] ==  2) {
+			std::cout << "Timescale 1.0";
+			m_timeline->changeTimeScale(1.0f);
+		}
+		if (inputHandler->keyboard[SDL_SCANCODE_0] == 2) {
+			std::cout << "Timescale 2.0";
+			m_timeline->changeTimeScale(2.0f);
+		}
     }
 
     void PlayerController::setPlayer(Entities::Player *p) {

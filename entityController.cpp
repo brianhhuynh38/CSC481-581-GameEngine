@@ -42,7 +42,7 @@ void EntityController::updateEntities(Timeline *timeline) {
 	*
 	* @param entityListString
 	*/
-void EntityController::updateEntitiesByString(std::string entityListString) {
+void EntityController::updateEntitiesByString(std::string entityListString, int networkType) {
 	//std::cout << "EntityListString: " << entityListString << "\n";
 	// Delimit by section
 	std::stringstream ss(entityListString);
@@ -72,7 +72,8 @@ void EntityController::updateEntitiesByString(std::string entityListString) {
 		// Construct player from string
 		Entities::Player p = *Entities::Player::fromString(temp);
 		// If the player is not the one this client controls, do not update
-		if (p.getUUID() != m_playerID) {
+		// 
+		if (p.getUUID() != m_playerID && (networkType == 2 && (getOpposingPlayers()->find(p.getUUID())) == getOpposingPlayers()->end())) {
 			insertOpposingPlayer(p);
 			insertEntity(p);
 		}
@@ -90,6 +91,10 @@ void EntityController::updateEntitiesByString(std::string entityListString) {
 
 std::map<int, Entities::Entity> *EntityController::getEntities() {
 	return m_entities;
+}
+
+std::map<int, Entities::Entity>* EntityController::getOpposingPlayers() {
+	return m_opposingPlayers;
 }
 
 

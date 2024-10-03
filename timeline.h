@@ -112,6 +112,13 @@ public:
 	void changeTic(int64_t tic);
 
 	/**
+	* Gets the time scale
+	*
+	* @return timeScale: The multiplier to set to affect the flow of time
+	*/
+	float getTimeScale();
+
+	/**
 	* Changes the multiplier applied to the flow of time in order to speed up or slow
 	* down the current flow of time.
 	* 
