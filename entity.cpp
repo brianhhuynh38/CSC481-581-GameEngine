@@ -8,6 +8,8 @@
 #include "vector2D.h"
 #include "draw.h"
 
+#include "json.hpp"
+
 
 namespace Entities {
 
