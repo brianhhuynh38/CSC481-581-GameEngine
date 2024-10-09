@@ -23,7 +23,7 @@ namespace Entities {
 		m_size = new Utils::Vector2D(0.0, 0.0);
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 1000;
+		m_velocity_max = 200;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration_max = 200;
 		m_mass = 5;

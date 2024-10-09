@@ -47,8 +47,9 @@ namespace Controllers {
          * Moves the player given a movement vector
          *
          * @param movementVector The vector used to move by adding to velocity
+         * @param axis The axis the player is being moved on. 0 = x-axis, 1 = y-axis
          */
-        void movePlayer(Utils::Vector2D movementVector);
+        void movePlayer(Utils::Vector2D movementVector, int axis);
 
         /**
          * Checks for movement inputs from keys and applies movement to player

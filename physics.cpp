@@ -67,7 +67,7 @@ void Physics::applyGravity(Entities::Entity *entity, Timeline *timeline) {
 
 	// Gravity value is multiplied by 01 to make it a downward force
 	//entity->updateVelocity(entity->getVelocity()->add(gravityForce.multConst(deltaTimeInSecs)));
-	entity->updateAcceleration(Utils::Vector2D(0, m_gravity * entity->getMass()).multConst(timeline->getDeltaTime() / MICROSEC_PER_SEC));
+	entity->updateAcceleration(Utils::Vector2D(0, m_gravity * entity->getMass()).multConst(deltaTimeInSecs));
 	//entity->updateAcceleration(Utils::Vector2D(0, m_gravity * timeline.getDeltaTime() / MICROSEC_PER_SEC));
 	//entity->setAcceleration(entity->getAcceleration()->x, (m_gravity + entity->getAcceleration()->y) * (1.0f - timeline->getDeltaTime() / MICROSEC_PER_SEC));
 }
