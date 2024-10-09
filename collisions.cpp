@@ -113,7 +113,6 @@ HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::map<int, Entities:
                     hInfo.hitVector = direction;
                     hInfo.collisionRect = *iterColOther;
                     hInfo.penetrationDepth = penetrationDepth;
-                    return hInfo;
                 }
             }
         }
