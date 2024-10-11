@@ -28,8 +28,8 @@ namespace PeerToPeer {
         // Set socket options
         int conflate = 1;
         zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-        int linger = 0;
-        zmq_setsockopt(subscriber, ZMQ_LINGER, &linger, sizeof(linger));
+        //int linger = 0;
+        //zmq_setsockopt(subscriber, ZMQ_LINGER, &linger, sizeof(linger));
         //int backlog = 0;
         //zmq_setsockopt(subscriber, ZMQ_BACKLOG, &backlog, sizeof(backlog));
         /*int rcvhwm = 1;
@@ -62,6 +62,10 @@ namespace PeerToPeer {
 
         std::stringstream ss;
         ss << "tcp://localhost:" << portNum;
+
+        // Set to only receive last message (theoretically)
+        zmq_setsockopt(p2ppublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+        zmq_setsockopt(p2psubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
 
         p2ppublisher->bind(ss.str());
         entityController->setPlayerID(player->getUUID());
