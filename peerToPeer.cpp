@@ -28,13 +28,7 @@ namespace PeerToPeer {
         // Set socket options
         int conflate = 1;
         zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-        //int linger = 0;
-        //zmq_setsockopt(subscriber, ZMQ_LINGER, &linger, sizeof(linger));
-        //int backlog = 0;
-        //zmq_setsockopt(subscriber, ZMQ_BACKLOG, &backlog, sizeof(backlog));
-        /*int rcvhwm = 1;
-        zmq_setsockopt(subscriber, ZMQ_RCVHWM, &rcvhwm, sizeof(rcvhwm));*/
-        //zmq_bind(subscriber, "tcp://localhost:5555");
+
         subscriber->connect("tcp://localhost:5555");
         request->connect("tcp://localhost:5556");
         
@@ -82,7 +76,7 @@ namespace PeerToPeer {
     * @param subscriber Subscriber to use
     */
     int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player, EntityController*& entityController) {
-        // Receive messages from the server as a subscriber
+        // Receive messages from the server as a subscriber for MovingEntities only
         zmq::message_t serverInfo;
         zmq_connect(subscriber, "tcp://localhost:5555");
         subscriber->recv(serverInfo, zmq::recv_flags::dontwait);
@@ -121,21 +115,27 @@ namespace PeerToPeer {
         // Iterate through opposing players
 		std::map<int, Entities::Entity>::iterator iter;
         std::map<int, Entities::Entity> playerMap = *entityController->getOpposingPlayers();
+
 		// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
 		for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
+
 			int entityId = iter->first; // Get the ID of the current entity
             std::cout << "Hello, playerMap is populated\n";
+
             // Calculate port and connect with both
             int portNum = 5558 + entityId;
             std::stringstream ss;
             ss << "tcp://localhost:" << portNum;
             p2ppublisher->connect(ss.str());
             p2psubscriber->connect(ss.str());
+
             //send messages
             p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+
             // Receive client info
             zmq::message_t clientInfo;
             p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+
             if (!clientInfo.empty()) {
                 std::cout << "Print peer's player info: " << clientInfo.to_string() << "\n";
                 // Create player from string and update their information
@@ -147,5 +147,50 @@ namespace PeerToPeer {
             }
         }
         return 0;
+    }
+
+    int startThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player) {
+
+        // Get client port number
+        int portNum = 5558 + player->getUUID();
+        // Assemble network address
+        std::stringstream ss;
+        ss << "tcp://localhost:" << portNum;
+
+        // Set to only receive last message
+        int conflate = 1;
+        zmq_setsockopt(p2ppublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+        zmq_setsockopt(p2psubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+
+        // Bind and set socket options and addresses
+        p2ppublisher->bind(ss.str());
+        p2psubscriber->set(zmq::sockopt::subscribe, "");
+        
+        // Connect each publisher and subscriber to the address
+        p2ppublisher->connect(ss.str());
+        p2psubscriber->connect(ss.str());
+
+        return 0;
+    }
+
+    int runThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player) {
+        zmq::message_t playerInfo("Client\n" + player->toString());
+
+        //send messages
+        p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+
+        // Receive client info
+        zmq::message_t clientInfo;
+        p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+
+        if (!clientInfo.empty()) {
+            std::cout << "Print peer's player info: " << clientInfo.to_string() << "\n";
+            // Create player from string and update their information
+            Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
+
+            // TODO: Add update function for each player here
+
+            std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
+        }
     }
 }

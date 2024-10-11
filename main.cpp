@@ -169,6 +169,9 @@ int main(int argc, char* argv[]) {
 	// The default player controller
 	Controllers::PlayerController* playerController;
 
+	// Create a vector of client threads so that they can be joined later on
+	std::vector<std::thread> clientThreads = {};
+
 	// Update request and subscriber. Put on a new thread
 	if (settings.networkType == 2) {
 		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController, playerController, settings);
@@ -269,14 +272,6 @@ int main(int argc, char* argv[]) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(16));
 		}
 	});
-
-	/*std::thread networkThread([&]() {
-		while (true) {
-			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(16));
-		}
-	});*/
 
 	// TODO Multithreading
 	// Basic, primitive game loop

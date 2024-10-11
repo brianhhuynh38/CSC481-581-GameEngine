@@ -160,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="client.h" />
     <ClInclude Include="collisions.h" />
+    <ClInclude Include="components.h" />
     <ClInclude Include="configIO.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />

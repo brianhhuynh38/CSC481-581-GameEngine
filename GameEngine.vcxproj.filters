@@ -64,6 +64,9 @@
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{799b129e-0f66-4e10-995e-71673ae4bb3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entities\Components">
+      <UniqueIdentifier>{6229b335-62b7-4d5d-92ec-a3b7b33ab746}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -191,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="peerToPeer.h">
       <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="components.h">
+      <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
