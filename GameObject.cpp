@@ -1,6 +1,9 @@
 #include "GameObject.h"
 #include "component.h"
 #include "transform.h"
+#include "textureMesh.h"
+#include "playerInput.h"
+#include "rigidBody.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -13,7 +16,15 @@
 class GameObject {
 protected:
 	std::vector<std::unique_ptr<Component::Component>> components; // Container for all components
+	// REFERENCE TO TIMELINE HERE
+	// Put stuff in struct?
 public:
+	// Default constructor for GameObject. Adds a Transform component (required)
+	GameObject(){
+		this->addComponent(new Component::Transform(1, 1, 0, 0, 1, 1));
+	}
+
+	// Constructor with fields for GameObject. Adds a Transform component (required)
 	GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height) {
 		this->addComponent(new Component::Transform(scaleX, scaleY, positionX, positionY, width, height));
 	}
@@ -46,6 +57,8 @@ public:
 		}
 	}
 };
+
+// - Player: TextureMesh, RigidBody (collision), 
 class Player : public GameObject {
 protected:
 	// Add player property fields here
@@ -53,8 +66,28 @@ public:
 	Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
 		float maxSpeed) {
-
+		this->addComponent(new Component::Transform(scaleX, scaleY, positionX, positionY, width, height));
+		this->addComponent(new Component::RigidBody(/*add parameters here*/));
+		this->addComponent(new Component::TextureMesh(/*add parameters here*/));
+		this->addComponent(new Component::PlayerInput(/*add parameters here*/));
 	}
-
-
 };
+
+// - StaticPlatform: TextureMesh, RigidBody (collision)
+class StaticPlatform : public GameObject {
+protected:
+	// Add static platform property fields here
+public:
+	StaticPlatform(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics) {
+		this->addComponent(new Component::Transform(scaleX, scaleY, positionX, positionY, width, height));
+		this->addComponent(new Component::RigidBody(/*add parameters here*/));
+		this->addComponent(new Component::TextureMesh(/*add parameters here*/));
+	}
+};
+
+// Others to add:
+// - MovingPlatform: Server-side.  TextureMesh, RigidBody, MovementController?
+// - SpawnPoint: DON'T need to add, can just be a GameObject, only needs Transform
+// - DeathZone: RigidBody (for collisions)
+// - SideBoundary: RigidBody (for collisions)

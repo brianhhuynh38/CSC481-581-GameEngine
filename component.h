@@ -10,6 +10,7 @@ namespace Component {
 		virtual ~Component() {}
 		virtual void update() = 0;
 	};
+
 }
 
 #endif
