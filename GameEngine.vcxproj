@@ -139,6 +139,7 @@
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="entityController.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movingEntity.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="entityController.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="movingEntity.h" />
