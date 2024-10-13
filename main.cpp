@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
 	Controllers::PlayerController* playerController;
 
 	// Create a vector of client threads so that they can be joined later on
-	std::vector<std::thread> clientThreads = {};
+	std::vector<std::thread> clientThreads = std::vector<std::thread>();
 
 	// Update request and subscriber. Put on a new thread
 	if (settings.networkType == 2) {
