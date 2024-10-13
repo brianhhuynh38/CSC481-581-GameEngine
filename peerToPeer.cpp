@@ -173,7 +173,11 @@ namespace PeerToPeer {
         return 0;
     }
 
-    int runThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player) {
+    int runOpposingPlayerThread() {
+
+    }
+
+    int runPlayerThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player) {
         zmq::message_t playerInfo("Client\n" + player->toString());
 
         //send messages
@@ -192,5 +196,7 @@ namespace PeerToPeer {
 
             std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
         }
+
+        return 0;
     }
 }

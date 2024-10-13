@@ -1,5 +1,8 @@
 #include "GameObject.h"
+#include "component.h"
+#include "transform.h"
 #include <iostream>
+#include <map>
 #include <vector>
 #include <memory>
 
@@ -8,7 +11,13 @@
 * http://entity-systems.wikidot.com/test-for-parallel-processing-of-components#cpp
 */
 class GameObject {
+protected:
+	std::vector<std::unique_ptr<Component::Component>> components; // Container for all components
 public:
+	GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height) {
+		this->addComponent(new Component::Transform(scaleX, scaleY, positionX, positionY, width, height));
+	}
+
 	// Function to add component to the game object
 	template<typename T, typename... Args>
 	void addComponent(Args&&... args) {
@@ -16,6 +25,12 @@ public:
 		components[typeid(T)] = std::move(component);
 	}
 
+	/**
+	* Uses the type given in the brackets to determine the component to get, then returns it:
+	* Usage: getComponent<TYPE>()
+	* 
+	* @return Returns the component specified by the template type
+	*/
 	template<typename T>
 	T* getComponent() {
 		auto it = components.find(typeid(T));
@@ -27,51 +42,19 @@ public:
 	// Update all components attached to game object
 	void update() {
 		for (auto& component : components) {
-			component->update(*this);
+			component->update();
 		}
 	}
-
-	// Game Object Properties (not sure if we need this here? maybe in our EntityComponent though)
-	float x = 0, y = 0; // Global position (not based on display)
-	float vx = 0, vy = 0; // Global velocity
-	// Add other relevant data here
-
-private:
-	std::vector<std::unique_ptr<Component>> components; // Container for all components
 };
+class Player : public GameObject {
+protected:
+	// Add player property fields here
+public:
+	Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
+		float maxSpeed) {
+
+	}
 
 
-
-// JUST EXAMPLE CODE FOR HOW A COMPONENT COULD WORK (based on my understanding):
-// 
-// Class handling movement of component:
-// class TransformComponent : public Component {
-//public:
-//	TransformComponent(float x, float y) : startX(x), startY(y) {}
-//
-//	void update(GameObject& obj) override {
-//		obj.x = startX;
-//		obj.y = startY;
-//		std::cout << "Transform Component: (" << obj.x << ", " << obj.y << ")\n";
-//	}
-//
-//private:
-//	float startX, startY;
-//};
-// 
-// Uses TransformComponent and applies physics:
-//class PhysicsComponent : public Component {
-//public:
-//	PhysicsComponent(float gravity) : gravity(gravity) {}
-//
-//	void update(GameObject& obj, Timeline* timeline) override {
-//		auto transform = obj.getComponent<TransformComponent>();
-//		if (transform) {
-//			// Apply physics to the transform component
-//			transform->y += gravity * timeline->getDeltaTime();
-//		}
-//	}
-//
-//private:
-//	float gravity;
-//};
+}

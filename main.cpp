@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 	
 	// TODO: Initialize networking
 	// initialize the zmq context with a single IO thread
-	zmq::context_t context{ 2 };
+	zmq::context_t context{ 6 };
 	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
 	zmq::socket_t serverToClientSubscriber{ context, zmq::socket_type::sub };
 	// construct a REQ (request) socket to receive client identification information from the server
@@ -139,6 +139,8 @@ int main(int argc, char* argv[]) {
 	zmq::socket_t peerToPeerPublisher{ context, zmq::socket_type::pub };
 	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
 	zmq::socket_t peerToPeerSubscriber{ context, zmq::socket_type::sub };
+	// Listens for peer to peer client connects
+	zmq::socket_t clientListener{ context, zmq::socket_type::pull };
 
 	ConfigSettings settings = ConfigSettings();
 	

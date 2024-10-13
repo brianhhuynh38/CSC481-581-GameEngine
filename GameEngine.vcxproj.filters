@@ -67,6 +67,9 @@
     <Filter Include="Header Files\Entities\Components">
       <UniqueIdentifier>{6229b335-62b7-4d5d-92ec-a3b7b33ab746}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities\Components">
+      <UniqueIdentifier>{abbde156-0676-46eb-a2b9-ce3b04b8f3c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -198,11 +201,23 @@
     <ClInclude Include="peerToPeer.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="components.h">
-      <Filter>Header Files\Entities\Components</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidBody.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="textureMesh.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="playerInput.h">
+      <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
