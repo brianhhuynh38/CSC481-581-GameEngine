@@ -3,6 +3,8 @@
 #include "component.h"
 #include "draw.h"
 
+#include <iostream>
+
 #ifndef TEXTUREMESH_H
 #define TEXTUREMESH_H
 

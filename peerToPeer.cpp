@@ -174,7 +174,8 @@ namespace PeerToPeer {
     }
 
     int runOpposingPlayerThread() {
-
+        // TODO: Not done yet
+        return -1;
     }
 
     int runPlayerThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player) {
