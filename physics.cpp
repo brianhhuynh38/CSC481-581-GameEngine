@@ -71,3 +71,11 @@ void Physics::applyGravity(Entities::Entity *entity, Timeline *timeline) {
 	//entity->updateAcceleration(Utils::Vector2D(0, m_gravity * timeline.getDeltaTime() / MICROSEC_PER_SEC));
 	//entity->setAcceleration(entity->getAcceleration()->x, (m_gravity + entity->getAcceleration()->y) * (1.0f - timeline->getDeltaTime() / MICROSEC_PER_SEC));
 }
+
+
+void Physics::applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration) {
+	// Get gravity force
+	Utils::Vector2D gravityForce(0, m_gravity * mass);
+	// Update acceleration
+	*acceleration = acceleration->add(Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs));
+}

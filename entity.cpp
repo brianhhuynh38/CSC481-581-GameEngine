@@ -77,8 +77,8 @@ namespace Entities {
 	}
 
 	/**
-		* Returns the entity's UUID
-		*/
+	 * Returns the entity's UUID
+	 */
 	int Entity::getUUID() {
 		return m_uuid;
 	}

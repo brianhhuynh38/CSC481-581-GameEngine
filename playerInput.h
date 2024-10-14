@@ -7,8 +7,8 @@
 
 #include <SDL.h>
 
-#ifndef RIGIDBODY_H
-#define RIGIDBODY_H
+#ifndef PLAYERINPUT_H
+#define PLAYERINPUT_H
 
 namespace Component {
 
