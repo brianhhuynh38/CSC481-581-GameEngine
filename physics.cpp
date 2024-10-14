@@ -46,6 +46,17 @@ void Physics::updateEntityPhysicsVectors(Timeline *timeline, Entities::Entity *e
 }
 
 /**
+* Updates vectors given as parameters
+*/
+void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position, Utils::Vector2D* velocity, Utils::Vector2D* acceleration) {
+	// Update velocity using acceleration
+	*velocity = velocity->add(acceleration->multConst(deltaTimeInSecs));
+
+	// Update position using velocity
+	*position = velocity->multConst(deltaTimeInSecs);
+}
+
+/**
  * Applies the given force to the given entity
  * @param entity to apply force too
  * @param forceVector to apply
