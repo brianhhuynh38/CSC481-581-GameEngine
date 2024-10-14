@@ -33,7 +33,7 @@ namespace Component {
 		GameObject* m_parent;
 		// Reference to the timeline (temp)
 		Timeline* m_timeline;
-
+		// Reference to physics object
 		Physics* m_physics;
 
 	public:
@@ -49,15 +49,8 @@ namespace Component {
 				// Update position using velocity
 				m_parent->getComponent<Transform>()->updatePosition(m_velocity.multConst(deltaTimeInSecs));
 
-				// TODO: Get gravity applying properly
-
-				m_physics->applyGravity();
-
-				//Utils::Vector2D gravityForce(0, m_gravity * entity->getMass());
-
-				//// Gravity value is multiplied by 01 to make it a downward force
-				////entity->updateVelocity(entity->getVelocity()->add(gravityForce.multConst(deltaTimeInSecs)));
-				//entity->updateAcceleration(Utils::Vector2D(0, m_gravity * entity->getMass()).multConst(deltaTimeInSecs));
+				// Apply gravity
+				m_physics->applyGravity(deltaTimeInSecs, m_mass, &m_acceleration);
 			}
 		}
 	};
