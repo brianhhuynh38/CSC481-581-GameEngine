@@ -25,7 +25,7 @@
 class GameObject {
 protected:
     // Store components in a map using std::type_index as the key
-    std::map<std::type_index, std::unique_ptr<Component::Component>> m_components;
+    std::map<std::type_index, std::unique_ptr<Components::Component>> m_components;
     // Reference pointer to the timeline controlling GameObject behaviors
     Timeline* m_timeline;
     // UUID

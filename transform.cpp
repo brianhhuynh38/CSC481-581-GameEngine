@@ -2,7 +2,7 @@
 #include "transform.h"
 #include "vector2D.h"
 
-namespace Component {
+namespace Components {
 
 	/**
 	* Constructs transform with all necessary fields

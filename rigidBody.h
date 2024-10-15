@@ -1,13 +1,14 @@
 #pragma once
 #include "physics.h"
+#include "component.h"
 
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
-namespace Component {
+namespace Components {
 
 	class RigidBody : public virtual Component {
-	private:
+	protected:
 		// Whether the object moves and is affected by physics
 		bool m_isStatic;
 		// The mass of the object
@@ -23,9 +24,9 @@ namespace Component {
 		// The collider of the GameObject
 		SDL_Rect m_collider;
 		// Reference to the parent GameObject to communicate with other components
-		GameObject* m_parent;
+		GameObject *m_parent;
 		// Reference to physics object
-		Physics* m_physics;
+		Physics *m_physics;
 
 	public:
 

@@ -1,16 +1,18 @@
 #pragma once
 
+#include "component.h"
+
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-namespace Component {
+namespace Components {
 
 	/**
 	* The transform is completely necessary for a GameObject, as it stores all relevant information related to 
 	* the object's position and existence.
 	*/
 	class Transform : public virtual Component {
-	private:
+	protected:
 		/** The current position of the GameObject */
 		Utils::Vector2D *m_position;
 		/** The reference to the global camera offset value used to keep track of the camera's position */

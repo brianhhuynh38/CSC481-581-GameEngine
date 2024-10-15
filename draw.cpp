@@ -116,8 +116,8 @@ namespace Render {
 	 */
 	void displayGameObject(GameObject gameObject) {
 		// Get necessary components
-		Component::TextureMesh *tm = gameObject.getComponent<Component::TextureMesh>();
-		Component::Transform *transform = gameObject.getComponent<Component::Transform>();
+		Components::TextureMesh *tm = gameObject.getComponent<Components::TextureMesh>();
+		Components::Transform *transform = gameObject.getComponent<Components::Transform>();
 
 		// If null, do not display
 		if (tm == nullptr || transform == nullptr) {
