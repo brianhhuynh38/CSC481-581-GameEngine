@@ -125,6 +125,7 @@ namespace Render {
 		}
 
 		// Displays the texture given the necessary components
-		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y, transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
+		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y,
+			transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
 	}
  }

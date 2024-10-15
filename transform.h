@@ -46,6 +46,7 @@ namespace Component {
 		 * @param position: The position to add to the current position
 	     */
 		void updatePosition(Utils::Vector2D position);
+
 		/**
 		 * Sets the position using the two float values provided
 		 * @param positionX: The x component of the position
