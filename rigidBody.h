@@ -29,7 +29,7 @@ namespace Component {
 		bool m_isTrigger;
 		// The collider of the GameObject
 		SDL_Rect m_collider;
-		// Reference to the parent GameObject
+		// Reference to the parent GameObject to communicate with 
 		GameObject* m_parent;
 		// Reference to the timeline (temp)
 		Timeline* m_timeline;

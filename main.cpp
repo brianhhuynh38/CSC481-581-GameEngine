@@ -142,6 +142,7 @@ int main(int argc, char* argv[]) {
 	// Listens for peer to peer client connects
 	zmq::socket_t clientListener{ context, zmq::socket_type::pull };
 
+	// Struct that contains all settings defined in configuration file
 	ConfigSettings settings = ConfigSettings();
 	
 	// Loads in config file to read and get configured gravity
@@ -155,14 +156,10 @@ int main(int argc, char* argv[]) {
 	// Runs memoryCleanUp() if the application exits
 	std::atexit(memoryCleanUp);
 
-	// Initiate current stage
-	//initStage();
-
 	then = timeline->getTime();
 	remainder = 0;
 
-	// Create a player Entity (Temp: Make more malleable in the future)
-	// TODO: Base starting position off window size percentage
+	// Create the entityController
 	EntityController* entityController = new EntityController(physics);
 	
 	// The entity that the player is able to control
@@ -236,9 +233,9 @@ int main(int argc, char* argv[]) {
 	std::cout << "WindowSize " << *w << "x" << *h << "\n";
 
 	// Sets global scaling to 80 by default (1280x720), 
-	// but sets it to not be on proportional scaling by default
+	// Sets it to be on proportional scaling by default
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
-	proportionalScalingActive = false;
+	proportionalScalingActive = true;
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
