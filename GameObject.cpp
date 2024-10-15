@@ -21,12 +21,12 @@
 
 // Default constructor for GameObject. Adds a Transform component (required)
 GameObject::GameObject(){
-	addComponent<Component::Transform>(1, 1, 0, 0, 1, 1);
+	addComponent<Components::Transform>(1, 1, 0, 0, 1, 1);
 }
 
 // Constructor with fields for GameObject. Adds a Transform component (required)
 GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height) {
-	addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
+	addComponent<Components::Transform>(scaleX, scaleY, positionX, positionY, width, height);
 }
 
 // Function to add component to the game object
@@ -74,19 +74,19 @@ PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY,
 	std::string textureFilepath, bool isStatic, bool isTrigger, float jumpVectorX, float jumpVectorY,
 	float maxSpeed) {
 	// Adding specific components for Player
-	addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-	addComponent<Component::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
-	addComponent<Component::TextureMesh>(textureFilepath);
-	addComponent<Component::PlayerInputPlatformer>();
+	addComponent<Components::Transform>(scaleX, scaleY, positionX, positionY, width, height);
+	addComponent<Components::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
+	addComponent<Components::TextureMesh>(textureFilepath);
+	addComponent<Components::PlayerInputPlatformer>();
 }
 
 
 StaticPlatform::StaticPlatform(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 	std::string textureFilepath, bool isStatic, bool isTrigger) {
 	// Adding specific components for StaticPlatform
-	addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-	addComponent<Component::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
-	addComponent<Component::TextureMesh>(textureFilepath);
+	addComponent<Components::Transform>(scaleX, scaleY, positionX, positionY, width, height);
+	addComponent<Components::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
+	addComponent<Components::TextureMesh>(textureFilepath);
 }
 
 

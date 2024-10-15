@@ -8,10 +8,10 @@
 #ifndef TEXTUREMESH_H
 #define TEXTUREMESH_H
 
-namespace Component {
+namespace Components {
 
 	class TextureMesh : public virtual Component {
-	private:
+	protected:
 		/** The filepath to the texture to be used */
 		std::string m_textureFilePath;
 		/** Texture to use for this entity */

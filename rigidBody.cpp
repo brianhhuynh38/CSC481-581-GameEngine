@@ -8,7 +8,7 @@
 
 #include <SDL.h>
 
-namespace Component {
+namespace Components {
 
 	RigidBody::RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef) {
 		// Create new vectors at (0,0) for velocity and acceleration

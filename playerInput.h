@@ -1,12 +1,14 @@
 #pragma once
 
+#include "component.h"
+
 #ifndef PLAYERINPUT_H
 #define PLAYERINPUT_H
 
-namespace Component {
+namespace Components {
 
 	class PlayerInputPlatformer : public virtual Component {
-	private:
+	protected:
 		float maxMovementSpeed;
 		Utils::Vector2D jumpVector;
 		//InputHandler* m_inputHandler;

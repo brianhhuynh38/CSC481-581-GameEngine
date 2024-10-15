@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Component {
+namespace Components {
 
 	/**
 		* TextureMesh constructor. Constructs a textureMesh component

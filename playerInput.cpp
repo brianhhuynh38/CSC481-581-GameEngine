@@ -6,7 +6,7 @@
 
 #include <SDL.h>
 
-namespace Component {
+namespace Components {
 
 	void PlayerInputPlatformer::update() {
 		// TODO: Update physics vectors
