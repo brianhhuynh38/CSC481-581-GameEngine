@@ -25,77 +25,51 @@ namespace Component {
 		 * with the given textureFilePath as its default.
 		 * @param textureFilePath to set during construction
 		 */
-		TextureMesh(std::string textureFilePath){
-			m_textureFilePath = textureFilePath;
-			m_texture = Render::loadTexture(m_textureFilePath);
-			m_isVisible = true;
-		}
+		TextureMesh(std::string textureFilePath);
 
-		void update() override {
-			// TODO: Animation when available
-		}
+		void update() override;
 
 		/**
 		 * Returns the textureMesh's file path.
 		 * @return textureFilePath
 		 */
-		std::string getTextureFilePath() {
-			return m_textureFilePath;
-		}
+		std::string getTextureFilePath();
 
 		/**
 		 * Sets the textureFilePath to the given string.
 		 * @param textureFilePath
 		 */
-		void setTextureFilePath(std::string textureFilePath) {
-			m_textureFilePath = textureFilePath;
-		}
+		void setTextureFilePath(std::string textureFilePath);
 
 		/**
 		 * Gets the textureMesh's texture.
 		 * @return texture
 		 */
-		SDL_Texture* getTexture() {
-			return m_texture;
-		}
+		SDL_Texture* getTexture();
 
 		/**
 		 * Sets the textureMesh's texture to the given texture.
 		 * @param texture to set
 		 */
-		void setTexture(SDL_Texture* texture) {
-			m_texture = texture;
-		}
+		void setTexture(SDL_Texture* texture);
 
 		/**
 		 * Sets the texture by trying to load the file at the given filepath
 		 * @param textureFilepath The location of the texture to load
 		 */
-		void setTexture(std::string textureFilepath) {
-			try {
-				m_textureFilePath = textureFilepath;
-				m_texture = Render::loadTexture(m_textureFilePath);
-			}
-			catch (std::exception& e) {
-				std::cerr << "Failed to load texture at: " << textureFilepath;
-			}
-		}
+		void setTexture(std::string textureFilepath);
 
 		/**
 		 * Gets the textureMesh's isVisible value.
 		 * @return true if the textureMesh is visible
 		 */
-		bool getIsVisible() {
-			return m_isVisible;
-		}
+		bool getIsVisible();
 
 		/**
 		 * Sets the textureMesh's visibility to the given boolean value.
 		 * @param isVisible
 		 */
-		void setIsVisible(bool isVisible) {
-			m_isVisible = isVisible;
-		}
+		void setIsVisible(bool isVisible);
 
 	};
 }

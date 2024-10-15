@@ -146,12 +146,16 @@
     <ClCompile Include="peerToPeer.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
+    <ClCompile Include="playerInput.cpp" />
+    <ClCompile Include="rigidBody.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
+    <ClCompile Include="textureMesh.cpp" />
     <ClCompile Include="thread.cpp" />
     <ClCompile Include="timeline.cpp" />
+    <ClCompile Include="transform.cpp" />
     <ClCompile Include="vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>

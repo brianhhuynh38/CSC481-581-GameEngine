@@ -135,6 +135,18 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="playerInput.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="rigidBody.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="textureMesh.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />

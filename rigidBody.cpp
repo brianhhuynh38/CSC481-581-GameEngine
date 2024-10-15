@@ -3,125 +3,103 @@
 #include "timeline.h"
 #include "definitions.h"
 #include "physics.h"
+#include "rigidBody.h"
+#include "GameObject.h"
 
 #include <SDL.h>
 
 namespace Component {
 
-	class RigidBody : public virtual Component {
-	private:
-		// Whether the object moves and is affected by physics
-		bool m_isStatic;
-		// The mass of the object
-		float m_mass;
+	RigidBody::RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef) {
+		// Create new vectors at (0,0) for velocity and acceleration
+		m_velocity = new Utils::Vector2D();
+		m_acceleration = new Utils::Vector2D();
+		// Set mass and whether the object is able to move/be able to be affected by physics
+		m_mass = mass;
+		m_isStatic = isStatic;
+		// Set collider options and whether it serves as a trigger
+		m_collider = collider;
+		m_isTrigger = isTrigger;
 
-		// The velocity of the object
-		Utils::Vector2D* m_velocity;
-		// The acceleration of the object
-		Utils::Vector2D* m_acceleration;
+		// Set all references to necessary files
+		m_parent = parentRef;
+		m_physics = physicsRef;
+	}
 
-		// Whether the collider is a trigger area (no collision) or not
-		bool m_isTrigger;
-		// The collider of the GameObject
-		SDL_Rect m_collider;
-		// Reference to the parent GameObject to communicate with other components
-		GameObject* m_parent;
-		// Reference to physics object
-		Physics* m_physics;
+	RigidBody::~RigidBody() {
+		// Deletes velocity and acceleration pointers
+		delete m_velocity;
+		delete m_acceleration;
+	}
 
-	public:
+	void RigidBody::update() {
+		// Update physics if the object is not static
+		if (!m_isStatic) {
+			// Get deltaTime and convert into seconds
+			float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
 
-		RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef) {
-			// Create new vectors at (0,0) for velocity and acceleration
-			m_velocity = new Utils::Vector2D();
-			m_acceleration = new Utils::Vector2D();
-			// Set mass and whether the object is able to move/be able to be affected by physics
-			m_mass = mass;
-			m_isStatic = isStatic;
-			// Set collider options and whether it serves as a trigger
-			m_collider = collider;
-			m_isTrigger = isTrigger;
+			// Update physics vectors
+			m_physics->updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
 
-			// Set all references to necessary files
-			m_parent = parentRef;
-			m_physics = physicsRef;
+			// Apply gravity
+			m_physics->applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
 		}
+	}
 
-		~RigidBody() override {
-			// Deletes velocity and acceleration pointers
-			delete m_velocity;
-			delete m_acceleration;
-		}
+	/**
+	* Returns the mass of the GameObject
+	*/
+	float RigidBody::getMass() {
+		return m_mass;
+	}
 
-		void update() override {
-			// Update physics if the object is not static
-			if (!m_isStatic) {
-				// Get deltaTime and convert into seconds
-				float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
+	/**
+	* Sets the mas of the GameObject
+	*/
+	void RigidBody::setMass(float mass) {
+		m_mass = mass;
+	}
 
-				// Update physics vectors
-				m_physics->updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
+	/**
+	* Returns a pointer to the Object's velocity
+	*/
+	Utils::Vector2D* RigidBody::getVelocity() {
+		return m_velocity;
+	}
 
-				// Apply gravity
-				m_physics->applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
-			}
-		}
+	/**
+	* Adds the given vector to the current velocity
+	*/
+	void RigidBody::updateVelocity(Utils::Vector2D other) {
+		*m_velocity = m_velocity->add(other);
+	}
 
-		/**
-		* Returns the mass of the GameObject
-		*/
-		float getMass() {
-			return m_mass;
-		}
+	/**
+	* Sets the velocity vector to the given parameter vector
+	*/
+	void RigidBody::setVelocity(Utils::Vector2D other) {
+		*m_velocity = other;
+	}
 
-		/**
-		* Sets the mas of the GameObject
-		*/
-		void setMass(float mass) {
-			m_mass = mass;
-		}
+	/**
+	* Returns a pointer to the acceleration of the GameObject
+	*/
+	Utils::Vector2D* RigidBody::getAcceleration() {
+		return m_acceleration;
+	}
 
-		/**
-		* Returns a pointer to the Object's velocity
-		*/
-		Utils::Vector2D* getVelocity() {
-			return m_velocity;
-		}
+	/**
+	* Updates the acceleration by adding the other parameter to the current value
+	*/
+	void RigidBody::updateAcceleration(Utils::Vector2D other) {
+		*m_acceleration = m_acceleration->add(other);
+	}
 
-		/**
-		* Adds the given vector to the current velocity
-		*/
-		void updateVelocity(Utils::Vector2D other) {
-			*m_velocity = m_velocity->add(other);
-		}
-
-		/**
-		* Sets the velocity vector to the given parameter vector
-		*/
-		void setVelocity(Utils::Vector2D other) {
-			*m_velocity = other;
-		}
-
-		/**
-		* Returns a pointer to the acceleration of the GameObject
-		*/
-		Utils::Vector2D* getAcceleration() {
-			return m_acceleration;
-		}
-
-		/**
-		* Updates the acceleration by adding the other parameter to the current value
-		*/
-		void updateAcceleration(Utils::Vector2D other) {
-			*m_acceleration = m_acceleration->add(other);
-		}
-
-		/**
-		* Sets the acceleration value to the provided vector
-		*/
-		void setAcceleration(Utils::Vector2D other) {
-			*m_acceleration = other;
-		}
-	};
+	/**
+	* Sets the acceleration value to the provided vector
+	*/
+	void RigidBody::setAcceleration(Utils::Vector2D other) {
+		*m_acceleration = other;
+	}
 
 }

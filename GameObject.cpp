@@ -5,6 +5,8 @@
 #include "playerInput.h"
 #include "rigidBody.h"
 #include "timeline.h"
+#include "definitions.h"
+
 #include <iostream>
 #include <map>
 #include <vector>
@@ -68,36 +70,25 @@ double GameObject::getDeltaTimeInSecsOfObject() {
 	return m_timeline->getDeltaTime() / MICROSEC_PER_SEC;
 }
 
+PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
+	std::string textureFilepath, bool isStatic, bool isTrigger, float jumpVectorX, float jumpVectorY,
+	float maxSpeed) {
+	// Adding specific components for Player
+	addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
+	addComponent<Component::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
+	addComponent<Component::TextureMesh>(textureFilepath);
+	addComponent<Component::PlayerInputPlatformer>();
+}
 
-// - Player: TextureMesh, RigidBody (collision), PlayerInput
-class PlayerGO : public GameObject {
-protected:
-	// Add player property fields here
-public:
-	PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
-		float maxSpeed) {
-		// Adding specific components for Player
-		addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-		addComponent<Component::RigidBody>(/*add parameters for RigidBody here*/);
-		addComponent<Component::TextureMesh>(textureFilepath);
-		addComponent<Component::PlayerInputPlatformer>(/*add parameters for PlayerInput here*/);
-	}
-};
 
-// - StaticPlatform: TextureMesh, RigidBody (collision)
-class StaticPlatform : public GameObject {
-protected:
-	// Add static platform property fields here
-public:
-	StaticPlatform(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		std::string textureFilepath, bool isStationary, bool affectedByPhysics) {
-		// Adding specific components for StaticPlatform
-		addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-		addComponent<Component::RigidBody>(/*add parameters for RigidBody here*/);
-		addComponent<Component::TextureMesh>(textureFilepath);
-	}
-};
+StaticPlatform::StaticPlatform(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
+	std::string textureFilepath, bool isStatic, bool isTrigger) {
+	// Adding specific components for StaticPlatform
+	addComponent<Component::Transform>(scaleX, scaleY, positionX, positionY, width, height);
+	addComponent<Component::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
+	addComponent<Component::TextureMesh>(textureFilepath);
+}
+
 
 // Example for main:
 // Player player(1, 1, 0, 0, 50, 50, 10, "player_texture.png", false, true, 0, 10, 5.0f);
