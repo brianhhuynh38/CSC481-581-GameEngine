@@ -1,12 +1,14 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <cassert>
+#include <string>
 
 #include "global.h"
 #include "structs.h"
 #include "draw.h"
-#include <cassert>
-
+#include "transform.h"
+#include "textureMesh.h"
 
 namespace Render {
 
@@ -50,8 +52,7 @@ namespace Render {
 	SDL_Texture* loadTexture(std::string filename) {
 		SDL_Texture* texture;
 		// Logs loading percents when loading in the given file
-		// REACTIVATE THIS EVENTUALLY TO FIX LOADING
-		//SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
 
 		//std::cout << "FileName: " << filename << "\n";
 		//assert(filename == "./Assets/Textures/DefaultPlayerTexture1.png");
@@ -106,5 +107,24 @@ namespace Render {
 	 */
 	void displayEntity(Entities::Entity entity) {
 		displayTexture(entity.getTexture(), entity.getPosition()->x, entity.getPosition()->y, entity.getSize()->x, entity.getSize()->y, entity.getScale()->x, entity.getScale()->y);
+	}
+
+	/**
+	 * Displays the given entities texture
+	 * (just a short version of the displayTexture function)
+	 * @param entity to display
+	 */
+	void displayGameObject(GameObject gameObject) {
+		// Get necessary components
+		Component::TextureMesh *tm = gameObject.getComponent<Component::TextureMesh>();
+		Component::Transform *transform = gameObject.getComponent<Component::Transform>();
+
+		// If null, do not display
+		if (tm == nullptr || transform == nullptr) {
+			return;
+		}
+
+		// Displays the texture given the necessary components
+		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y, transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
 	}
  }

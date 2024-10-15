@@ -14,6 +14,7 @@
 #include "stage.h"
 #include "player.h"
 #include "movingEntity.h"
+#include "GameObject.h"
 #include "configIO.h"
 #include "playerController.h"
 #include "entityController.h"
@@ -186,7 +187,10 @@ int main(int argc, char* argv[]) {
 
 	Input* input = new Input(inputHandler);
 
-	Entities::Entity* ball = new Entities::Entity
+	StaticPlatform* ball = new StaticPlatform(1.0, 1.0, 550.0, 250.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png",true,false);
+	//ball->setUUID(-2);
+
+	/*Entities::Entity* ball = new Entities::Entity
 	(
 		1.0, 1.0,
 		550.0, 250.0,
@@ -195,8 +199,8 @@ int main(int argc, char* argv[]) {
 		"./Assets/Textures/BallTexture.png",
 		true,
 		false
-	);
-	ball->setUUID(-2);
+	);*/
+	//ball->setUUID(-2);
 	// Create ground object (Temp)
 	Entities::Entity* ground = new Entities::Entity(
 		1.0, 1.0,
@@ -224,7 +228,7 @@ int main(int argc, char* argv[]) {
 	// Client side non-moving entities
 	entityController->insertEntity(*ground);
 	entityController->insertEntity(*platform);
-	entityController->insertEntity(*ball);
+	//entityController->insertEntity(*ball);
 
 	// Get current window size
 	int* w = new int(0);
@@ -309,6 +313,8 @@ int main(int argc, char* argv[]) {
 		for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
 			Render::displayEntity((Entities::Entity) iterEnt->second);
 		}
+		
+		Render::displayGameObject((GameObject) *ball);
 
 		Render::displayEntity((Entities::Entity) *player);
 

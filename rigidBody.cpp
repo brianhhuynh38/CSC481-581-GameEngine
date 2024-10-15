@@ -1,5 +1,3 @@
-#pragma once
-
 #include "component.h"
 #include "vector2D.h"
 #include "timeline.h"
@@ -7,9 +5,6 @@
 #include "physics.h"
 
 #include <SDL.h>
-
-#ifndef RIGIDBODY_H
-#define RIGIDBODY_H
 
 namespace Component {
 
@@ -21,9 +16,9 @@ namespace Component {
 		float m_mass;
 
 		// The velocity of the object
-		Utils::Vector2D *m_velocity;
+		Utils::Vector2D* m_velocity;
 		// The acceleration of the object
-		Utils::Vector2D *m_acceleration;
+		Utils::Vector2D* m_acceleration;
 
 		// Whether the collider is a trigger area (no collision) or not
 		bool m_isTrigger;
@@ -36,7 +31,7 @@ namespace Component {
 
 	public:
 
-		RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject *parentRef, Physics *physicsRef) {
+		RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef) {
 			// Create new vectors at (0,0) for velocity and acceleration
 			m_velocity = new Utils::Vector2D();
 			m_acceleration = new Utils::Vector2D();
@@ -130,5 +125,3 @@ namespace Component {
 	};
 
 }
-
-#endif

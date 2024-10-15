@@ -1,6 +1,8 @@
-#include "entity.h"
-
 #pragma once
+
+#include "entity.h"
+#include "GameObject.h"
+
 #ifndef DRAW_H
 #define DRAW_H
 
@@ -49,6 +51,13 @@ namespace Render {
 	 * @param entity to display
 	 */
 	void displayEntity(Entities::Entity entity);
-}
 
+	/**
+	 * Displays the given GO texture
+	 * (just a short version of the displayTexture function)
+	 * @param entity to display
+	 */
+	void displayGameObject(GameObject gameObject);
+
+}
 #endif
