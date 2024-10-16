@@ -15,7 +15,7 @@ namespace Components {
 	class RigidBody : public virtual Component {
 	protected:
 		// Whether the object moves and is affected by physics
-		bool m_isStatic;
+		bool m_isKinematic;
 		// The mass of the object
 		float m_mass;
 
@@ -35,7 +35,7 @@ namespace Components {
 
 	public:
 
-		RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef);
+		RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef);
 
 		~RigidBody() override;
 
