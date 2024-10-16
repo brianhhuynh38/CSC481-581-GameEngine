@@ -70,6 +70,12 @@
     <Filter Include="Source Files\Entities\Components">
       <UniqueIdentifier>{abbde156-0676-46eb-a2b9-ce3b04b8f3c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities\Old">
+      <UniqueIdentifier>{654730c9-1356-4434-94d7-02aad37fcebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\Old">
+      <UniqueIdentifier>{ad9559e6-d7e5-49da-be81-9bb9c0ab7a45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,9 +90,6 @@
     <ClCompile Include="stageManager.cpp">
       <Filter>Source Files\Stages</Filter>
     </ClCompile>
-    <ClCompile Include="entity.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
@@ -95,12 +98,6 @@
     </ClCompile>
     <ClCompile Include="vector2D.cpp">
       <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="movingEntity.cpp">
-      <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="timeline.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -132,9 +129,6 @@
     <ClCompile Include="peerToPeer.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>Source Files\Entities\Components</Filter>
     </ClCompile>
@@ -146,6 +140,24 @@
     </ClCompile>
     <ClCompile Include="textureMesh.cpp">
       <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="staticObject.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="playerGO.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>Source Files\Entities\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="movingEntity.cpp">
+      <Filter>Source Files\Entities\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\Entities\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,15 +173,6 @@
     </ClInclude>
     <ClInclude Include="global.h">
       <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="movingEntity.h">
-      <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="vector2D.h">
       <Filter>Header Files\Utils</Filter>
@@ -213,9 +216,6 @@
     <ClInclude Include="peerToPeer.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="component.h">
       <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
@@ -230,6 +230,24 @@
     </ClInclude>
     <ClInclude Include="playerInput.h">
       <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="playerGO.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="staticObject.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files\Entities\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\Entities\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="movingEntity.h">
+      <Filter>Header Files\Entities\Old</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

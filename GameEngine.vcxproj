@@ -146,12 +146,14 @@
     <ClCompile Include="peerToPeer.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
+    <ClCompile Include="playerGO.cpp" />
     <ClCompile Include="playerInput.cpp" />
     <ClCompile Include="rigidBody.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
+    <ClCompile Include="staticObject.cpp" />
     <ClCompile Include="textureMesh.cpp" />
     <ClCompile Include="thread.cpp" />
     <ClCompile Include="timeline.cpp" />
@@ -179,10 +181,12 @@
     <ClInclude Include="physics.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
+    <ClInclude Include="playerGO.h" />
     <ClInclude Include="playerInput.h" />
     <ClInclude Include="rigidBody.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="stageManager.h" />
+    <ClInclude Include="staticObject.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="textureMesh.h" />
     <ClInclude Include="thread.h" />
