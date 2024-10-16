@@ -1,5 +1,9 @@
 #pragma once
 
+#include "component.h"
+#include "transform.h"
+#include "vector2D.h"
+
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
@@ -24,7 +28,7 @@ namespace Components {
 		/**
 		* Constructs transform with all necessary fields
 		*/
-		Transform(float x, float y, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale);
+		Transform(Utils::Vector2D position, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale);
 
 		/**
 		* Destructor for the Transform
@@ -34,7 +38,7 @@ namespace Components {
 		/**
 		* Updates the transform (currently does nothing)
 		*/
-		void update() override;
+		void update(void) override;
 
 		/**
 		 * Returns the position

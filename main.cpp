@@ -10,17 +10,20 @@
 #include "input.h"
 #include "global.h"
 #include "structs.h"
+#include "configIO.h"
+
 #include "entity.h"
-#include "stage.h"
 #include "player.h"
 #include "movingEntity.h"
-#include "GameObject.h"
-#include "configIO.h"
+
 #include "playerController.h"
 #include "entityController.h"
+
 #include "client.h"
 #include "peerToPeer.h"
-#include "thread.h"
+
+#include "GameObject.h"
+#include "transform.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -186,6 +189,10 @@ int main(int argc, char* argv[]) {
 	InputHandler* inputHandler = new InputHandler();
 
 	Input* input = new Input(inputHandler);
+
+	GameObject* gameObject = new GameObject();
+	Components::Transform *transform = gameObject->getComponent<Components::Transform>();
+	transform->setPosition(5.0, 5.0);
 
 	//StaticPlatform* ball = new StaticPlatform(1.0, 1.0, 550.0, 250.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png",true,false);
 	//ball->setUUID(-2);

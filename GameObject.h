@@ -1,7 +1,7 @@
 #pragma once
 
 #include "component.h"
-//#include "transform.h"
+#include "transform.h"
 //#include "textureMesh.h"
 //#include "playerInput.h"
 //#include "rigidBody.h"
@@ -13,9 +13,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-//#include <memory>
-
-
 
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
@@ -39,11 +36,14 @@ public:
     GameObject();
 
     // Constructor with fields for GameObject. Adds a Transform component (required)
-    GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height);
+    GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos);
 
     // Function to add component to the game object
     template<typename T, typename... Args>
-    void addComponent(Args&&... args);
+    void addComponent(Args&&... args) {
+        // Create a unique_ptr for the component and store it using its typeid
+        m_components[typeid(T)] = std::make_unique<T>(std::forward<Args>(args)...);
+    }
 
     /**
     * Uses the type given in the brackets to determine the component to get, then returns it:
@@ -52,7 +52,17 @@ public:
     * @return Returns the component specified by the template type
     */
     template<typename T>
-    T* getComponent();
+    T* getComponent() {
+
+        std::cout << "I made it in getComponent\n";
+
+        auto it = m_components.find(typeid(T));
+        if (it != m_components.end()) {
+
+            return dynamic_cast<T*>(it->second.get());  // Safely cast the component to its type
+        }
+        return nullptr;
+    }
 
     // Update all components attached to game object
     void update(double deltaTimeInSecs);
@@ -63,6 +73,7 @@ public:
 
     double getDeltaTimeInSecsOfObject();
 };
+
 
 
 // Example for main:

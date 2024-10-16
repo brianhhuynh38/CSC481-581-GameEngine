@@ -7,9 +7,10 @@ namespace Components {
 	/**
 	* Constructs transform with all necessary fields
 	*/
-	Transform::Transform(float x, float y, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale) {
+	Transform::Transform(Utils::Vector2D position, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale) {
 		// Set position values
-		m_position = new Utils::Vector2D(x, y);
+		m_position = new Utils::Vector2D();
+		*m_position = position;
 
 		// Set reference to global camera offset value
 		m_cameraOffset = offsetRef;
@@ -26,7 +27,7 @@ namespace Components {
 		delete m_position;
 	}
 
-	void Transform::update() {
+	void Transform::update(void) {
 		// modify position using offset
 	}
 

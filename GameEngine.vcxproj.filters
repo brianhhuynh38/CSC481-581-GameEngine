@@ -159,6 +159,9 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="gameObjectManager.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -248,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="movingEntity.h">
       <Filter>Header Files\Entities\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObjectManager.h">
+      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

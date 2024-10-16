@@ -1,11 +1,11 @@
 #include "GameObject.h"
 #include "definitions.h"
+#include "transform.h"
 
-//#include <iostream>
-//#include <map>
-//#include <vector>
-//#include <memory>
-//#include <typeindex>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <typeindex>
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-
@@ -15,34 +15,24 @@
 
 // Default constructor for GameObject. Adds a Transform component (required)
 GameObject::GameObject(){
-	//addComponent<Components::Transform>(1, 1, 0, 0, 1, 1);
+	// Add default GameObject values
+	addComponent<Components::Transform>(
+		Utils::Vector2D(0,0), 
+		nullptr, 
+		Utils::Vector2D(1, 1), 
+		Utils::Vector2D(1, 1)
+	);
 }
 
 // Constructor with fields for GameObject. Adds a Transform component (required)
-GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height) {
-	//addComponent<Components::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-}
-
-// Function to add component to the game object
-template<typename T, typename... Args>
-void GameObject::addComponent(Args&&... args) {
-	// Create a unique_ptr for the component and store it using its typeid
-	m_components[typeid(T)] = std::make_unique<T>(std::forward<Args>(args)...);
-}
-
-/**
-* Uses the type given in the brackets to determine the component to get, then returns it:
-* Usage: getComponent<TYPE>()
-* 
-* @return Returns the component specified by the template type
-*/
-template<typename T>
-T* GameObject::getComponent() {
-	auto it = m_components.find(typeid(T));
-	if (it != m_components.end()) {
-		return static_cast<T*>(it->second.get());  // Safely cast the component to its type
-	}
-	return nullptr;
+GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D *cameraPos) {
+	// Add Transform component, which is required for all GameObjects
+	addComponent<Components::Transform>(
+		Utils::Vector2D(positionX, positionY),
+		cameraPos,
+		Utils::Vector2D(width, height),
+		Utils::Vector2D(scaleX, scaleY)
+	);
 }
 
 // Update all components attached to game object and the time step the object should be using for calculations

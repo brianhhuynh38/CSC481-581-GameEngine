@@ -8,7 +8,7 @@ namespace Components {
 	class Component {
 	public:
 		virtual ~Component() {}
-		virtual void update() = 0;
+		virtual void update(void) = 0;
 	};
 
 }
