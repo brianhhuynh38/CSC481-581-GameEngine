@@ -10,6 +10,8 @@
 
 class GameObjectManager {
 private:
+	// Keeps track of the current ID and assigns it to added GameObjects
+	int m_idTracker;
 	// Map of GameObjects (Key: UUID, Value: GameObject)
 	std::map<int, GameObject> *m_objects;
 	// Reference to Timeline for physics calculations

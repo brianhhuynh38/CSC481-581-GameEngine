@@ -1,5 +1,6 @@
 #include "gameObjectManager.h"
 
+#include "component.h"
 #include "rigidBody.h"
 #include "definitions.h"
 
@@ -9,6 +10,8 @@
 * @param timeline: Reference to the timeline
 */
 GameObjectManager::GameObjectManager(Timeline* timelineRef) {
+	// Set starting ID value
+	m_idTracker = 0;
 	// Set reference to timeline
 	m_timeline = timelineRef;
 	// Instantiate empty map of GameObjects with UUIDs as the key
@@ -18,9 +21,9 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 /**
 * Destructor that frees any allocated memory for the GameObjects
 */
-GameObjectManager::~GameObjectManager() {
-	//delete m_objects;
-}
+//GameObjectManager::~GameObjectManager() {
+//	delete m_objects;
+//}
 
 /**
 * Updates each of the GameObjects in the objects map
@@ -60,6 +63,14 @@ std::map<int, GameObject>* GameObjectManager::getObjectMap() {
 * @param go GameObject to be added to end of the object map
 */
 void GameObjectManager::insert(GameObject go) {
+	// Sets UUID for the inserted object before adding it, if new
+	if (go.getUUID() < 0) {
+		go.setUUID(m_idTracker);
+		m_idTracker++;
+	}
+	
+	// Adds or inserts existing information into the Manager
 	m_objects->insert_or_assign(go.getUUID(), go);
+	
 }
 

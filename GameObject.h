@@ -25,12 +25,13 @@
 */
 class GameObject {
 protected:
+    // UUID
+    int m_uuid;
     // Store components in a map using std::type_index as the key
     std::map<std::type_index, std::unique_ptr<Components::Component>> m_components;
     // The deltaTime for the object passed down by the Manager
     double m_currTimeStep;
-    // UUID
-    int m_uuid;
+    
     // Put stuff in struct?
 public:
     // Default constructor for GameObject. Adds a Transform component (required)

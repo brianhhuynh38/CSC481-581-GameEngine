@@ -18,6 +18,7 @@
 // Default constructor for GameObject. Adds a Transform component (required)
 GameObject::GameObject(){
 	// Add default GameObject values
+	m_uuid = -1;
 	addComponent<Components::Transform>(
 		Utils::Vector2D(0,0), 
 		nullptr, 
@@ -28,6 +29,8 @@ GameObject::GameObject(){
 
 // Constructor with fields for GameObject. Adds a Transform component (required)
 GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D *cameraPos) {
+	// Add default GameObject ID
+	m_uuid = -1;
 	// Add Transform component, which is required for all GameObjects
 	addComponent<Components::Transform>(
 		Utils::Vector2D(positionX, positionY),
