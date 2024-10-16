@@ -187,7 +187,7 @@ int main(int argc, char* argv[]) {
 
 	Input* input = new Input(inputHandler);
 
-	StaticPlatform* ball = new StaticPlatform(1.0, 1.0, 550.0, 250.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png",true,false);
+	//StaticPlatform* ball = new StaticPlatform(1.0, 1.0, 550.0, 250.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png",true,false);
 	//ball->setUUID(-2);
 
 	/*Entities::Entity* ball = new Entities::Entity
@@ -314,7 +314,7 @@ int main(int argc, char* argv[]) {
 			Render::displayEntity((Entities::Entity) iterEnt->second);
 		}
 		
-		Render::displayGameObject((GameObject) *ball);
+		//Render::displayGameObject((GameObject) *ball);
 
 		Render::displayEntity((Entities::Entity) *player);
 
