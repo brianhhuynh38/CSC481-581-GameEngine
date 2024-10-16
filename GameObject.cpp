@@ -70,26 +70,6 @@ double GameObject::getDeltaTimeInSecsOfObject() {
 	return m_timeline->getDeltaTime() / MICROSEC_PER_SEC;
 }
 
-PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-	std::string textureFilepath, bool isStatic, bool isTrigger, float jumpVectorX, float jumpVectorY,
-	float maxSpeed) {
-	// Adding specific components for Player
-	addComponent<Components::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-	addComponent<Components::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
-	addComponent<Components::TextureMesh>(textureFilepath);
-	addComponent<Components::PlayerInputPlatformer>();
-}
-
-
-StaticPlatform::StaticPlatform(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-	std::string textureFilepath, bool isStatic, bool isTrigger) {
-	// Adding specific components for StaticPlatform
-	addComponent<Components::Transform>(scaleX, scaleY, positionX, positionY, width, height);
-	addComponent<Components::RigidBody>(mass, isStatic, SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) }, isTrigger, this);
-	addComponent<Components::TextureMesh>(textureFilepath);
-}
-
-
 // Example for main:
 // Player player(1, 1, 0, 0, 50, 50, 10, "player_texture.png", false, true, 0, 10, 5.0f);
 // StaticPlatform platform(1, 1, 100, 50, 200, 10, 100, "platform_texture.png", true, false);

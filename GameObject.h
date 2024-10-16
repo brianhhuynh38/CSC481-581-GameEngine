@@ -61,24 +61,6 @@ public:
     double getDeltaTimeInSecsOfObject();
 };
 
-// - Player: TextureMesh, RigidBody (collision), PlayerInput
-class PlayerGO : public GameObject {
-protected:
-    // Add player property fields here
-public:
-    PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-        std::string textureFilepath, bool isStatic, bool isTrigger, float jumpVectorX, float jumpVectorY,
-        float maxSpeed);
-};
-
-// - StaticPlatform: TextureMesh, RigidBody (collision)
-class StaticPlatform : public GameObject {
-protected:
-    // Add static platform property fields here
-public:
-    StaticPlatform(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-        std::string textureFilepath, bool isStationary, bool affectedByPhysics);
-};
 
 // Example for main:
 // Player player(1, 1, 0, 0, 50, 50, 10, "player_texture.png", false, true, 0, 10, 5.0f);
