@@ -50,11 +50,11 @@ To activate proportional resolution, use the `MINUS KEY` (Base resolution is 128
 
 The timeline's timescale can be modified by using the `8 KEY`, `9 KEY`, `0 KEY`:
 
-|        Key        |            Timescales            |
-| -------------------------- | ---------------------------------- |
-|  `8 KEY`  | `0.5x` |
-|  `9 KEY`  | `1.0x`        |
-| `0 KEY` |    `2.0x`     |
+|    Key    | Timescales |
+| --------- | ---------- |
+|  `8 KEY`  |   `0.5x`   |
+|  `9 KEY`  |   `1.0x`   |
+|  `0 KEY`  |   `2.0x`   |
 
 The player can also be paused and unpaused with the `P KEY`
 
@@ -193,6 +193,20 @@ We ended up doing a very simplistic threading example in main that splits Entiti
 
 ### Guide here
 
+
 ### Other Guide here
 
-### Textbook here
+
+### [*Game Engine Architecture* by Jason Gregory](https://www.gameenginebook.com/)
+
+The textbook was used, not necessarily for code snippets, but for information regarding potential designs 
+for a component-based system. The book provides several different possible implementations, but we decided 
+on a generic component-based system. Some of our component definitions also took inspiration from the textbook as 
+well, both with their naming schemes and their contents ([`Transform`](transform.cpp), [`RigidBody`](rigidBody.h)).
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+| [`GameObject.cpp`](GameObject.cpp) | [`GameObject.h`](GameObject.h) |
+| [`transform.cpp`](transform.cpp) | [`transform.h`](transform.h) |
+| [`rigidBody.cpp`](rigidBody.cpp) | [`rigidBody.h`](rigidBody.h) |
+| [`textureMesh.cpp`](textureMesh.cpp) | [`textureMesh.h`](textureMesh.h) |
