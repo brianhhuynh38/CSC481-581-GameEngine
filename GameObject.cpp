@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "definitions.h"
-#include "transform.h"
+#include "vector2D.h"
+//#include "transform.h"
+//#include "rigidBody.h"
 
 #include <iostream>
 #include <map>

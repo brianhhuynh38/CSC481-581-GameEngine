@@ -1,6 +1,10 @@
 #pragma once
 
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
+
 #include "component.h"
+#include "vector2D.h"
 #include "transform.h"
 //#include "textureMesh.h"
 //#include "playerInput.h"
@@ -13,9 +17,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-

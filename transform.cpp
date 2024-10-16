@@ -1,6 +1,4 @@
-#include "component.h"
 #include "transform.h"
-#include "vector2D.h"
 
 namespace Components {
 

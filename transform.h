@@ -1,11 +1,10 @@
 #pragma once
 
-#include "component.h"
-#include "transform.h"
-#include "vector2D.h"
-
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
+
+#include "component.h"
+#include "vector2D.h"
 
 namespace Components {
 
