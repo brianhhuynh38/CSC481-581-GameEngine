@@ -47,6 +47,25 @@ namespace Utils {
 	}
 
 	/**
+	 * Subtracts the given vector from this vector and returns the result.
+	 * @param other Vector2D
+	 * @returns The result of the subtraction between the two Vectors
+	 */
+	Vector2D Vector2D::subtract(Vector2D other) {
+		return Vector2D(this->x - other.x, this->y - other.y);
+	}
+
+	/**
+	 * Subtracts the given vector coordinates from this vector and returns the result.
+	 * @param x coordinate to subtract
+	 * @param y coordinate to subtract
+	 * @returns The result of the subtraction between the two Vectors
+	 */
+	Vector2D Vector2D::subtract(float x, float y) {
+		return Vector2D(this->x - x, this->y - y);
+	}
+
+	/**
 	* Multiplies the vector by a constant and returns the result
 	* @param constant The constant multiplying the Vector
 	* @returns The result of the constant multiplication

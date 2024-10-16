@@ -21,6 +21,10 @@ namespace Utils {
 
 		Vector2D add(float x, float y);
 
+		Vector2D subtract(Vector2D other);
+
+		Vector2D subtract(float x, float y);
+
 		Vector2D multConst(float constant);
 
 		Vector2D divideConst(float constant);
