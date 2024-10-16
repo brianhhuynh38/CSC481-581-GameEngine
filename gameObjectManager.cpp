@@ -68,6 +68,10 @@ void GameObjectManager::insert(GameObject* go) {
 		go->setUUID(m_idTracker);
 		m_idTracker++;
 	}
+
+	// TODO: It may be better to change so that it updates each of the components individually
+	// Might also want to make it so that it doesn't try to load texture in the constructor so that
+	// it doesn't call it every single time this function is called like last time
 	
 	// Adds or inserts existing information into the Manager
 	m_objects->insert_or_assign(go->getUUID(), go);

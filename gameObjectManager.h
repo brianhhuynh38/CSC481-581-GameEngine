@@ -14,6 +14,8 @@ private:
 	int m_idTracker;
 	// Map of GameObjects (Key: UUID, Value: GameObject)
 	std::map<int, GameObject*> *m_objects;
+	// Map of GameObjects controlled by the server
+	std::map<int, GameObject>* m_serverObjects;
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 public:
