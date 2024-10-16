@@ -26,7 +26,7 @@ public:
 	/**
 	* Destructor that frees any allocated memory for the GameObjects
 	*/
-	~GameObjectManager();
+	//~GameObjectManager();
 
 	/**
 	* Updates each of the GameObejcts in the objects map
@@ -34,17 +34,12 @@ public:
 	void update();
 
 	/**
-	* Deserializes a string and inserts those GameObjects into the object map
+	* Deserializes a string of movingObjects and inserts those GameObjects into the object map
 	*
 	* @param movingEntityString: string containing movingObject information from the server
 	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 	*/
-	void serializeIn(std::string movingEntityString, int networkType);
-
-	/**
-	* Sets the player ID that is ignored when receiving information from the server
-	*/
-	void setPlayerID(int uuid);
+	void serializeIn(std::string movingObjectString, int networkType);
 
 	/**
 	* Returns the objects map
