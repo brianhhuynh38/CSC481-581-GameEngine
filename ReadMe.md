@@ -1,5 +1,5 @@
 # Introduction
-This is Team 1's game engine repository for CSC 581 - Game Engine Foundaations. Below are 
+This is Team 1's game engine repository for CSC 581 - Game Engine Foundations. Below are 
 compilation instructions, as well as our references for each of the tutorials we used while 
 making this project.
 
@@ -10,6 +10,7 @@ making this project.
 - [References](#references)
 	- [Homework 1 References](#homework-1)
 	- [Homework 2 References](#homework-2)
+	- [Homework 3 References](#homework-3)
 
 # Starting Instructions
 
@@ -186,3 +187,12 @@ We ended up doing a very simplistic threading example in main that splits Entiti
 |        `.cpp` Files        |            Header Files            |
 | -------------------------- | ---------------------------------- |
 | [`main.cpp`](./main.cpp) |  |
+
+
+## Homework 3
+
+### Guide here
+
+### Other Guide here
+
+### Textbook here
