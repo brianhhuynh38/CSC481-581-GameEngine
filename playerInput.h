@@ -15,9 +15,11 @@ namespace Components {
 	protected:
 		// The maximum speed the player moves at
 		float maxMovementSpeed;
-		// The vector that provides the player
+		// The vector that defines the force with which the palyer jumps
 		Utils::Vector2D jumpVector;
+		// Struct that takes in player inputs
 		InputHandler* m_inputHandler;
+		// A reference to the GameObject parent that allows for inter-Object communication between components
 		GameObject* m_parent;
 	public:
 
