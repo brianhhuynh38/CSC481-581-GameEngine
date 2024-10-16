@@ -56,7 +56,7 @@ public:
     template<typename T>
     T* getComponent() {
 
-        std::cout << "I made it in getComponent\n";
+        //std::cout << "I made it in getComponent\n";
 
         auto it = m_components.find(typeid(T));
         if (it != m_components.end()) {

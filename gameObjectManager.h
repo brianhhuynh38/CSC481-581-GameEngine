@@ -13,7 +13,7 @@ private:
 	// Keeps track of the current ID and assigns it to added GameObjects
 	int m_idTracker;
 	// Map of GameObjects (Key: UUID, Value: GameObject)
-	std::map<int, GameObject> *m_objects;
+	std::map<int, GameObject*> *m_objects;
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 public:
@@ -28,10 +28,10 @@ public:
 	/**
 	* Destructor that frees any allocated memory for the GameObjects
 	*/
-	//~GameObjectManager();
+	~GameObjectManager();
 
 	/**
-	* Updates each of the GameObejcts in the objects map
+	* Updates each of the GameObjects in the objects map
 	*/
 	void update();
 
@@ -46,15 +46,14 @@ public:
 	/**
 	* Returns the objects map
 	*/
-	std::map<int, GameObject>* getObjectMap();
+	std::map<int, GameObject*>* getObjectMap();
 
 	/**
 	* Inserts the GameObject into the objects map
 	* 
 	* @param go GameObject to be added to end of the object map
 	*/
-	void insert(GameObject go);
-
+	void insert(GameObject* go);
 };
 
 #endif

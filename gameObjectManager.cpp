@@ -15,15 +15,15 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	// Set reference to timeline
 	m_timeline = timelineRef;
 	// Instantiate empty map of GameObjects with UUIDs as the key
-	m_objects = new std::map<int, GameObject>();
+	m_objects = new std::map<int, GameObject*>();
 }
 
 /**
 * Destructor that frees any allocated memory for the GameObjects
 */
-//GameObjectManager::~GameObjectManager() {
-//	delete m_objects;
-//}
+GameObjectManager::~GameObjectManager() {
+	delete m_objects;
+}
 
 /**
 * Updates each of the GameObjects in the objects map
@@ -32,10 +32,10 @@ void GameObjectManager::update() {
 	// Calculate current delta time in seconds
 	double deltaTimeInSecs = m_timeline->getDeltaTime() / MICROSEC_PER_SEC;
 	// Create iterator to iterate through the Map
-	std::map<int, GameObject>::iterator iter;
+	std::map<int, GameObject*>::iterator iter;
 	// Updates each GameObject in the map
 	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
-		iter->second.update(deltaTimeInSecs);
+		iter->second->update(deltaTimeInSecs);
 	}
 }
 
@@ -53,7 +53,7 @@ void GameObjectManager::serializeIn(std::string movingObjectString, int networkT
 /**
 * Returns a pointer to the objects map
 */
-std::map<int, GameObject>* GameObjectManager::getObjectMap() {
+std::map<int, GameObject*>* GameObjectManager::getObjectMap() {
 	return m_objects;
 }
 
@@ -62,15 +62,14 @@ std::map<int, GameObject>* GameObjectManager::getObjectMap() {
 *
 * @param go GameObject to be added to end of the object map
 */
-void GameObjectManager::insert(GameObject go) {
+void GameObjectManager::insert(GameObject* go) {
 	// Sets UUID for the inserted object before adding it, if new
-	if (go.getUUID() < 0) {
-		go.setUUID(m_idTracker);
+	if (go->getUUID() < 0) {
+		go->setUUID(m_idTracker);
 		m_idTracker++;
 	}
 	
 	// Adds or inserts existing information into the Manager
-	m_objects->insert_or_assign(go.getUUID(), go);
-	
+	m_objects->insert_or_assign(go->getUUID(), go);
 }
 
