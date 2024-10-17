@@ -15,11 +15,17 @@ namespace PhysCalc {
 	*/
 	void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position,
 		Utils::Vector2D* velocity, Utils::Vector2D* acceleration) {
-		// TODO: Populate
+		// Update velocity using acceleration
+		*velocity = velocity->add(acceleration->multConst(deltaTimeInSecs));
+
+		// Update position using velocity
+		*position = velocity->multConst(deltaTimeInSecs);
 	}
 
 	void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration) {
-		// TODO: Populate
+		Utils::Vector2D gravityForce(0, m_gravity * mass);
+
+		*acceleration = acceleration->add(Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs));
 	}
 
 }

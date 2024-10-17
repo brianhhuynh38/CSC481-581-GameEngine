@@ -1,9 +1,11 @@
 #include <SDL.h>
 #include <iostream>
+#include <map>
 
 #include "input.h"
 #include "structs.h"
 #include "global.h"
+#include "entity.h"
 
 #pragma once
 #ifndef COLLISIONS_H

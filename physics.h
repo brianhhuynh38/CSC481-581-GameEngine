@@ -1,8 +1,11 @@
+#pragma once
+
+#ifndef PHYSICS_H
+#define PHYSICS_H
+
 #include "vector2D.h"
 #include "entity.h"
 #include "timeline.h"
-
-#pragma once
 
 /**
 * The class that handles physics interactions
@@ -10,7 +13,7 @@
 class Physics {
 private:
 	/** The value of gravity */
-	static float m_gravity;
+	//static float m_gravity;
 public:
   
 	Physics();
@@ -39,5 +42,6 @@ public:
 	void applyGravity(Entities::Entity *entity, Timeline *timeline);
 
 	static void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration);
-
 };
+
+#endif

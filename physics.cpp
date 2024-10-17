@@ -3,7 +3,7 @@
 
 Physics::Physics() {
 	// default value
-	m_gravity = 9.81f;
+	//m_gravity = 9.81f;
 }
 
 /**
@@ -11,14 +11,15 @@ Physics::Physics() {
 */
 void Physics::setGravity(float gravity) {
 	std::cout << "Gravity:" << gravity << "\n";
-	m_gravity = gravity;
+	//m_gravity = gravity;
 }
 
 /**
 * Gets the gravity value
 */
 float Physics::getGravity() {
-	return m_gravity;
+	//return m_gravity;
+	return 9.81f;
 }
 
 /**
@@ -48,7 +49,7 @@ void Physics::updateEntityPhysicsVectors(Timeline *timeline, Entities::Entity *e
 /**
 * Updates vectors given as parameters
 */
-void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position, Utils::Vector2D* velocity, Utils::Vector2D* acceleration) {
+void Physics::updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position, Utils::Vector2D* velocity, Utils::Vector2D* acceleration) {
 	// Update velocity using acceleration
 	*velocity = velocity->add(acceleration->multConst(deltaTimeInSecs));
 
@@ -74,11 +75,11 @@ void Physics::applyForce(Entities::Entity *entity, Utils::Vector2D forceVector) 
 void Physics::applyGravity(Entities::Entity *entity, Timeline *timeline) {
 	double deltaTimeInSecs = timeline->getDeltaTime() / MICROSEC_PER_SEC;
 
-	Utils::Vector2D gravityForce(0, m_gravity * entity->getMass());
+	Utils::Vector2D gravityForce(0, 9.81 * entity->getMass());
 
 	// Gravity value is multiplied by 01 to make it a downward force
 	//entity->updateVelocity(entity->getVelocity()->add(gravityForce.multConst(deltaTimeInSecs)));
-	entity->updateAcceleration(Utils::Vector2D(0, m_gravity * entity->getMass()).multConst(deltaTimeInSecs));
+	entity->updateAcceleration(Utils::Vector2D(0, 9.81 * entity->getMass()).multConst(deltaTimeInSecs));
 	//entity->updateAcceleration(Utils::Vector2D(0, m_gravity * timeline.getDeltaTime() / MICROSEC_PER_SEC));
 	//entity->setAcceleration(entity->getAcceleration()->x, (m_gravity + entity->getAcceleration()->y) * (1.0f - timeline->getDeltaTime() / MICROSEC_PER_SEC));
 }
@@ -86,7 +87,7 @@ void Physics::applyGravity(Entities::Entity *entity, Timeline *timeline) {
 
 void Physics::applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration) {
 	// Get gravity force
-	Utils::Vector2D gravityForce(0, m_gravity * mass);
+	Utils::Vector2D gravityForce(0, 9.81 * mass);
 	// Update acceleration
-	*acceleration = acceleration->add(Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs));
+	*acceleration = acceleration->add(Utils::Vector2D(0, 9.81 * mass).multConst(deltaTimeInSecs));
 }

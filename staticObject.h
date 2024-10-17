@@ -4,7 +4,7 @@
 #define STATICOBJECT_H
 
 #include "GameObject.h"
-#include "physics.h"
+//#include "physics.h"
 #include "rigidBody.h"
 #include "textureMesh.h"
 

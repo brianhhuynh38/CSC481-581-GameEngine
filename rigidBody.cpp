@@ -3,7 +3,7 @@
 #include "GameObject.h"
 //#include "component.h"
 //#include "vector2D.h"
-#include "physics.h"
+//#include "physics.h"
 //
 //#include <SDL.h>
 

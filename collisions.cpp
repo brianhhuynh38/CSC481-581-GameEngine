@@ -1,4 +1,12 @@
 #include "collisions.h"
+#include <SDL.h>
+#include <iostream>
+#include <map>
+
+#include "input.h"
+#include "structs.h"
+#include "global.h"
+#include "entity.h"
 
 /**
     * Checks collisions

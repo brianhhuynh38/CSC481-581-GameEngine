@@ -247,7 +247,7 @@ int main(int argc, char* argv[]) {
 	// Sets global scaling to 80 by default (1280x720), 
 	// Sets it to be on proportional scaling by default
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
-	proportionalScalingActive = true;
+	proportionalScalingActive = false;
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
