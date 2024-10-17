@@ -9,7 +9,7 @@
 
 namespace Components {
 
-	RigidBody::RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef) {
+	RigidBody::RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef) {
 		// Create new vectors at (0,0) for velocity and acceleration
 		m_velocity = new Utils::Vector2D();
 		m_acceleration = new Utils::Vector2D();
@@ -22,7 +22,6 @@ namespace Components {
 
 		// Set all references to necessary files
 		m_parent = parentRef;
-		//m_physics = physicsRef;
 	}
 
 	RigidBody::~RigidBody() {
@@ -33,15 +32,15 @@ namespace Components {
 
 	void RigidBody::update() {
 		//// Update physics if the object is not static
-		//if (!m_isStatic) {
+		//if (!m_isKinematic) {
 		//	// Get deltaTime and convert into seconds
 		//	float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
 
 		//	// Update physics vectors
-		//	m_physics->updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
+		//	Physics::updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
 
 		//	// Apply gravity
-		//	m_physics->applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
+		//	Physics::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
 		//}
 	}
 

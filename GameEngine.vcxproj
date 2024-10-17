@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movingEntity.cpp" />
     <ClCompile Include="peerToPeer.cpp" />
+    <ClCompile Include="physicsCalculator.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
     <ClCompile Include="playerGO.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="movingEntity.h" />
     <ClInclude Include="peerToPeer.h" />
     <ClInclude Include="physics.h" />
+    <ClInclude Include="physicsCalculator.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
     <ClInclude Include="playerGO.h" />

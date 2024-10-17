@@ -10,7 +10,7 @@
 class Physics {
 private:
 	/** The value of gravity */
-	float m_gravity;
+	static float m_gravity;
 public:
   
 	Physics();
@@ -24,7 +24,7 @@ public:
 	*/
 	void updateEntityPhysicsVectors(Timeline *timeline, Entities::Entity *entity);
 
-	void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position, Utils::Vector2D* velocity, Utils::Vector2D* acceleration);
+	static void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position, Utils::Vector2D* velocity, Utils::Vector2D* acceleration);
 
 	/**
 	 * Applies the given force to the given entity
@@ -38,6 +38,6 @@ public:
 	*/
 	void applyGravity(Entities::Entity *entity, Timeline *timeline);
 
-	void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration);
+	static void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration);
 
 };

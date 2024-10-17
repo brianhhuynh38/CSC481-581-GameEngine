@@ -4,7 +4,7 @@
 #include <string>
 
 StaticObject::StaticObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
-	std::string textureFilepath, bool isStatic, bool isTrigger, Physics* physicsRef) {
+	std::string textureFilepath, bool isStatic, bool isTrigger) {
 	// Adding specific components for StaticPlatform
 	addComponent<Components::Transform>(
 		Utils::Vector2D(positionX, positionY),
@@ -13,15 +13,12 @@ StaticObject::StaticObject(float scaleX, float scaleY, float positionX, float po
 		Utils::Vector2D(scaleX, scaleY)
 	);
 
-	//(float mass, bool isStatic, SDL_Rect collider, bool isTrigger, GameObject * parentRef, Physics * physicsRef)
-
 	addComponent<Components::RigidBody>(
 		mass,
 		isStatic,
 		SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) },
 		isTrigger,
-		this,
-		physicsRef
+		this
 	);
 	addComponent<Components::TextureMesh>(textureFilepath);
 }

@@ -162,6 +162,9 @@
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="physicsCalculator.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -254,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="gameObjectManager.h">
       <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsCalculator.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

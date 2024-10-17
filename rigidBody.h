@@ -35,7 +35,7 @@ namespace Components {
 
 	public:
 
-		RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef, Physics* physicsRef);
+		RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef);
 
 		~RigidBody() override;
 
