@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "physicsCalculator.h"
 #include "collisions.h"
+#include "transform.h"
 //#include "component.h"
 //#include "vector2D.h"
 //#include "physics.h"
@@ -41,8 +42,15 @@ namespace Components {
 			// Get deltaTime and convert into seconds
 			float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
 
+			// Get the parent GameObject's transform component
+			Utils::Vector2D *position = m_parent->getComponent<Transform>()->getPosition();
+
 			// Update physics vectors
-			PhysCalc::updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
+			PhysCalc::updatePhysicsVectors(deltaTimeInSecs, position, m_velocity, m_acceleration);
+
+			// Set position of the collider to the position of the transform
+			m_collider->x = position->x;
+			m_collider->y = position->y;
 
 			// Apply gravity
 			PhysCalc::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
@@ -50,7 +58,43 @@ namespace Components {
 	}
 
 	void RigidBody::updateCollisions(std::map<int, GameObject> goMap) {
+		// Only update collisions if the object is not kinematic to save some processing time
+		if (!m_isKinematic) {
 
+			// Get hit information from checkCollisions
+			HitInfo hInfo = checkCollisions(m_collider, goMap);
+			// Check if the object collided with anything
+			if (hInfo.hit) {
+
+				// Get Transform component of the GameObject to manipulate position
+				Transform *transform = m_parent->getComponent<Transform>();
+
+				//if (axis == 0) { // x-axis collision
+				//	//std::cout << "X-HIT\n";
+				//	player->updatePosition(posMover.multConst(-1));
+				//	player->updateVelocity(Utils::Vector2D(-1 * player->getVelocity()->x, 0));
+				//}
+				//else if (axis == 1) { // y-axis collision
+				//	//std::cout << "Y-HIT\n";
+
+				//	// set as grounded if player was moving down during y-axis collision
+				//	player->setIsGrounded(player->getVelocity()->y >= 0);
+
+				//	// update position and velocity of player
+				//	player->updatePosition(posMover.multConst(-1));
+				//	player->updateVelocity(Utils::Vector2D(0, -1 * player->getVelocity()->y));
+
+				//}
+				
+				// Updates the position and velocity of the object (TODO: Not sure if this would work)
+				transform->updatePosition(hInfo.hitVector.multConst(m_velocity->getMagnitude()));
+				updateVelocity(hInfo.hitVector.multConst(m_velocity->getMagnitude()));
+
+				// Set position of the collider to the position of the transform
+				m_collider->x = transform->getPosition()->x;
+				m_collider->y = transform->getPosition()->y;
+			}
+		}
 	}
 
 	/**
