@@ -13,8 +13,7 @@
 class PlayerGO : public GameObject {
 public:
     PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
-		std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY,
-		float maxSpeed);
+		std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY, float maxSpeed, InputHandler* inputHandler);
 };
 
 #endif

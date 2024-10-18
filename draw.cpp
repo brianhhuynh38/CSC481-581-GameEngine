@@ -1,3 +1,5 @@
+#include "draw.h"
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
@@ -6,7 +8,7 @@
 
 #include "global.h"
 #include "structs.h"
-#include "draw.h"
+
 #include "transform.h"
 #include "textureMesh.h"
 
@@ -128,4 +130,4 @@ namespace Render {
 		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y,
 			transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
 	}
- }
+}

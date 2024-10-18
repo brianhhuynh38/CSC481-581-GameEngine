@@ -8,6 +8,8 @@
 #include "rigidBody.h"
 #include "textureMesh.h"
 
+#include <string>
+
 // - StaticObject: TextureMesh, RigidBody (collision)
 class StaticObject : public GameObject {
 public:
