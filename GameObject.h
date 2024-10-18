@@ -10,14 +10,15 @@
 using json = nlohmann::json;
 
 #include "transform.h"
-#include "textureMesh.h"
-#include "playerInput.h"
-#include "rigidBody.h"
+//#include "textureMesh.h"
+//#include "playerInput.h"
+//#include "rigidBody.h"
 
 #include <typeindex>
 #include <iostream>
 #include <map>
 #include <vector>
+#include <string>
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-

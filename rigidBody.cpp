@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "physicsCalculator.h"
+
+#include <algorithm>
 //#include "transform.h"
 //#include "component.h"
 //#include "vector2D.h"
@@ -30,6 +32,30 @@ namespace Components {
 		// Deletes velocity and acceleration pointers
 		delete m_velocity;
 		delete m_acceleration;
+		delete m_collider;
+	}
+
+	void RigidBody::updateCollisions(std::map<int, GameObject*>& goMap) {
+		// Only update collisions if the object is not kinematic to save some processing time
+		if (!m_isKinematic) {
+
+			// Get hit information from checkCollisions
+			HitInfo m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
+			// Check if the object collided with anything
+			if (m_mostRecentCollisionInfo.hit) {
+
+				// Get Transform component of the GameObject to manipulate position
+				Transform* transform = m_parent->getComponent<Transform>();
+
+				// Updates the position and velocity of the object (TODO: Not sure if this would work)
+				transform->updatePosition(m_mostRecentCollisionInfo.penetrationDepth.multConst(-0.5f));
+				updateVelocity(m_mostRecentCollisionInfo.hitVector.multConst(m_velocity->getMagnitude()).multConst(0));
+
+				// Set position of the collider to the position of the transform
+				m_collider->x = transform->getPosition()->x;
+				m_collider->y = transform->getPosition()->y;
+			}
+		}
 	}
 
 	void RigidBody::update() {
@@ -50,66 +76,31 @@ namespace Components {
 
 			// Apply gravity
 			PhysCalc::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
+
 		}
 	}
 
-	void RigidBody::updateCollisions(std::map<int, GameObject>& goMap) {
-		// Only update collisions if the object is not kinematic to save some processing time
-		if (!m_isKinematic) {
-
-			// Get hit information from checkCollisions
-			HitInfo m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
-			// Check if the object collided with anything
-			if (m_mostRecentCollisionInfo.hit) {
-
-				// Get Transform component of the GameObject to manipulate position
-				Transform *transform = m_parent->getComponent<Transform>();
-
-				//if (axis == 0) { // x-axis collision
-				//	//std::cout << "X-HIT\n";
-				//	player->updatePosition(posMover.multConst(-1));
-				//	player->updateVelocity(Utils::Vector2D(-1 * player->getVelocity()->x, 0));
-				//}
-				//else if (axis == 1) { // y-axis collision
-				//	//std::cout << "Y-HIT\n";
-
-				//	// set as grounded if player was moving down during y-axis collision
-				//	player->setIsGrounded(player->getVelocity()->y >= 0);
-
-				//	// update position and velocity of player
-				//	player->updatePosition(posMover.multConst(-1));
-				//	player->updateVelocity(Utils::Vector2D(0, -1 * player->getVelocity()->y));
-
-				//}
-				
-				// Updates the position and velocity of the object (TODO: Not sure if this would work)
-				transform->updatePosition(m_mostRecentCollisionInfo.penetrationDepth.multConst(-1));
-				updateVelocity(m_mostRecentCollisionInfo.hitVector.multConst(m_velocity->getMagnitude()).multConst(-1));
-
-				// Set position of the collider to the position of the transform
-				m_collider->x = transform->getPosition()->x;
-				m_collider->y = transform->getPosition()->y;
-			}
-		}
-	}
 
 	/**
 	 * Loop through entities, use their colliders to check the collisions, using checkCollision method
 	 * This was referenced from the SDL2 tutorial:
 	 * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
 	 */
-	HitInfo RigidBody::checkObjectCollisions(SDL_Rect *collider, std::map<int, GameObject>& goMap) {
-		// Create list iterator
-		std::map<int, GameObject>::iterator iterGO;
+	HitInfo RigidBody::checkObjectCollisions(SDL_Rect *collider, std::map<int, GameObject*>& goMap) {
+			
+		std::cout << "Entered Collisions\n";
 
-		// Create hit responce for return
+		// Create list iterator
+		std::map<int, GameObject*>::iterator iterGO;
+
+		// Create hit response for return
 		HitInfo hInfo{ false };
 
 		// Loop through entities, use their colliders to check the collisions, using checkCollision method
 		for (iterGO = goMap.begin(); iterGO != goMap.end(); ++iterGO) { // Iterate through all entities
 
 			// RigidBody of the other GameObject
-			RigidBody *rb = iterGO->second.getComponent<RigidBody>();
+			RigidBody *rb = iterGO->second->getComponent<RigidBody>();
 
 			// Check if RigidBody is null
 			if (rb) {
@@ -147,6 +138,7 @@ namespace Components {
 			}
 		}
 
+		std::cout << "Collided?: " << hInfo.hit << "\n";
 		return hInfo;
 	}
 
@@ -175,7 +167,10 @@ namespace Components {
 	* Adds the given vector to the current velocity
 	*/
 	void RigidBody::updateVelocity(Utils::Vector2D other) {
-		*m_velocity = m_velocity->add(other);
+		Utils::Vector2D vel = (m_velocity->add(other));
+		vel.x = std::max(std::min(vel.x, 200.0f), -200.0f);
+		vel.y = std::max(std::min(vel.y, 200.0f), -200.0f);
+		*m_velocity = vel;
 	}
 
 	/**

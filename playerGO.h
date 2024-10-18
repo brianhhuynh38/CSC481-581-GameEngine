@@ -4,7 +4,7 @@
 #define PLAYERGO_H
 
 #include "GameObject.h"
-#include "physics.h"
+#include "structs.h"
 #include "rigidBody.h"
 #include "textureMesh.h"
 #include "playerInput.h"

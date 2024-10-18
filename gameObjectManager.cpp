@@ -37,7 +37,14 @@ void GameObjectManager::update() {
 	std::map<int, GameObject*>::iterator iter;
 	// Updates each GameObject in the map
 	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
-		iter->second->update(deltaTimeInSecs);
+		// Get GameObject
+		GameObject* go = iter->second;
+		// Update each GameObject component
+		go->update(deltaTimeInSecs);
+		// If GameObject has a RigidBody, update collisions
+		if (Components::RigidBody *rb = go->getComponent<Components::RigidBody>()) {
+			rb->updateCollisions(*m_objects);
+		}
 	}
 }
 

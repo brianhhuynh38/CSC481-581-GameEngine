@@ -1,10 +1,9 @@
 #include "playerGO.h"
-#include "GameObject.h"
 
 #include <string>
 
 PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
-	std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY, float maxSpeed, InputHandler *inputHandler) {
+	std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY, float maxSpeed, InputHandler* inputHandler) {
 	// Adding specific components for Player
 	
 	// Add transform component
@@ -28,7 +27,8 @@ PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY,
 	addComponent<Components::TextureMesh>(textureFilepath);
 
 	// Add PlayerInput Component (specifically the platforming controls currently)
-	addComponent<Components::PlayerInputPlatformer>(maxSpeed,
+	addComponent<Components::PlayerInputPlatformer>(
+		maxSpeed,
 		Utils::Vector2D(jumpVectorX, jumpVectorY),
 		inputHandler,
 		this

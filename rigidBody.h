@@ -37,7 +37,7 @@ namespace Components {
 		// Reference to physics object
 		//Physics *m_physics;
 
-		HitInfo checkObjectCollisions(SDL_Rect* collider, std::map<int, GameObject>& goMap);
+		
 
 	public:
 
@@ -47,7 +47,9 @@ namespace Components {
 
 		void update() override;
 
-		void updateCollisions(std::map<int, GameObject>& goMap);
+		HitInfo checkObjectCollisions(SDL_Rect* collider, std::map<int, GameObject*>& goMap);
+		
+		void updateCollisions(std::map<int, GameObject*>& goMap);
 
 		/**
 		* Returns the mass of the GameObject

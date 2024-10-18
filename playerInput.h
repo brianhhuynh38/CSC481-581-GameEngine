@@ -3,8 +3,9 @@
 #ifndef PLAYERINPUT_H
 #define PLAYERINPUT_H
 
-#include "component.h"
 #include "GameObject.h"
+#include "component.h"
+#include "rigidBody.h"
 
 #include "input.h"
 #include "vector2D.h"
@@ -25,9 +26,7 @@ namespace Components {
 		InputHandler* m_inputHandler;
 		// A reference to the GameObject parent that allows for inter-Object communication between components
 		GameObject* m_parent;
-
-		// Helper method to move the player transform
-		void movePlayer(Utils::Vector2D &movementVector, int axis, RigidBody* rb, Transform* transform);
+		
 	public:
 		/* Default constructor */
 		PlayerInputPlatformer();
@@ -36,6 +35,9 @@ namespace Components {
 		PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, InputHandler* inputHandler, GameObject* parentRef);
 
 		void update() override;
+
+		// Helper method to move the player transform
+		void movePlayer(Utils::Vector2D movementVector, int axis, RigidBody* rb, Transform* transform);
 
 		float getMaxSpeed();
 

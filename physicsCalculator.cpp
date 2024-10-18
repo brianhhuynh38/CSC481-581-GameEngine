@@ -2,6 +2,8 @@
 
 #include "vector2D.h"
 
+#include <iostream>
+
 namespace PhysCalc {
 
 	// Gravity used for calculating physics in the game engine (default 9.81)
@@ -23,13 +25,15 @@ namespace PhysCalc {
 		*velocity = velocity->add(acceleration->multConst(deltaTimeInSecs));
 
 		// Update position using velocity
-		*position = velocity->multConst(deltaTimeInSecs);
+		*position = position->add(velocity->multConst(deltaTimeInSecs));
+
+		//std::cout << "Velocity: " << velocity->toString() << "Position: " << position->toString() << "\n";
 	}
 
 	void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration) {
 		Utils::Vector2D gravityForce(0, m_gravity * mass);
 
-		*acceleration = acceleration->add(Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs));
+		*acceleration = Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs);
+		//*acceleration = acceleration->add(Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs));
 	}
-
 }

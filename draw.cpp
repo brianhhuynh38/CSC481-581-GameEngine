@@ -54,7 +54,7 @@ namespace Render {
 	SDL_Texture* loadTexture(std::string filename) {
 		SDL_Texture* texture;
 		// Logs loading percents when loading in the given file
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
+		//SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename.c_str());
 
 		//std::cout << "FileName: " << filename << "\n";
 		//assert(filename == "./Assets/Textures/DefaultPlayerTexture1.png");
@@ -95,6 +95,8 @@ namespace Render {
 		dest.w = sw;
 		dest.h = sh;
 
+		
+
 		// Defines texture properties with the dimensions of the source texture
 		// TODO: This can also be used to scale textures, look into this for section 6
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
@@ -129,5 +131,7 @@ namespace Render {
 		// Displays the texture given the necessary components
 		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y,
 			transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
+
+		//std::cout << "Destination Rendered: " << transform->getPosition()->x << ", " << transform->getPosition()->y << "\n";
 	}
 }

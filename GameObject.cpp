@@ -1,9 +1,13 @@
 #include "GameObject.h"
 #include "definitions.h"
 #include "vector2D.h"
-#include "transform.h"
 #include "json.hpp"
 using json = nlohmann::json;
+
+#include "transform.h"
+#include "textureMesh.h"
+#include "playerInput.h"
+#include "rigidBody.h"
 
 #include <iostream>
 #include <map>
@@ -43,6 +47,7 @@ GameObject::GameObject(float scaleX, float scaleY, float positionX, float positi
 
 // Update all components attached to game object and the time step the object should be using for calculations
 void GameObject::update(double deltaTimeInSecs) {
+	//std::cout << "Update all game object components\n";
 	m_currTimeStep = deltaTimeInSecs;
 	for (auto& [type, component] : m_components) {
 		component->update();  // Update each component

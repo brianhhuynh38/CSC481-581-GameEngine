@@ -57,7 +57,7 @@ namespace Render {
 	 * (just a short version of the displayTexture function)
 	 * @param entity to display
 	 */
-	void displayGameObject(GameObject gameObject);
-
+	void displayGameObject(GameObject& gameObject);
 }
+
 #endif

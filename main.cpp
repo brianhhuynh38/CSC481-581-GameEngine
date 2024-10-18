@@ -19,6 +19,7 @@
 
 #include "playerController.h"
 #include "entityController.h"
+#include "gameObjectManager.h"
 
 #include "client.h"
 #include "peerToPeer.h"
@@ -26,6 +27,7 @@
 #include "GameObject.h"
 #include "staticObject.h"
 #include "transform.h"
+#include "playerGO.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -170,6 +172,9 @@ int main(int argc, char* argv[]) {
 	// Create the entityController
 	EntityController* entityController = new EntityController(physics);
 	
+	// Create gameObjectManager
+	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
+
 	// The entity that the player is able to control
 	Entities::Player* player;
 	
@@ -187,7 +192,6 @@ int main(int argc, char* argv[]) {
 		Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
 	}
 	
-
 	playerController = new Controllers::PlayerController(player, entityController, timeline);
 
 	InputHandler* inputHandler = new InputHandler();
@@ -198,8 +202,22 @@ int main(int argc, char* argv[]) {
 	Components::Transform *transform = gameObject->getComponent<Components::Transform>();
 	transform->setPosition(5.0, 5.0);
 
-	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 250.0, 20.0, 20.0, nullptr, 10.0, "./Assets/Textures/BallTexture.png", true);
-	//ball->setUUID(-2);
+	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, nullptr, 10.0, "./Assets/Textures/devLongTexture2.png", true);
+	platformObject->setUUID(-2);
+
+	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, nullptr, 10.0, "./Assets/Textures/BallTexture.png", true);
+	ball->setUUID(-3);
+
+	PlayerGO* playerObject = new PlayerGO(
+		1.0, 1.0, 350.0, 400.0, 50.0, 50.0, nullptr, 50,
+		"./Assets/Textures/DefaultPlayerTexture1.png",
+		false, 0.0, 0.0, 50.0, inputHandler
+	);
+
+	gameObjectManager->insert(platformObject);
+	gameObjectManager->insert(playerObject);
+	gameObjectManager->insert(ball);
+	gameObjectManager->insert(gameObject);
 
 	/*Entities::Entity* ball = new Entities::Entity
 	(
@@ -238,7 +256,7 @@ int main(int argc, char* argv[]) {
 
 	// Client side non-moving entities
 	entityController->insertEntity(*ground);
-	entityController->insertEntity(*platform);
+	//entityController->insertEntity(*platform);
 	//entityController->insertEntity(*ball);
 
 	// Get current window size
@@ -280,6 +298,10 @@ int main(int argc, char* argv[]) {
 
 			playerController->actionInput(inputHandler);
 
+			playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
+
+			gameObjectManager->update();
+
 			// Handle physics
 			playerController->updatePlayerPhysics(physics);
 
@@ -315,6 +337,10 @@ int main(int argc, char* argv[]) {
 			player->setPosition(250.0f, 400.0f);
 		}
 
+		if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
+			playerObject->getComponent<Components::Transform>()->setPosition(350.0f, 400.0f);
+		}
+
 		// Display all entities
 		std::map<int, Entities::Entity>::iterator iterEnt;
 		// Get entity map
@@ -326,6 +352,8 @@ int main(int argc, char* argv[]) {
 		}
 		
 		Render::displayGameObject(*ball);
+		Render::displayGameObject(*platformObject);
+		Render::displayGameObject(*playerObject);
 
 		Render::displayEntity((Entities::Entity) *player);
 

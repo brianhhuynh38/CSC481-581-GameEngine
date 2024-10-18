@@ -64,7 +64,7 @@ namespace Controllers {
                 if (inputHandler->keyboard[SDL_SCANCODE_UP] == 1 && player->getIsGrounded()) {
                     moveVector.y = player->getJumpVector()->y;
                     player->setIsGrounded(false);
-                    std::cout << "JUMPER: " << moveVector.y << "\n";
+                    //std::cout << "JUMPER: " << moveVector.y << "\n";
                 }
                 else {
                     // gravity
@@ -101,7 +101,7 @@ namespace Controllers {
             //player->updateVelocity(moveVector);
 
 
-            std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
+            //std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
 
             // move on x axis
             movePlayer(Utils::Vector2D(moveVector.x, NULL), 0);
@@ -199,8 +199,8 @@ namespace Controllers {
         // move player
         player->updatePosition(posMover);
 
-        std::cout << "Vel: " << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
-        std::cout << "posMover: " << posMover.x << ", " << posMover.y << "\n";
+        //std::cout << "Vel: " << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
+        //std::cout << "posMover: " << posMover.x << ", " << posMover.y << "\n";
         
         //player->updateVelocity(moveVector);
         //player->updatePosition(moveVector);
