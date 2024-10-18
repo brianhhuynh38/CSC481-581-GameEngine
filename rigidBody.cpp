@@ -87,8 +87,8 @@ namespace Components {
 				//}
 				
 				// Updates the position and velocity of the object (TODO: Not sure if this would work)
-				transform->updatePosition(hInfo.hitVector.multConst(m_velocity->getMagnitude()));
-				updateVelocity(hInfo.hitVector.multConst(m_velocity->getMagnitude()));
+				transform->updatePosition(hInfo.penetrationDepth.multConst(-1));
+				updateVelocity(hInfo.hitVector.multConst(m_velocity->getMagnitude()).multConst(-1));
 
 				// Set position of the collider to the position of the transform
 				m_collider->x = transform->getPosition()->x;
