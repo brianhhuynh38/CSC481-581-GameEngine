@@ -133,9 +133,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boundaryZone.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="collisions.cpp" />
     <ClCompile Include="configIO.cpp" />
+    <ClCompile Include="deathZone.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="entityController.cpp" />
@@ -167,10 +169,12 @@
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="boundaryZone.h" />
     <ClInclude Include="client.h" />
     <ClInclude Include="collisions.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="configIO.h" />
+    <ClInclude Include="deathZone.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="entity.h" />
