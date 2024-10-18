@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "physicsCalculator.h"
+#include "collisions.h"
 //#include "component.h"
 //#include "vector2D.h"
 //#include "physics.h"
@@ -10,7 +11,7 @@
 
 namespace Components {
 
-	RigidBody::RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef) {
+	RigidBody::RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, bool isTrigger, GameObject* parentRef) {
 		// Create new vectors at (0,0) for velocity and acceleration
 		m_velocity = new Utils::Vector2D();
 		m_acceleration = new Utils::Vector2D();
@@ -18,7 +19,10 @@ namespace Components {
 		m_mass = mass;
 		m_isKinematic = isKinematic;
 		// Set collider options and whether it serves as a trigger
-		m_collider = collider;
+		m_collider = new SDL_Rect();
+		*m_collider = collider;
+		m_colliderType = colliderType;
+
 		m_isTrigger = isTrigger;
 
 		// Set all references to necessary files
@@ -43,6 +47,67 @@ namespace Components {
 			// Apply gravity
 			PhysCalc::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
 		}
+	}
+
+	void RigidBody::updateCollisions(std::map<int, GameObject> goMap) {
+
+	}
+
+	/**
+	 * Loop through entities, use their colliders to check the collisions, using checkCollision method
+	 * This was referenced from the SDL2 tutorial:
+	 * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
+	 */
+	HitInfo checkCollisions(SDL_Rect *collider, std::map<int, GameObject> goMap) {
+		// Create list iterator
+		std::map<int, GameObject>::iterator iterGO;
+
+		// Create hit responce for return
+		HitInfo hInfo{ false };
+
+		// Loop through entities, use their colliders to check the collisions, using checkCollision method
+		for (iterGO = goMap.begin(); iterGO != goMap.end(); ++iterGO) { // Iterate through all entities
+
+			// RigidBody of the other GameObject
+			RigidBody *rb = iterGO->second.getComponent<RigidBody>();
+
+			// Check if RigidBody is null
+			if (rb) {
+				// Get collider
+				SDL_Rect *otherCollider = rb->getCollider();
+
+				// Check if the collider does not belong to this RigidBody, then checks if there is an intersection between the two
+				if (collider != otherCollider && SDL_HasIntersection(collider, otherCollider)) {
+
+					// Calculate penetration depth
+					int overlapX = std::min(collider->x + collider->w, otherCollider->x + otherCollider->w) -
+						std::max(collider->x, otherCollider->x);
+					int overlapY = std::min(collider->y + collider->h, otherCollider->y + otherCollider->h) -
+						std::max(collider->y, otherCollider->y);
+
+					// Determine the penetration depth
+					Utils::Vector2D penetrationDepth;
+
+					if (overlapX < overlapY) {
+						penetrationDepth.x = overlapX;
+						penetrationDepth.y = 0; // No vertical penetration
+					}
+					else {
+						penetrationDepth.x = 0; // No horizontal penetration
+						penetrationDepth.y = overlapY;
+					}
+
+					Utils::Vector2D direction = Utils::Vector2D(otherCollider->x, otherCollider->y).add(Utils::Vector2D(-collider->x, -collider->y));
+
+					hInfo.hit = true;
+					hInfo.hitVector = direction;
+					hInfo.collisionRect = *otherCollider;
+					hInfo.penetrationDepth = penetrationDepth;
+				}
+			}
+		}
+
+		return hInfo;
 	}
 
 	/**
@@ -99,6 +164,10 @@ namespace Components {
 	*/
 	void RigidBody::setAcceleration(Utils::Vector2D other) {
 		*m_acceleration = other;
+	}
+
+	SDL_Rect* RigidBody::getCollider() {
+		return m_collider;
 	}
 
 }

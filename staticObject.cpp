@@ -17,6 +17,7 @@ StaticObject::StaticObject(float scaleX, float scaleY, float positionX, float po
 		mass,
 		isStatic,
 		SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) },
+		0, // Default collider type (normal collision)
 		isTrigger,
 		this
 	);

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "entity.h"
-#include "GameObject.h"
-
 #ifndef DRAW_H
 #define DRAW_H
+
+#include "entity.h"
+#include "GameObject.h"
 
 namespace Render {
 
@@ -57,7 +57,7 @@ namespace Render {
 	 * (just a short version of the displayTexture function)
 	 * @param entity to display
 	 */
-	//void displayGameObject(GameObject gameObject);
+	void displayGameObject(GameObject& gameObject);
 
 }
 #endif

@@ -18,6 +18,7 @@ PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY,
 		mass,
 		isStatic,
 		SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) },
+		0, // Default collider type
 		isTrigger,
 		this
 	);

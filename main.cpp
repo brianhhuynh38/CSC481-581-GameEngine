@@ -325,7 +325,7 @@ int main(int argc, char* argv[]) {
 			Render::displayEntity((Entities::Entity) iterEnt->second);
 		}
 		
-		//Render::displayGameObject((GameObject) *ball);
+		Render::displayGameObject(*ball);
 
 		Render::displayEntity((Entities::Entity) *player);
 

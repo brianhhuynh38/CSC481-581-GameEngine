@@ -109,23 +109,23 @@ namespace Render {
 		displayTexture(entity.getTexture(), entity.getPosition()->x, entity.getPosition()->y, entity.getSize()->x, entity.getSize()->y, entity.getScale()->x, entity.getScale()->y);
 	}
 
-	///**
-	// * Displays the given entities texture
-	// * (just a short version of the displayTexture function)
-	// * @param entity to display
-	// */
-	//void displayGameObject(GameObject gameObject) {
-	//	// Get necessary components
-	//	Components::TextureMesh *tm = gameObject.getComponent<Components::TextureMesh>();
-	//	Components::Transform *transform = gameObject.getComponent<Components::Transform>();
+	/**
+	* Displays the given entities texture
+	* (just a short version of the displayTexture function)
+	* @param entity to display
+	*/
+	void displayGameObject(GameObject& gameObject) {
+		// Get necessary components
+		Components::TextureMesh *tm = gameObject.getComponent<Components::TextureMesh>();
+		Components::Transform *transform = gameObject.getComponent<Components::Transform>();
 
-	//	// If null, do not display
-	//	if (tm == nullptr || transform == nullptr) {
-	//		return;
-	//	}
+		// If null, do not display
+		if (tm == nullptr || transform == nullptr) {
+			return;
+		}
 
-	//	// Displays the texture given the necessary components
-	//	displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y,
-	//		transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
-	//}
+		// Displays the texture given the necessary components
+		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y,
+			transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
+	}
  }

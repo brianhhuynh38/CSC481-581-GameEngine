@@ -27,7 +27,11 @@ namespace Components {
 		// Whether the collider is a trigger area (no collision) or not
 		bool m_isTrigger;
 		// The collider of the GameObject
-		SDL_Rect m_collider;
+		SDL_Rect *m_collider;
+
+		// 0 = normal collider, 1 = death zone, 2 = boundary
+		int m_colliderType;
+
 		// Reference to the parent GameObject to communicate with other components
 		GameObject *m_parent;
 		// Reference to physics object
@@ -35,11 +39,13 @@ namespace Components {
 
 	public:
 
-		RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger, GameObject* parentRef);
+		RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, bool isTrigger, GameObject* parentRef);
 
 		~RigidBody() override;
 
 		void update() override;
+
+		void updateCollisions(std::map<int, GameObject> goMap);
 
 		/**
 		* Returns the mass of the GameObject
@@ -80,6 +86,8 @@ namespace Components {
 		* Sets the acceleration value to the provided vector
 		*/
 		void setAcceleration(Utils::Vector2D other);
+
+		SDL_Rect *getCollider();
 	};
 
 }

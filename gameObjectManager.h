@@ -38,12 +38,21 @@ public:
 	void update();
 
 	/**
-	* Deserializes a string of movingObjects and inserts those GameObjects into the object map
+	* Deserializes a string of gameObjects and inserts those GameObjects into the object map.
+	* This is meant to read in gameObject information sent from the server
 	*
 	* @param movingEntityString: string containing movingObject information from the server
 	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 	*/
-	void serializeIn(std::string movingObjectString, int networkType);
+	void deserialize(std::string gameObjectString, int networkType);
+
+	/**
+	* Serializes a string of gameObjects
+	*
+	* @param gameObjectString: string containing movingObject information from the server
+	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+	*/
+	void serialize(std::string& outputString);
 
 	/**
 	* Returns the objects map

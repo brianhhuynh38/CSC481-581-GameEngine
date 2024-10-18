@@ -6,6 +6,8 @@
 #include "component.h"
 #include "vector2D.h"
 #include "transform.h"
+#include "json.hpp"
+using json = nlohmann::json;
 //#include "textureMesh.h"
 //#include "playerInput.h"
 //#include "rigidBody.h"
@@ -74,8 +76,11 @@ public:
     int getUUID();
 
     double getDeltaTimeInSecsOfObject();
-};
 
+    void from_json(const json& j);
+
+    void to_json(json& j);
+};
 
 
 // Example for main:

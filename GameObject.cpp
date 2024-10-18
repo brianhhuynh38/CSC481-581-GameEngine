@@ -1,7 +1,8 @@
 #include "GameObject.h"
 #include "definitions.h"
 #include "vector2D.h"
-//#include "transform.h"
+#include "json.hpp"
+using json = nlohmann::json;
 //#include "rigidBody.h"
 
 #include <iostream>
@@ -58,6 +59,41 @@ int GameObject::getUUID() {
 
 double GameObject::getDeltaTimeInSecsOfObject() {
 	return m_currTimeStep;
+}
+
+void GameObject::from_json(const json& j) {
+	if (j.contains("uuid")) {
+		m_uuid = j["uuid"].get<int>();
+	}
+	// If it contains each component
+	if (j.contains("transform")) {
+		auto transformData = j["transform"];
+		addComponent<Components::Transform>(
+			Utils::Vector2D(transformData["position"]["x"], transformData["position"]["y"]),
+			nullptr,  // cameraPos is handled elsewhere
+			Utils::Vector2D(transformData["width"], transformData["height"]),
+			Utils::Vector2D(transformData["scale"]["x"], transformData["scale"]["y"])
+		);
+	}
+	// Other components here
+	// TODO: Add all other components here
+}
+
+void GameObject::to_json(json& j) {
+	j["uuid"] = m_uuid;
+
+	// If it contains each component
+	Components::Transform* transform = getComponent<Components::Transform>();
+	if (transform) {
+		j["transform"] = {
+			{"position", {{"x", transform->getPosition()->x}, {"y", transform->getPosition()->y}}},
+			{"width", transform->getSize().x},
+			{"height", transform->getSize().y},
+			{"scale", {{"x", transform->getScale().x}, {"y", transform->getScale().y}}}
+		};
+	}
+	// Other components here
+	// TODO: Add all other components here
 }
 
 // Example for main:

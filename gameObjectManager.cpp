@@ -16,6 +16,8 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	m_timeline = timelineRef;
 	// Instantiate empty map of GameObjects with UUIDs as the key
 	m_objects = new std::map<int, GameObject*>();
+
+	m_serverObjects = new std::map<int, GameObject>();
 }
 
 /**
@@ -40,14 +42,47 @@ void GameObjectManager::update() {
 }
 
 /**
-* Deserializes a string of movingObjects and inserts those GameObjects into the object map.
-* This is meant to read in movingObject information sent from the server
+* Deserializes a string of gameObjects and inserts those GameObjects into the object map.
+* This is meant to read in gameObject information sent from the server
 *
 * @param movingEntityString: string containing movingObject information from the server
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
-void GameObjectManager::serializeIn(std::string movingObjectString, int networkType) {
+void GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
 	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
+	json j = json::parse(gameObjectString);
+
+	// Loop through objects in JSON array
+	for (const auto& obj : j) {
+		GameObject* go = new GameObject();
+		// Get game object information from json
+		go->from_json(obj);
+		// insert game object into objects table
+		insert(go);
+	}
+
+	// Handle network type if necessary
+}
+
+/**
+* Serializes a string of gameObjects and puts them all into one string.
+* This is meant to prepare the gameObject information to send (might only need player itself)
+*
+* @param gameObjectString: string containing movingObject information from the server
+* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+*/
+void GameObjectManager::serialize(std::string& outputString) {
+	// TODO: Adjust for use in peer-to-peer where only the player's information needs to be sent.
+	// Probably don't need to iterate, but need to have the local player field for conversion
+	json j;
+
+	for (const auto& [id, go] : *m_objects) {
+		json gameObjectJson;
+		go->to_json(gameObjectJson);
+		j.push_back(gameObjectJson);
+	}
+
+	outputString = j.dump(); // Convert JSON to string
 }
 
 /**
@@ -76,4 +111,3 @@ void GameObjectManager::insert(GameObject* go) {
 	// Adds or inserts existing information into the Manager
 	m_objects->insert_or_assign(go->getUUID(), go);
 }
-
