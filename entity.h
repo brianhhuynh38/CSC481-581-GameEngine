@@ -14,6 +14,8 @@ namespace Entities {
 	*/
 	class Entity {
 	protected:
+		/** Unique identifier for each Entity */
+		int m_uuid;
 		/** The scaling vector for the Entity */
 		Utils::Vector2D *m_scale;
 		/** The position the Entity is currently at */
@@ -32,6 +34,8 @@ namespace Entities {
 		/** Max acceleration */
 		float m_acceleration_max;
 
+		/** The filepath to the texture to be used */
+		std::string m_textureFilepath;
 		/** Texture to use for this entity */
 		SDL_Texture *m_texture;
 
@@ -65,7 +69,17 @@ namespace Entities {
 		 * @param affectedByPhysics Whether the object is affectedByPhysics
 		 */
 		Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-			const char* textureFilepath, bool isStationary, bool affectedByPhysics);
+			std::string textureFilepath, bool isStationary, bool affectedByPhysics);
+
+		/**
+		* Returns the entity's UUID
+		*/
+		int getUUID();
+
+		/**
+		Sets the entitiy's uuid
+		*/
+		void setUUID(int uuid);
 
 		/**
 		 * Returns the scale
@@ -163,7 +177,7 @@ namespace Entities {
 		/**
 		 * Loads the texture at the given filepath
 		 */
-		void setTexture(char* textureFilepath);
+		void setTexture(std::string textureFilepath);
 
 		/**
 		 * Returns the list of colliders
@@ -198,6 +212,11 @@ namespace Entities {
 		 * @param affectedByPhysics
 		 */
 		void setAffectedByPhysics(bool affectedByPhysics);
+
+		/**
+		* Generates and returns a string containing all entity information
+		*/
+		std::string toString();
 
 		/**
 		 * Deletes objects to free memory allocated to each relevant field

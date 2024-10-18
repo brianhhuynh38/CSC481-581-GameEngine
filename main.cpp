@@ -1,54 +1,39 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <zmq.hpp>
+#include <string>
+#include <mutex>
 
 #include "definitions.h"
 #include "draw.h"
 #include "input.h"
 #include "global.h"
 #include "structs.h"
+#include "configIO.h"
+
 #include "entity.h"
-#include "stage.h"
 #include "player.h"
 #include "movingEntity.h"
-#include "configIO.h"
+
 #include "playerController.h"
 #include "entityController.h"
+
+#include "client.h"
+#include "peerToPeer.h"
+
+#include "GameObject.h"
+#include "staticObject.h"
+#include "transform.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
 Display *display;
-/// The entity that the player is able to control
-Entities::Player *player;
-/// Ball entity (TEST)
-Entities::Entity *ball;
-/// movingBox entity (TEST)
-Entities::MovingEntity *movingBox;
-/// floor entity (TEST)
-Entities::Entity *ground;
-/// platform entity (TEST)
-Entities::Entity *platform;
-/// The default player controller
-Controllers::PlayerController *playerController;
 /// Controller for all entities and their physics
-EntityController* entityController;
-/// The InputHandler struct used to keep track of keypresses and other input.
-InputHandler inputHandler;
-
 /// Global scale factor
 Utils::Vector2D globalScaling;
 /// Determines if proportional scaling is active
 bool proportionalScalingActive;
-
-/// The resolution width the window is set to
-int resolutionWidth;
-/// The resolution Height the window is set to
-int resolutionHeight;
-
-/// The physics system
-Physics physics;
-/// The timeline used to keep track of time intervals
-Timeline timeline;
 
 /**
  * Frees any allocated memory on application exit
@@ -56,8 +41,8 @@ Timeline timeline;
 void memoryCleanUp() {
 	delete display;
 	// Free memory for player
-	player->destroy();
-	delete player;
+	//player->destroy();
+	//delete player;
 }
 
 /**
@@ -66,7 +51,7 @@ void memoryCleanUp() {
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
  *
  */
-void initSDL(void) {
+void initSDL(ConfigSettings settings) {
 	// Define SDL rendering flags
 	int rendererFlags, windowFlags;
 	// Renderer uses hardware acceleration
@@ -76,17 +61,17 @@ void initSDL(void) {
 
 	// If negative error code, exit with failure status
 	if (int status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
-		std::cout << "SDL failed to start up:" << status;
+		std::cout << "SDL failed to start up:" << status << "\n";
 		exit(1);
 	}
 
 	// Create window that is centered
 	// TODO: Might change later to not automatically use default resolution and have it adjust
 	display->window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		resolutionWidth, resolutionHeight, windowFlags);
+		settings.resolutionWidth, settings.resolutionHeight, windowFlags);
 	// Exit if the window fails to open
 	if (!display->window) {
-		std::cout << "The window was unable to open: " << SDL_GetError();
+		std::cout << "The window was unable to open: " << SDL_GetError() << "\n";
 		exit(1);
 	}
 
@@ -96,7 +81,7 @@ void initSDL(void) {
 	display->renderer = SDL_CreateRenderer(display->window, -1, rendererFlags);
 	// Exit if the renderer fails to be created
 	if (!display->renderer) {
-		std::cout << "The renderer failed to be created: " << SDL_GetError();
+		std::cout << "The renderer failed to be created: " << SDL_GetError() << "\n";
 	}
 	// Allows the use of JPG and PNG files by initializing them in SDL
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
@@ -107,102 +92,125 @@ void initSDL(void) {
  * This references the tutorial linked to on the SDL wiki here :
  * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
  */
-static void capFrameRate(long* then, float* remainder) {
+static void capFrameRate(Timeline *timeline, long* then, float* remainder) {
 	long wait, frameTime;
 
-	wait = 16 + *remainder;
+	const int targetFrameTime = 16667;
 
-	*remainder -= (int) *remainder;
+	frameTime = timeline->getTime() - *then;
 
-	frameTime = SDL_GetTicks() - *then;
+	wait = targetFrameTime - frameTime + static_cast<int>(*remainder);
 
-	wait -= frameTime;
-
-	if (wait < 1) {
-		wait = 1;
+	if (wait < 1000) {
+		wait = 1000;
 	}
 
-	SDL_Delay(wait);
+	SDL_Delay(wait/1000);
 
-	*remainder += 0.667;
+	*remainder += (wait % 1000) / 1000.0f;
 
-	*then = SDL_GetTicks();
+	*then = timeline->getTime();
 }
+
 
 /**
  * The main function where all components are initialized and the gameplay update loop is maintained 
  */
 int main(int argc, char* argv[]) {
-	
 	long then;
 	float remainder;
 	
 	// Allocate memory to SDL renderer components and instantiate Display struct
 	display = new Display;
 
-	// Create Timeline
-	timeline = Timeline();
+	/// The timeline used to keep track of time intervals
+	Timeline *timeline = new Timeline();
 	// Create physics
-	physics = Physics();
-
-	// Loads in config file to read and get configured gravity
-	loadConfigFile();
+	Physics *physics = new Physics();
 	
+	// TODO: Initialize networking
+	// initialize the zmq context with a single IO thread
+	zmq::context_t context{ 6 };
+	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
+	zmq::socket_t serverToClientSubscriber{ context, zmq::socket_type::sub };
+	// construct a REQ (request) socket to receive client identification information from the server
+	zmq::socket_t clientToServerRequest{ context, zmq::socket_type::req };
+	// construct a PUB (publish) socket to send player information to the server
+	zmq::socket_t clientToServerPublisher{ context, zmq::socket_type::pub };
+
+	// PEER TO PEER
+
+	// construct a PUB (publish) socket to send player information to the server
+	zmq::socket_t peerToPeerPublisher{ context, zmq::socket_type::pub };
+	// construct a SUB (subscribe) socket to receive entity movements and checks from the server
+	zmq::socket_t peerToPeerSubscriber{ context, zmq::socket_type::sub };
+	// Listens for peer to peer client connects
+	zmq::socket_t clientListener{ context, zmq::socket_type::pull };
+
+	// Struct that contains all settings defined in configuration file
+	ConfigSettings settings = ConfigSettings();
+	
+	// Loads in config file to read and get configured gravity
+	loadConfigFile(&settings);
+
+	// Set physics configured gravity
+	physics->setGravity(settings.gravity);
 	// Initialize SDL components
-	initSDL();
+	initSDL(settings);
 
 	// Runs memoryCleanUp() if the application exits
 	std::atexit(memoryCleanUp);
 
-	// Initiate current stage
-	//initStage();
-
-	then = SDL_GetTicks();
-
+	then = timeline->getTime();
 	remainder = 0;
 
-	// Create a player Entity (Temp: Make more malleable in the future)
-	// TODO: Base starting position off window size percentage
-	player = new Entities::Player(
-		1.0, 1.0,
-		250.0, 250.0,
-		15.0, 25.0,
-		50.0,
-		"./Assets/Textures/DefaultPlayerTexture1.png",
-		false,
-		true,
-		0.0f, -150.0f,
-		6.0
-	);
-	// Create ball object (Temp)
-	ball = new Entities::Entity(
+	// Create the entityController
+	EntityController* entityController = new EntityController(physics);
+	
+	// The entity that the player is able to control
+	Entities::Player* player;
+	
+	// The default player controller
+	Controllers::PlayerController* playerController;
+
+	// Create a vector of client threads so that they can be joined later on
+	std::vector<std::thread> clientThreads = std::vector<std::thread>();
+
+	// Update request and subscriber. Put on a new thread
+	if (settings.networkType == 2) {
+		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController, playerController, settings);
+	}
+	else {
+		Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
+	}
+	
+
+	playerController = new Controllers::PlayerController(player, entityController, timeline);
+
+	InputHandler* inputHandler = new InputHandler();
+
+	Input* input = new Input(inputHandler);
+
+	GameObject* gameObject = new GameObject();
+	Components::Transform *transform = gameObject->getComponent<Components::Transform>();
+	transform->setPosition(5.0, 5.0);
+
+	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 250.0, 20.0, 20.0, nullptr, 10.0, "./Assets/Textures/BallTexture.png", true, false);
+	//ball->setUUID(-2);
+
+	/*Entities::Entity* ball = new Entities::Entity
+	(
 		1.0, 1.0,
 		550.0, 250.0,
 		20.0, 20.0,
 		10.0,
 		"./Assets/Textures/BallTexture.png",
-		false,
-		true
-	);
-	// Create box object that moves (Temp)
-	movingBox = new Entities::MovingEntity
-	(
-		1.0, 1.0,
-		550.0, 550.0,
-		10.0,
-		50.0f, 50.0f,
-		"./Assets/Textures/devTexture0.png",
-		false,
 		true,
-		true,
-		false,
-		10,
-		500,
-		800.0,
-		800.0
-	);
+		false
+	);*/
+	//ball->setUUID(-2);
 	// Create ground object (Temp)
-	ground = new Entities::Entity(
+	Entities::Entity* ground = new Entities::Entity(
 		1.0, 1.0,
 		250.0, 550.0,
 		128.0, 64.0,
@@ -211,9 +219,10 @@ int main(int argc, char* argv[]) {
 		true,
 		false
 	);
+	ground->setUUID(-3);
 
 	// Create second ground object (Temp)
-	platform = new Entities::Entity(
+	Entities::Entity* platform = new Entities::Entity(
 		1.0, 1.0,
 		350.0, 525.0,
 		64.0, 64.0,
@@ -222,38 +231,71 @@ int main(int argc, char* argv[]) {
 		true,
 		false
 	);
+	platform->setUUID(-4);
 
-	// Create player controller for player (temp for testing)
-	playerController = new Controllers::PlayerController(player);
-	//Create entity controller
-	entityController = new EntityController();
-	entityController->addEntity((Entities::Entity) *player);
-	entityController->addEntity(*ground);
-	entityController->addEntity(*platform);
-	entityController->addEntity(*ball);
-	entityController->addEntity((Entities::Entity) *movingBox);
-	entityController->addMovingEntity(*movingBox);
-	
-	
+	// Client side non-moving entities
+	entityController->insertEntity(*ground);
+	entityController->insertEntity(*platform);
+	//entityController->insertEntity(*ball);
 
 	// Get current window size
 	int* w = new int(0);
 	int* h = new int(0);
 	SDL_GetWindowSizeInPixels(display->window, w, h);
-	std::cout << "WindowSize " << *w << ", " << *h;
+	std::cout << "WindowSize " << *w << "x" << *h << "\n";
 
 	// Sets global scaling to 80 by default (1280x720), 
-	// but sets it to not be on proportional scaling by default
+	// Sets it to be on proportional scaling by default
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
 	proportionalScalingActive = false;
 
-	std::cout << "globalScaling: " << globalScaling.x << ", " << globalScaling.y;
+	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
+	std::mutex *m;
+	std::condition_variable* cv;
+
+	std::thread entityThread([&]() {
+		while (true) {
+			// EntityController thread
+
+			// Update the physics of all entities
+			entityController->updateEntities(timeline);
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+		}
+	});
+
+	std::thread playerThread([&]() {
+		while (true) {
+			// PlayerController thread
+
+			// Updates to get a new deltaTime
+			timeline->updateTime();
+
+			// Handle movement inputs and actions
+			playerController->movementInput(inputHandler);
+
+			playerController->actionInput(inputHandler);
+
+			// Handle physics
+			playerController->updatePlayerPhysics(physics);
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+		}
+	});
+
+	// TODO Multithreading
 	// Basic, primitive game loop
 	// TODO: Add ability to reload everything via terminal at some point
 	while (true) {
-		// Updates to get a new deltaTime
-		timeline.updateTime();
+		// TODO: Send client information update to the server
+		// Update request and subscriber
+		if (settings.networkType == 2) {
+			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController);
+		}
+		else {
+			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
+		}
 
 		// Prepares scene for rendering
 		Render::prepareScene();
@@ -261,39 +303,38 @@ int main(int argc, char* argv[]) {
 		// Updates the keyboard inputs
 		SDL_PumpEvents();
 		// Handles player input, including exit
-		Input::takeInput();
+		input->takeInput();
 
-		// Run logic and draw scene
-		//display->delegate.logic();
-	    //display->delegate.draw();
+		//std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
 
-		// check player movmentInput (TESTING)
-		playerController->movementInput();
+		// Respawn Player
+		if (player->getPosition()->y > 1000) {
+			player->setPosition(250.0f, 400.0f);
+		}
 
-		// check player actionInput (TESTING)
-		playerController->actionInput();
+		// Display all entities
+		std::map<int, Entities::Entity>::iterator iterEnt;
+		// Get entity map
+		std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
 
-		// Update the physics of all entities
-		entityController->updateEntities();
+		// Loop through entities and display them all
+		for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
+			Render::displayEntity((Entities::Entity) iterEnt->second);
+		}
+		
+		//Render::displayGameObject((GameObject) *ball);
 
-		// TEST PRINT for player info (DELETE LATER)
-		//std::cout << "Player P(" << player->getPosition()->x << ", " << player->getPosition()->y << ") | V(" << player->getVelocity()->x << ", " << player->getVelocity()->y << ") | A(" << player->getAcceleration()->x << ", " << player->getAcceleration()->y << ") | Grounded(" << player->getIsGrounded() << ")\n";
-
-		// Display player and floor texture at their locations
 		Render::displayEntity((Entities::Entity) *player);
-		Render::displayEntity(*ground);
-		Render::displayEntity(*platform);
-		Render::displayEntity(*ball);
-		Render::displayEntity((Entities::Entity) *movingBox);
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
 
-		// Slow down by 16 ms to maintain approximately 62 fps
-		SDL_Delay(16);
-
-		capFrameRate(&then, &remainder);
+		//SDL_Delay(16);
+		capFrameRate(timeline, &then, &remainder);
 	}
+
+	entityThread.join();
+	playerThread.join();
 
 	delete w;
 	delete h;

@@ -54,13 +54,18 @@ namespace Entities {
 		* @param endPosY The y component of the end position
 		*/
 		MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-			const char* textureFilepath, bool isStationary, bool affectedByPhysics, 
+			std::string textureFilepath, bool isStationary, bool affectedByPhysics,
 			bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY);
 
-		/**
-		* Forcibly moves the entity left or right
-		*/
-		void move();
+		///**
+		//* Forcibly moves the entity left or right
+		//*/
+		//void move();
+
+		///**
+		//* Moves the entity given delta time 
+		//*/
+		//void moveByTime(double deltaTime);
 
 		/**
 		* Sets the position of the entity given a percentage float
@@ -98,6 +103,16 @@ namespace Entities {
 		* Sets the speed at which the entity moves
 		*/
 		void setSpeed(float speed);
+
+		/**
+		* Creates a string containing all information for the MovingEntity
+		*/
+		std::string toString();
+
+		/**
+		* Takes a string containing information for a MovingEntity and creates one
+		*/
+		static MovingEntity* fromString(const std::string& data);
 	};
 
 }

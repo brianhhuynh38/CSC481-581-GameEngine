@@ -1,4 +1,12 @@
 #include "collisions.h"
+#include <SDL.h>
+#include <iostream>
+#include <map>
+
+#include "input.h"
+#include "structs.h"
+#include "global.h"
+#include "entity.h"
 
 /**
     * Checks collisions
@@ -57,21 +65,21 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
  * This was referenced from the SDL2 tutorial:
  * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
  */
-HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities) {
+HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::map<int, Entities::Entity> *entities) {
     // Create list iterator
-	std::list<Entities::Entity>::iterator iterEnt;
+	std::map<int, Entities::Entity>::iterator iterEnt;
 
     // Create hit responce for return
     HitInfo hInfo{false};
 
     // Loop through entities, use their colliders to check the collisions, using checkCollision method
-    for (iterEnt = (*entities).begin(); iterEnt != (*entities).end(); ++iterEnt) { // Iterate through all entities
+    for (iterEnt = entities->begin(); iterEnt != entities->end(); ++iterEnt) { // Iterate through all entities
 
         // Create colliders iterator
         std::list<SDL_Rect>::iterator iterCol;
 
         // Get colliders of entity
-        std::list<SDL_Rect> *entityCollisions = (*iterEnt).getColliders();
+        std::list<SDL_Rect> *entityCollisions = iterEnt->second.getColliders();
 
         // Loop through colliders from 'entities'
         for (iterCol = entityCollisions->begin(); iterCol != entityCollisions->end(); ++iterCol) { // Iterate through all of the colliders of the entity
@@ -80,7 +88,7 @@ HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Ent
             std::list<SDL_Rect>::iterator iterColOther;
 
             // Get colliders of entity to check against checked object
-            std::list<SDL_Rect> *entityCollisions = (*iterEnt).getColliders();
+            std::list<SDL_Rect> *entityCollisions = iterEnt->second.getColliders();
 
             for (iterColOther = collisions->begin(); iterColOther != collisions->end(); ++iterColOther) { // Iterate through all of the colliders of the entity
                 if (&(*iterCol) != &(*iterColOther)) {
@@ -89,11 +97,30 @@ HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Ent
                 }
                 if ((&(*iterCol) != &(*iterColOther)) && SDL_HasIntersection(&(*iterCol), &(*iterColOther))) {
                     
+                    // Calculate penetration depth
+                    int overlapX = std::min(iterCol->x + iterCol->w, iterColOther->x + iterColOther->w) -
+                        std::max(iterCol->x, iterColOther->x);
+                    int overlapY = std::min(iterCol->y + iterCol->h, iterColOther->y + iterColOther->h) -
+                        std::max(iterCol->y, iterColOther->y);
+
+                    // Determine the penetration depth
+                    Utils::Vector2D penetrationDepth;
+
+                    if (overlapX < overlapY) {
+                        penetrationDepth.x = overlapX;
+                        penetrationDepth.y = 0; // No vertical penetration
+                    }
+                    else {
+                        penetrationDepth.x = 0; // No horizontal penetration
+                        penetrationDepth.y = overlapY;
+                    }
+
                     Utils::Vector2D direction = Utils::Vector2D(iterColOther->x, iterColOther->y).add(Utils::Vector2D(-iterCol->x, -iterCol->y));
                     
                     hInfo.hit = true;
                     hInfo.hitVector = direction;
-                    return hInfo;
+                    hInfo.collisionRect = *iterColOther;
+                    hInfo.penetrationDepth = penetrationDepth;
                 }
             }
         }

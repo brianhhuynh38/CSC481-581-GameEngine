@@ -1,6 +1,8 @@
-#include "entity.h"
-
 #pragma once
+
+#include "entity.h"
+#include "GameObject.h"
+
 #ifndef DRAW_H
 #define DRAW_H
 
@@ -27,7 +29,7 @@ namespace Render {
 	 * @param filename for texture to load
 	 * @return texture in SDL_Texture format
 	 */
-	SDL_Texture* loadTexture(const char* filename);
+	SDL_Texture* loadTexture(std::string filename);
 
 	/**
 	 * Displays given texture at the given coordinates.
@@ -49,6 +51,13 @@ namespace Render {
 	 * @param entity to display
 	 */
 	void displayEntity(Entities::Entity entity);
-}
 
+	/**
+	 * Displays the given GO texture
+	 * (just a short version of the displayTexture function)
+	 * @param entity to display
+	 */
+	//void displayGameObject(GameObject gameObject);
+
+}
 #endif

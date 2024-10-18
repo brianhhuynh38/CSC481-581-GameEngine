@@ -8,6 +8,9 @@
 #define ASPECT_W 16
 #define ASPECT_H 9
 
+// Time-related constants
+#define MICROSEC_PER_SEC 1000000.0
+
 // Max number of tile types
 #define MAX_TILE_TYPES 8
 
@@ -22,3 +25,7 @@
 
 // max keyboard keys available to press
 #define MAX_KEYBOARD_KEYS 350
+
+#define MAX_ALLOWED_DELAY 1000 // msecs
+
+#define ZMQ_MSG_DELAY 5 // Temporary measure for zmq message overload

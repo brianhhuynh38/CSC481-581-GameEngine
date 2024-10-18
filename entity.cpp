@@ -1,11 +1,14 @@
 #include <SDL.h>
 #include <iostream>
+#include <sstream>
 #include <list>
 #include <algorithm>
 
 #include "entity.h"
 #include "vector2D.h"
 #include "draw.h"
+
+#include "json.hpp"
 
 
 namespace Entities {
@@ -14,17 +17,19 @@ namespace Entities {
 	* Default constructor that sets all values to their defaults
 	*/
 	Entity::Entity() {
+		m_uuid = -1;
 		m_scale = new Utils::Vector2D(1.0, 1.0);
 		m_position = new Utils::Vector2D(0.0, 0.0);
 		m_size = new Utils::Vector2D(0.0, 0.0);
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 10;
+		m_velocity_max = 200;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration_max = 10;
+		m_acceleration_max = 200;
 		m_mass = 5;
 
-		m_texture = Render::loadTexture(".\Assets\Textures\MissingTexture.png");
+		m_textureFilepath = "./Assets/Textures/MissingTexture.png";
+		m_texture = Render::loadTexture(m_textureFilepath);
 
 		m_isStationary = false;
 		m_affectedByPhysics = false;
@@ -48,18 +53,21 @@ namespace Entities {
 	 * @param affectedByPhysics Whether the object is affectedByPhysics
 	 */
 	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height,  float mass,
-		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics) {
+		m_uuid = -1;
+
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
 		m_mass = mass;
 
 		m_velocity = new Utils::Vector2D(0.0, 0.0);
-		m_velocity_max = 10;
+		m_velocity_max = 80;
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
-		m_acceleration_max = 10;
+		m_acceleration_max = 80;
 
-		m_texture = Render::loadTexture(textureFilepath);
+		m_textureFilepath = textureFilepath;
+		m_texture = Render::loadTexture(m_textureFilepath);
 
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
@@ -67,6 +75,18 @@ namespace Entities {
 		m_colliders->emplace_back(SDL_Rect() = {(int) positionX, (int) positionY, (int) (scaleX * width), (int) (scaleY * height)});
 		m_isVisible = true; // TODO: For future use, currently not doing anything
 	}
+
+	/**
+	 * Returns the entity's UUID
+	 */
+	int Entity::getUUID() {
+		return m_uuid;
+	}
+
+	void Entity::setUUID(int uuid) {
+		m_uuid = uuid;
+	}
+
 	/**
 	 * Returns the scale ratio of the entity
 	 * @returns The scale ratio of the entity as a 2D vector
@@ -81,7 +101,7 @@ namespace Entities {
 	 * @param scaleY The new y value of the scale to set
 	 */
 	void Entity::setScale(float scaleX, float scaleY) {
-		m_scale = new Utils::Vector2D(scaleX, scaleY);
+		*m_scale = Utils::Vector2D(scaleX, scaleY);
 	}
 
 	/**
@@ -98,6 +118,7 @@ namespace Entities {
 	 */
 	void Entity::updatePosition(Utils::Vector2D position) {
 		*m_position = m_position->add(position);
+		//std::cout << "Pos += " << position.x << ", " << position.y << "\n";
 	}
 
 	/**
@@ -106,7 +127,8 @@ namespace Entities {
 	 * @param positionY The new y value of the position to set
 	 */
 	void Entity::setPosition(float positionX, float positionY) {
-		m_position = new Utils::Vector2D(positionX, positionY);
+		*m_position = Utils::Vector2D(positionX, positionY);
+		//std::cout << "Pos = " << positionX << ", " << positionY << "\n";
 	}
 
 	/**
@@ -123,7 +145,7 @@ namespace Entities {
 	 * @param height to set
 	 */
 	void Entity::setSize(float width, float height) {
-		m_size = new Utils::Vector2D(width, height);
+		*m_size = Utils::Vector2D(width, height);
 	}
 
 	/**
@@ -143,6 +165,7 @@ namespace Entities {
 		vel.x = std::max(std::min(vel.x, m_velocity_max), -m_velocity_max);
 		vel.y = std::max(std::min(vel.y, m_velocity_max), -m_velocity_max);
 		*m_velocity = vel;
+		//std::cout << "Vel += " << velocity.x << ", " << velocity.y << "\n";
 	}
 
 	/**
@@ -151,7 +174,8 @@ namespace Entities {
 	* @param velocityY The new y value of the velocity to set
 	*/
 	void Entity::setVelocity(float velocityX, float velocityY) {
-		m_velocity = new Utils::Vector2D(velocityX, velocityY);
+		*m_velocity = Utils::Vector2D(velocityX, velocityY);
+		//std::cout << "Vel = " << velocityX << ", " << velocityY << "\n";
 	}
 
 	/**
@@ -171,6 +195,7 @@ namespace Entities {
 		acc.x = std::max(std::min(acc.x, m_acceleration_max), -m_acceleration_max);
 		acc.y = std::max(std::min(acc.y, m_acceleration_max), -m_acceleration_max);
 		*m_acceleration = acc;
+		//std::cout << "Acc += " << acceleration.x << ", " << acceleration.y << "\n";
 	}
 
 	/**
@@ -179,9 +204,10 @@ namespace Entities {
 	* @param accelerationY The new y value of the acceleration to set
 	*/
 	void Entity::setAcceleration(float accelerationX, float accelerationY) {
-		m_acceleration = new Utils::Vector2D(accelerationX, accelerationY);
-		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
-		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
+		*m_acceleration = Utils::Vector2D(accelerationX, accelerationY);
+//		std::cout << "updateAcceleration: (" << accelerationX << ", " << accelerationY << ")\n";
+//		std::cout << "Acceleration: (" << m_acceleration->x << ", " << m_acceleration->y << ")\n";
+		//std::cout << "Acc = " << accelerationX << ", " << accelerationY << "\n";
 	}
 
 	/**
@@ -212,7 +238,7 @@ namespace Entities {
 	* Sets the texture by trying to load the file at the given filepath
 	* @param textureFilepath The location of the texture to load
 	*/
-	void Entity::setTexture(char* textureFilepath) {
+	void Entity::setTexture(std::string textureFilepath) {
 		try {
 			m_texture = Render::loadTexture(textureFilepath);
 		}
@@ -272,6 +298,35 @@ namespace Entities {
 	 */
 	void Entity::setAffectedByPhysics(bool affectedByPhysics) {
 		m_affectedByPhysics = affectedByPhysics;
+	}
+
+	std::string Entity::toString() {
+		// Create string to serialize all fields within the Entity
+		// Each field is delineated by a newline
+		std::stringstream ss;
+		// Stringify ID
+		ss << m_uuid << "\n";
+		// Stringify positional and physics vectors
+		ss << getPosition()->toString();
+		ss << getVelocity()->toString();
+		ss << getAcceleration()->toString();
+		// Stringify scale, size, and mass
+		ss << getScale()->toString();
+		ss << getSize()->toString();
+		ss << getMass() << "\n";
+		// Stringify max velocity and acceleration values
+		ss << m_velocity_max << "\n";
+		ss << m_acceleration_max << "\n";
+		// Get filepath to SDLTexture
+		ss << m_textureFilepath << "\n";
+		// Stringifies each SDL_Rect Collider
+		for (SDL_Rect collider : *m_colliders) {
+			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
+		}
+		ss << "\n";
+		// Stringifies each of the bools: stationary, affectedByPhysics, visible
+		ss << m_isStationary << "\n" << m_affectedByPhysics << "\n" << m_isVisible << "\n";
+		return ss.str();
 	}
 
 	/**
