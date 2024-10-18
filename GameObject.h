@@ -5,15 +5,14 @@
 
 #include "component.h"
 #include "vector2D.h"
-#include "transform.h"
 #include "json.hpp"
+//#include "timeline.h"
 using json = nlohmann::json;
-//#include "textureMesh.h"
-//#include "playerInput.h"
-//#include "rigidBody.h"
-//#include "timeline.h"
 
-//#include "timeline.h"
+#include "transform.h"
+#include "textureMesh.h"
+#include "playerInput.h"
+#include "rigidBody.h"
 
 #include <typeindex>
 #include <iostream>

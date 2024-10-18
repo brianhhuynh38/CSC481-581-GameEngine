@@ -3,7 +3,6 @@
 #include "vector2D.h"
 #include "json.hpp"
 using json = nlohmann::json;
-//#include "rigidBody.h"
 
 #include <iostream>
 #include <map>
@@ -77,6 +76,36 @@ void GameObject::from_json(const json& j) {
 	}
 	// Other components here
 	// TODO: Add all other components here
+	if (j.contains("rigidbody")) {
+		auto transformData = j["transform"];
+		auto rigidBodyData = j["rigidbody"];
+		addComponent<Components::RigidBody>(
+			rigidBodyData["mass"],
+			rigidBodyData["iskinematic"],
+			SDL_Rect() = {
+				(int)transformData["position"]["x"],
+				(int)transformData["position"]["y"],
+				(int)((float)transformData["scale"]["x"] * (float)transformData["width"]),
+				(int)((float)transformData["scale"]["y"] * (float)transformData["height"])
+			},
+			rigidBodyData["collidertype"], // Default collider type
+			this
+		);
+	}
+
+	if (j.contains("texturemesh")) {
+		auto textureMeshData = j["texturemesh"];
+		addComponent<Components::TextureMesh>(
+			
+		);
+	}
+
+	if (j.contains("playerinput")) {
+		auto playerInputData = j["playerinput"];
+		addComponent<Components::PlayerInputPlatformer>(
+
+		);
+	}
 }
 
 void GameObject::to_json(json& j) {

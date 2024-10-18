@@ -12,7 +12,7 @@
 
 namespace Components {
 
-	RigidBody::RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, bool isTrigger, GameObject* parentRef) {
+	RigidBody::RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, GameObject* parentRef) {
 		// Create new vectors at (0,0) for velocity and acceleration
 		m_velocity = new Utils::Vector2D();
 		m_acceleration = new Utils::Vector2D();
@@ -23,9 +23,6 @@ namespace Components {
 		m_collider = new SDL_Rect();
 		*m_collider = collider;
 		m_colliderType = colliderType;
-
-		m_isTrigger = isTrigger;
-
 		// Set all references to necessary files
 		m_parent = parentRef;
 	}
@@ -57,12 +54,12 @@ namespace Components {
 		}
 	}
 
-	void RigidBody::updateCollisions(std::map<int, GameObject> goMap) {
+	void RigidBody::updateCollisions(std::map<int, GameObject>& goMap) {
 		// Only update collisions if the object is not kinematic to save some processing time
 		if (!m_isKinematic) {
 
 			// Get hit information from checkCollisions
-			HitInfo hInfo = checkCollisions(m_collider, goMap);
+			HitInfo hInfo = checkObjectCollisions(m_collider, goMap);
 			// Check if the object collided with anything
 			if (hInfo.hit) {
 
@@ -102,7 +99,7 @@ namespace Components {
 	 * This was referenced from the SDL2 tutorial:
 	 * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
 	 */
-	HitInfo checkCollisions(SDL_Rect *collider, std::map<int, GameObject> goMap) {
+	HitInfo RigidBody::checkObjectCollisions(SDL_Rect *collider, std::map<int, GameObject>& goMap) {
 		// Create list iterator
 		std::map<int, GameObject>::iterator iterGO;
 
@@ -212,6 +209,10 @@ namespace Components {
 
 	SDL_Rect* RigidBody::getCollider() {
 		return m_collider;
+	}
+
+	bool RigidBody::isKinematic() {
+		return m_isKinematic;
 	}
 
 }

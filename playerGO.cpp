@@ -4,7 +4,7 @@
 #include <string>
 
 PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
-	std::string textureFilepath, bool isStatic, bool isTrigger, float jumpVectorX, float jumpVectorY,
+	std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY,
 	float maxSpeed) {
 	// Adding specific components for Player
 	addComponent<Components::Transform>(
@@ -16,10 +16,9 @@ PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY,
 
 	addComponent<Components::RigidBody>(
 		mass,
-		isStatic,
+		isKinematic,
 		SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) },
 		0, // Default collider type
-		isTrigger,
 		this
 	);
 	addComponent<Components::TextureMesh>(textureFilepath);

@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "component.h"
 #include "vector2D.h"
-//#include "physics.h"
+#include "structs.h"
 
 #include <SDL.h>
 
@@ -24,8 +24,6 @@ namespace Components {
 		// The acceleration of the object
 		Utils::Vector2D *m_acceleration;
 
-		// Whether the collider is a trigger area (no collision) or not
-		bool m_isTrigger;
 		// The collider of the GameObject
 		SDL_Rect *m_collider;
 
@@ -37,15 +35,17 @@ namespace Components {
 		// Reference to physics object
 		//Physics *m_physics;
 
+		HitInfo checkObjectCollisions(SDL_Rect* collider, std::map<int, GameObject>& goMap);
+
 	public:
 
-		RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, bool isTrigger, GameObject* parentRef);
+		RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, GameObject* parentRef);
 
 		~RigidBody() override;
 
 		void update() override;
 
-		void updateCollisions(std::map<int, GameObject> goMap);
+		void updateCollisions(std::map<int, GameObject>& goMap);
 
 		/**
 		* Returns the mass of the GameObject
@@ -88,6 +88,8 @@ namespace Components {
 		void setAcceleration(Utils::Vector2D other);
 
 		SDL_Rect *getCollider();
+
+		bool isKinematic();
 	};
 
 }

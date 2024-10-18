@@ -13,6 +13,10 @@ namespace Components {
 
 	class PlayerInputPlatformer : public virtual Component {
 	protected:
+		// Whether the player can input
+		bool m_canPressInput;
+		// Whether the player is on the ground
+		bool m_isGrounded;
 		// The maximum speed the player moves at
 		float m_maxMovementSpeed;
 		// The vector that defines the force with which the palyer jumps
@@ -21,6 +25,9 @@ namespace Components {
 		InputHandler* m_inputHandler;
 		// A reference to the GameObject parent that allows for inter-Object communication between components
 		GameObject* m_parent;
+
+		// Helper method to move the player transform
+		void movePlayer(Utils::Vector2D movementVector, int axis);
 	public:
 		/* Default constructor */
 		PlayerInputPlatformer();
