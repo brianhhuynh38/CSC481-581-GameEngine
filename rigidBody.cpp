@@ -1,6 +1,7 @@
 #include "rigidBody.h"
 
 #include "GameObject.h"
+#include "physicsCalculator.h"
 //#include "component.h"
 //#include "vector2D.h"
 //#include "physics.h"
@@ -31,17 +32,17 @@ namespace Components {
 	}
 
 	void RigidBody::update() {
-		//// Update physics if the object is not static
-		//if (!m_isKinematic) {
-		//	// Get deltaTime and convert into seconds
-		//	float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
+		// Update physics if the object is not kinematic
+		if (!m_isKinematic) {
+			// Get deltaTime and convert into seconds
+			float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
 
-		//	// Update physics vectors
-		//	Physics::updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
+			// Update physics vectors
+			PhysCalc::updatePhysicsVectors(deltaTimeInSecs, m_parent->getComponent<Transform>()->getPosition(), m_velocity, m_acceleration);
 
-		//	// Apply gravity
-		//	Physics::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
-		//}
+			// Apply gravity
+			PhysCalc::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
+		}
 	}
 
 	/**

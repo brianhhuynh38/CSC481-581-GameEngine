@@ -11,6 +11,7 @@
 #include "global.h"
 #include "structs.h"
 #include "configIO.h"
+#include "physicsCalculator.h"
 
 #include "entity.h"
 #include "player.h"
@@ -155,6 +156,8 @@ int main(int argc, char* argv[]) {
 
 	// Set physics configured gravity
 	physics->setGravity(settings.gravity);
+	PhysCalc::setGravity(settings.gravity);
+
 	// Initialize SDL components
 	initSDL(settings);
 

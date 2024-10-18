@@ -4,8 +4,12 @@
 
 namespace PhysCalc {
 
-	float m_gravity;
+	// Gravity used for calculating physics in the game engine (default 9.81)
+	float m_gravity = 9.81f;
 
+	/**
+	* Sets the gravity value used for calculations
+	*/
 	void setGravity(float gravity) {
 		m_gravity = gravity;
 	}

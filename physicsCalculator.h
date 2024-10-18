@@ -12,10 +12,10 @@ namespace PhysCalc {
 	/**
 	* Updates the vectors sent in as parameters
 	*/
-	static void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position,
+	void updatePhysicsVectors(double deltaTimeInSecs, Utils::Vector2D* position,
 		Utils::Vector2D* velocity, Utils::Vector2D* acceleration);
 
-	static void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration);
+	void applyGravity(double deltaTimeInSecs, float mass, Utils::Vector2D* acceleration);
 
 }
 
