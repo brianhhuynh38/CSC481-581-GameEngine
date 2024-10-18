@@ -26,6 +26,8 @@ namespace Components {
 
 		// The collider of the GameObject
 		SDL_Rect *m_collider;
+		// The most recent collision information
+		HitInfo m_mostRecentCollisionInfo;
 
 		// 0 = normal collider, 1 = death zone, 2 = boundary
 		int m_colliderType;
@@ -89,7 +91,15 @@ namespace Components {
 
 		SDL_Rect *getCollider();
 
+		void setColliderCoordinates(float x, float y);
+
+		void setColliderCoordinates(Utils::Vector2D newCoords);
+
 		bool isKinematic();
+
+		int getColliderType();
+
+		HitInfo getMostRecentCollisionInfo();
 	};
 
 }

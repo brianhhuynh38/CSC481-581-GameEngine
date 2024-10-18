@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "definitions.h"
 #include "vector2D.h"
+#include "transform.h"
 #include "json.hpp"
 using json = nlohmann::json;
 
@@ -61,6 +62,7 @@ double GameObject::getDeltaTimeInSecsOfObject() {
 }
 
 void GameObject::from_json(const json& j) {
+	// Get UUID
 	if (j.contains("uuid")) {
 		m_uuid = j["uuid"].get<int>();
 	}
@@ -69,26 +71,25 @@ void GameObject::from_json(const json& j) {
 		auto transformData = j["transform"];
 		addComponent<Components::Transform>(
 			Utils::Vector2D(transformData["position"]["x"], transformData["position"]["y"]),
-			nullptr,  // cameraPos is handled elsewhere
+			getComponent<Components::Transform>()->getCameraRef(),  // Keep the cameraPos from client's main
 			Utils::Vector2D(transformData["width"], transformData["height"]),
 			Utils::Vector2D(transformData["scale"]["x"], transformData["scale"]["y"])
 		);
 	}
-	// Other components here
-	// TODO: Add all other components here
+
 	if (j.contains("rigidbody")) {
 		auto transformData = j["transform"];
 		auto rigidBodyData = j["rigidbody"];
 		addComponent<Components::RigidBody>(
 			rigidBodyData["mass"],
 			rigidBodyData["iskinematic"],
-			SDL_Rect() = {
+			SDL_Rect() = { // Use transform data to fill out the rectangle for now
 				(int)transformData["position"]["x"],
 				(int)transformData["position"]["y"],
 				(int)((float)transformData["scale"]["x"] * (float)transformData["width"]),
 				(int)((float)transformData["scale"]["y"] * (float)transformData["height"])
 			},
-			rigidBodyData["collidertype"], // Default collider type
+			rigidBodyData["collidertype"],
 			this
 		);
 	}
@@ -96,19 +97,23 @@ void GameObject::from_json(const json& j) {
 	if (j.contains("texturemesh")) {
 		auto textureMeshData = j["texturemesh"];
 		addComponent<Components::TextureMesh>(
-			
+			textureMeshData["texturefilepath"]
 		);
 	}
 
 	if (j.contains("playerinput")) {
 		auto playerInputData = j["playerinput"];
 		addComponent<Components::PlayerInputPlatformer>(
-
+			playerInputData["maxspeed"],
+			Utils::Vector2D(playerInputData["jumpvector"]["x"], playerInputData["jumpvector"]["y"]),
+			getComponent<Components::PlayerInputPlatformer>()->getInputHandler(), // Keep the input handler from client's main
+			this
 		);
 	}
 }
 
 void GameObject::to_json(json& j) {
+	// Set UUID
 	j["uuid"] = m_uuid;
 
 	// If it contains each component
@@ -121,8 +126,30 @@ void GameObject::to_json(json& j) {
 			{"scale", {{"x", transform->getScale().x}, {"y", transform->getScale().y}}}
 		};
 	}
-	// Other components here
-	// TODO: Add all other components here
+
+	Components::RigidBody* rigidBody = getComponent<Components::RigidBody>();
+	if (rigidBody) {
+		j["rigidbody"] = {
+			{"mass", rigidBody->getMass()},
+			{"iskinematic", rigidBody->isKinematic()},
+			{"collidertype", rigidBody->getColliderType()}
+		};
+	}
+
+	Components::TextureMesh* textureMesh = getComponent<Components::TextureMesh>();
+	if (textureMesh) {
+		j["texturemesh"] = {
+			{"texturefilepath", textureMesh->getTextureFilePath()}
+		};
+	}
+
+	Components::PlayerInputPlatformer* playerInput = getComponent<Components::PlayerInputPlatformer>();
+	if (playerInput) {
+		j["playerinput"] = {
+			{"maxspeed", playerInput->getMaxSpeed()},
+			{"jumpvector", {{"x", playerInput->getJumpVector().x}, {"y", playerInput->getJumpVector().y}}}
+		};
+	}
 }
 
 // Example for main:
@@ -130,7 +157,7 @@ void GameObject::to_json(json& j) {
 // StaticPlatform platform(1, 1, 100, 50, 200, 10, 100, "platform_texture.png", true, false);
 
 // Others to add:
-// - MovingPlatform: Server-side.  TextureMesh, RigidBody, MovementController?
+// - MovingPlatform: Server-side. TextureMesh, RigidBody, MovementController?
 // - SpawnPoint: DON'T need to add, can just be a GameObject, only needs Transform
 // - DeathZone: RigidBody (for collisions)
 // - SideBoundary: RigidBody (for collisions)

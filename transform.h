@@ -82,6 +82,9 @@ namespace Components {
 		 * @param scaleY
 		 */
 		void setScale(float scaleX, float scaleY);
+
+		// Returns the pointer reference to the camera position
+		Utils::Vector2D* getCameraRef();
 	};
 
 }

@@ -27,7 +27,7 @@ namespace Components {
 		GameObject* m_parent;
 
 		// Helper method to move the player transform
-		void movePlayer(Utils::Vector2D movementVector, int axis);
+		void movePlayer(Utils::Vector2D &movementVector, int axis, RigidBody* rb, Transform* transform);
 	public:
 		/* Default constructor */
 		PlayerInputPlatformer();
@@ -36,6 +36,12 @@ namespace Components {
 		PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, InputHandler* inputHandler, GameObject* parentRef);
 
 		void update() override;
+
+		float getMaxSpeed();
+
+		Utils::Vector2D getJumpVector();
+
+		InputHandler* getInputHandler();
 	};
 
 }

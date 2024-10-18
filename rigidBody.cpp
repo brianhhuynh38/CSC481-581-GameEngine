@@ -2,8 +2,7 @@
 
 #include "GameObject.h"
 #include "physicsCalculator.h"
-#include "collisions.h"
-#include "transform.h"
+//#include "transform.h"
 //#include "component.h"
 //#include "vector2D.h"
 //#include "physics.h"
@@ -59,9 +58,9 @@ namespace Components {
 		if (!m_isKinematic) {
 
 			// Get hit information from checkCollisions
-			HitInfo hInfo = checkObjectCollisions(m_collider, goMap);
+			HitInfo m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
 			// Check if the object collided with anything
-			if (hInfo.hit) {
+			if (m_mostRecentCollisionInfo.hit) {
 
 				// Get Transform component of the GameObject to manipulate position
 				Transform *transform = m_parent->getComponent<Transform>();
@@ -84,8 +83,8 @@ namespace Components {
 				//}
 				
 				// Updates the position and velocity of the object (TODO: Not sure if this would work)
-				transform->updatePosition(hInfo.penetrationDepth.multConst(-1));
-				updateVelocity(hInfo.hitVector.multConst(m_velocity->getMagnitude()).multConst(-1));
+				transform->updatePosition(m_mostRecentCollisionInfo.penetrationDepth.multConst(-1));
+				updateVelocity(m_mostRecentCollisionInfo.hitVector.multConst(m_velocity->getMagnitude()).multConst(-1));
 
 				// Set position of the collider to the position of the transform
 				m_collider->x = transform->getPosition()->x;
@@ -211,8 +210,25 @@ namespace Components {
 		return m_collider;
 	}
 
+	void RigidBody::setColliderCoordinates(float x, float y) {
+		m_collider->x = x;
+		m_collider->y = y;
+	}
+
+	void RigidBody::setColliderCoordinates(Utils::Vector2D newCoords) {
+		m_collider->x = newCoords.x;
+		m_collider->y = newCoords.y;
+	}
+
 	bool RigidBody::isKinematic() {
 		return m_isKinematic;
 	}
 
+	int RigidBody::getColliderType() {
+		return m_colliderType;
+	}
+
+	HitInfo RigidBody::getMostRecentCollisionInfo() {
+		return m_mostRecentCollisionInfo;
+	}
 }

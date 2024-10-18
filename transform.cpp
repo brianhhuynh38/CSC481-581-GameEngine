@@ -87,4 +87,8 @@ namespace Components {
 		m_scale = Utils::Vector2D(scaleX, scaleY);
 	}
 
+	Utils::Vector2D* Transform::getCameraRef() {
+		return m_cameraOffset;
+	}
+
 }
