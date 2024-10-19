@@ -1,12 +1,11 @@
 #include "staticObject.h"
 
 
-StaticObject::StaticObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
+StaticObject::StaticObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 	std::string textureFilepath, bool isKinematic) {
 	// Adding specific components for StaticPlatform
 	addComponent<Components::Transform>(
 		Utils::Vector2D(positionX, positionY),
-		cameraPos,
 		Utils::Vector2D(width, height),
 		Utils::Vector2D(scaleX, scaleY)
 	);

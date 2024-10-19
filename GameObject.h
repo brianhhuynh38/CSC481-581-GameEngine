@@ -40,7 +40,7 @@ public:
     GameObject();
 
     // Constructor with fields for GameObject. Adds a Transform component (required)
-    GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos);
+    GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height);
 
     // Function to add component to the game object
     template<typename T, typename... Args>

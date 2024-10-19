@@ -2,6 +2,7 @@
 #include <list>
 #include "definitions.h"
 #include "vector2D.h"
+#include "GameObject.h"
 #pragma once
 
 /**
@@ -54,8 +55,16 @@ typedef struct {
 	Utils::Vector2D hitVector;
 	// directional vector of hit
 	SDL_Rect collisionRect;
-
+	// Collision type
+	int colliderType;
+	// Collided game object
+	GameObject* collidedObj;
+	// depth the object has penetrated into the object
 	Utils::Vector2D penetrationDepth;
+	// The amount that the object had moved
+    Utils::Vector2D posMover;
+	// The amount that the object's velocity was manipulated
+	Utils::Vector2D velMover;
 } HitInfo;
 
 /**

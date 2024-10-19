@@ -4,6 +4,8 @@
 #include "physicsCalculator.h"
 
 #include <algorithm>
+#include "playerGO.h"
+#include "boundaryZone.h"
 //#include "transform.h"
 //#include "component.h"
 //#include "vector2D.h"
@@ -43,17 +45,41 @@ namespace Components {
 			HitInfo m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
 			// Check if the object collided with anything
 			if (m_mostRecentCollisionInfo.hit) {
+				if (m_mostRecentCollisionInfo.colliderType == 0) { // Standard collision
+					// Get Transform component of the GameObject to manipulate position
+					Transform* transform = m_parent->getComponent<Transform>();
 
-				// Get Transform component of the GameObject to manipulate position
-				Transform* transform = m_parent->getComponent<Transform>();
+					// Sets the amount of distance and velocity changed during the collision
+					m_mostRecentCollisionInfo.posMover = m_mostRecentCollisionInfo.hitVector.normalizeVector().multConst(m_velocity->getMagnitude() * m_parent->getDeltaTimeInSecsOfObject() * -1);
+					m_mostRecentCollisionInfo.velMover = Utils::Vector2D(0, m_velocity->y * -1);
 
-				// Updates the position and velocity of the object (TODO: Not sure if this would work)
-				transform->updatePosition(m_mostRecentCollisionInfo.penetrationDepth.multConst(-0.5f));
-				updateVelocity(m_mostRecentCollisionInfo.hitVector.multConst(m_velocity->getMagnitude()).multConst(0));
+					// Updates the position and velocity of the object (TODO: Not sure if this would work)
+					transform->updatePosition(m_mostRecentCollisionInfo.posMover);
+					updateVelocity(m_mostRecentCollisionInfo.velMover);
 
-				// Set position of the collider to the position of the transform
-				m_collider->x = transform->getPosition()->x;
-				m_collider->y = transform->getPosition()->y;
+					// Set position of the collider to the position of the transform
+					m_collider->x = transform->getPosition()->x;
+					m_collider->y = transform->getPosition()->y;
+				}
+				else if (m_mostRecentCollisionInfo.colliderType == 1) { // Death zone collision
+					Transform* transform = m_parent->getComponent<Transform>();
+					auto* player = static_cast<PlayerGO*>(m_parent);
+					Transform* spawnTransform = player->getSpawn()->getComponent<Transform>();
+					transform->updatePosition(*(spawnTransform->getPosition()));
+				}
+				else if (m_mostRecentCollisionInfo.colliderType == 2) { // Boundary collision
+					auto* boundaryZone = static_cast<BoundaryZone*>(m_mostRecentCollisionInfo.collidedObj);
+
+					// Check switch (which side collided from)
+					if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos1())) {
+						// Change camera location to the other one
+						boundaryZone->setCurrentPos(boundaryZone->getPos2());
+					}
+					else if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos2())) {
+						// Change camera location to the other one
+						boundaryZone->setCurrentPos(boundaryZone->getPos1());
+					}
+				}
 			}
 		}
 	}
@@ -87,8 +113,6 @@ namespace Components {
 	 * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
 	 */
 	HitInfo RigidBody::checkObjectCollisions(SDL_Rect *collider, std::map<int, GameObject*>& goMap) {
-			
-		std::cout << "Entered Collisions\n";
 
 		// Create list iterator
 		std::map<int, GameObject*>::iterator iterGO;
@@ -109,6 +133,8 @@ namespace Components {
 
 				// Check if the collider does not belong to this RigidBody, then checks if there is an intersection between the two
 				if (collider != otherCollider && SDL_HasIntersection(collider, otherCollider)) {
+
+					std::cout << "SDL_HasIntersection returned true\n";
 
 					// Calculate penetration depth
 					int overlapX = std::min(collider->x + collider->w, otherCollider->x + otherCollider->w) -
@@ -134,6 +160,8 @@ namespace Components {
 					hInfo.hitVector = direction;
 					hInfo.collisionRect = *otherCollider;
 					hInfo.penetrationDepth = penetrationDepth;
+					hInfo.colliderType = rb->getColliderType();
+					hInfo.collidedObj = iterGO->second;
 				}
 			}
 		}
