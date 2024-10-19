@@ -5,6 +5,7 @@
 
 #include "entity.h"
 #include "GameObject.h"
+#include "vector2D.h"
 
 namespace Render {
 
@@ -57,7 +58,8 @@ namespace Render {
 	 * (just a short version of the displayTexture function)
 	 * @param entity to display
 	 */
-	void displayGameObject(GameObject& gameObject);
+	void displayGameObject(GameObject& gameObject, Utils::Vector2D cameraPos);
+
 }
 
 #endif

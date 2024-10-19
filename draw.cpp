@@ -95,8 +95,6 @@ namespace Render {
 		dest.w = sw;
 		dest.h = sh;
 
-		
-
 		// Defines texture properties with the dimensions of the source texture
 		// TODO: This can also be used to scale textures, look into this for section 6
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
@@ -118,7 +116,7 @@ namespace Render {
 	* (just a short version of the displayTexture function)
 	* @param entity to display
 	*/
-	void displayGameObject(GameObject& gameObject) {
+	void displayGameObject(GameObject& gameObject, Utils::Vector2D cameraPos) {
 		// Get necessary components
 		Components::TextureMesh *tm = gameObject.getComponent<Components::TextureMesh>();
 		Components::Transform *transform = gameObject.getComponent<Components::Transform>();
@@ -129,9 +127,10 @@ namespace Render {
 		}
 
 		// Displays the texture given the necessary components
-		displayTexture(tm->getTexture(), transform->getPosition()->x, transform->getPosition()->y,
+		displayTexture(tm->getTexture(), transform->getPosition()->x - cameraPos.x, transform->getPosition()->y - cameraPos.y,
 			transform->getSize().x, transform->getSize().y, transform->getScale().x, transform->getScale().y);
 
 		//std::cout << "Destination Rendered: " << transform->getPosition()->x << ", " << transform->getPosition()->y << "\n";
 	}
+
 }

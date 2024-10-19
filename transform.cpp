@@ -5,13 +5,10 @@ namespace Components {
 	/**
 	* Constructs transform with all necessary fields
 	*/
-	Transform::Transform(Utils::Vector2D position, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale) {
+	Transform::Transform(Utils::Vector2D position, Utils::Vector2D size, Utils::Vector2D scale) {
 		// Set position values
 		m_position = new Utils::Vector2D();
 		*m_position = position;
-
-		// Set reference to global camera offset value
-		m_cameraOffset = offsetRef;
 
 		// Set size and scale
 		m_size = size;
@@ -86,9 +83,4 @@ namespace Components {
 	void Transform::setScale(float scaleX, float scaleY) {
 		m_scale = Utils::Vector2D(scaleX, scaleY);
 	}
-
-	Utils::Vector2D* Transform::getCameraRef() {
-		return m_cameraOffset;
-	}
-
 }

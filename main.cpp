@@ -28,6 +28,7 @@
 #include "staticObject.h"
 #include "transform.h"
 #include "playerGO.h"
+#include "deathZone.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -194,26 +195,39 @@ int main(int argc, char* argv[]) {
 	
 	playerController = new Controllers::PlayerController(player, entityController, timeline);
 
+	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
+
 	InputHandler* inputHandler = new InputHandler();
 
 	Input* input = new Input(inputHandler);
 
+	// Test GameObject
 	GameObject* gameObject = new GameObject();
 	Components::Transform *transform = gameObject->getComponent<Components::Transform>();
-	transform->setPosition(5.0, 5.0);
+	transform->setPosition(350.0, 400.0);
 
-	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, nullptr, 10.0, "./Assets/Textures/devLongTexture2.png", true);
+	// Test StaticObject
+	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
 	platformObject->setUUID(-2);
 
-	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, nullptr, 10.0, "./Assets/Textures/BallTexture.png", true);
+	// Test other StaticObject
+	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png", true);
 	ball->setUUID(-3);
 
+	// Test PlayerObject
 	PlayerGO* playerObject = new PlayerGO(
-		1.0, 1.0, 350.0, 400.0, 50.0, 50.0, nullptr, 50,
+		1.0, 1.0, 350.0, 400.0, 50.0, 50.0, 50,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
-		false, 0.0, 0.0, 50.0, inputHandler
+		false, 50.0, 50.0, 50.0, inputHandler, gameObject
 	);
 
+	// Test DeathZone
+	DeathZone* deathZone = new DeathZone(1.0, 1.0, 350.0, 650.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
+	deathZone->setUUID(-4);
+
+	// Test Boundary 
+
+	gameObjectManager->insert(deathZone);
 	gameObjectManager->insert(platformObject);
 	gameObjectManager->insert(playerObject);
 	gameObjectManager->insert(ball);
@@ -351,9 +365,9 @@ int main(int argc, char* argv[]) {
 			Render::displayEntity((Entities::Entity) iterEnt->second);
 		}
 		
-		Render::displayGameObject(*ball);
-		Render::displayGameObject(*platformObject);
-		Render::displayGameObject(*playerObject);
+		Render::displayGameObject(*ball, *cameraPosition);
+		Render::displayGameObject(*platformObject, *cameraPosition);
+		Render::displayGameObject(*playerObject, *cameraPosition);
 
 		Render::displayEntity((Entities::Entity) *player);
 

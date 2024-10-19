@@ -16,8 +16,6 @@ namespace Components {
 	protected:
 		/** The current position of the GameObject */
 		Utils::Vector2D *m_position;
-		/** The reference to the global camera offset value used to keep track of the camera's position */
-		Utils::Vector2D *m_cameraOffset;
 		/** The size of the GameObject in pixels */
 		Utils::Vector2D m_size;
 		/** The scale of the object to be multiplied by */
@@ -27,7 +25,7 @@ namespace Components {
 		/**
 		* Constructs transform with all necessary fields
 		*/
-		Transform(Utils::Vector2D position, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale);
+		Transform(Utils::Vector2D position, Utils::Vector2D size, Utils::Vector2D scale);
 
 		/**
 		* Destructor for the Transform
@@ -83,8 +81,6 @@ namespace Components {
 		 */
 		void setScale(float scaleX, float scaleY);
 
-		// Returns the pointer reference to the camera position
-		Utils::Vector2D* getCameraRef();
 	};
 
 }

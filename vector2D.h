@@ -36,6 +36,8 @@ namespace Utils {
 		std::string toString();
 
 		static Vector2D fromString(std::stringstream& ss);
+
+		bool equals(Utils::Vector2D other);
 	};
 }
 

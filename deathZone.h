@@ -9,7 +9,7 @@
 
 class DeathZone : public GameObject {
 public:
-	DeathZone(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
+	DeathZone(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 		std::string textureFilepath, bool isKinematic);
 };
 

@@ -25,21 +25,19 @@ GameObject::GameObject(){
 	// Add default GameObject values
 	m_uuid = -1;
 	addComponent<Components::Transform>(
-		Utils::Vector2D(0, 0), 
-		nullptr, 
+		Utils::Vector2D(0, 0),
 		Utils::Vector2D(1, 1), 
 		Utils::Vector2D(1, 1)
 	);
 }
 
 // Constructor with fields for GameObject. Adds a Transform component (required)
-GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D *cameraPos) {
+GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height) {
 	// Add default GameObject ID
 	m_uuid = -1;
 	// Add Transform component, which is required for all GameObjects
 	addComponent<Components::Transform>(
 		Utils::Vector2D(positionX, positionY),
-		cameraPos,
 		Utils::Vector2D(width, height),
 		Utils::Vector2D(scaleX, scaleY)
 	);
@@ -76,7 +74,6 @@ void GameObject::from_json(const json& j) {
 		auto transformData = j["transform"];
 		addComponent<Components::Transform>(
 			Utils::Vector2D(transformData["position"]["x"], transformData["position"]["y"]),
-			getComponent<Components::Transform>()->getCameraRef(),  // Keep the cameraPos from client's main
 			Utils::Vector2D(transformData["width"], transformData["height"]),
 			Utils::Vector2D(transformData["scale"]["x"], transformData["scale"]["y"])
 		);
