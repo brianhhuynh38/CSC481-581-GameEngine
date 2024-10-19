@@ -223,7 +223,7 @@ int main(int argc, char* argv[]) {
 		50,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
 		false,
-		100.0, 100.0,
+		0.0f, -3000.0f,
 		50.0,
 		inputHandler,
 		gameObject

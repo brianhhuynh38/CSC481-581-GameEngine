@@ -27,7 +27,7 @@ namespace Components {
 
 	void PlayerInputPlatformer::movePlayer(Utils::Vector2D movementVector, int axis, RigidBody* rb, Transform* transform) {
 		Utils::Vector2D moveVector;
-		std::cout << "MOVE PLAYER\n";
+		std::cout << "The movementVector in movePlayer: " << movementVector.toString() << "\n";
 		float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
 		Utils::Vector2D posMover = Utils::Vector2D(0, 0); // amount to change positon by
 		Utils::Vector2D velMover = Utils::Vector2D(0, 0); // amount to change velocity by
