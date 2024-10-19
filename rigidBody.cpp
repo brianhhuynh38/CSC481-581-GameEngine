@@ -71,13 +71,15 @@ namespace Components {
 					auto* boundaryZone = static_cast<BoundaryZone*>(m_mostRecentCollisionInfo.collidedObj);
 
 					// Check switch (which side collided from)
-					if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos1())) {
+					if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos1()) && boundaryZone->checkCooldown()) {
 						// Change camera location to the other one
 						boundaryZone->setCurrentPos(boundaryZone->getPos2());
+						boundaryZone->initiateTimer(15);
 					}
-					else if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos2())) {
+					else if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos2()) && boundaryZone->checkCooldown()) {
 						// Change camera location to the other one
 						boundaryZone->setCurrentPos(boundaryZone->getPos1());
+						boundaryZone->initiateTimer(15);
 					}
 				}
 			}

@@ -69,7 +69,7 @@ public:
     }
 
     // Update all components attached to game object
-    void update(double deltaTimeInSecs);
+    virtual void update(double deltaTimeInSecs);
 
     void setUUID(int uuid);
 

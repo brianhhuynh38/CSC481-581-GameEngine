@@ -29,6 +29,7 @@
 #include "transform.h"
 #include "playerGO.h"
 #include "deathZone.h"
+#include "boundaryZone.h"
 
 // Global variables
 /// The Display struct used to initialize renderer and window
@@ -222,11 +223,27 @@ int main(int argc, char* argv[]) {
 	);
 
 	// Test DeathZone
-	DeathZone* deathZone = new DeathZone(1.0, 1.0, 350.0, 650.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
+	DeathZone* deathZone = new DeathZone(1.0, 1.0, 350.0, 650.0, 2000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture4.png", true);
 	deathZone->setUUID(-4);
 
-	// Test Boundary 
+	//(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
+	// std::string textureFilepath, bool isKinematic, Utils::Vector2D pos1, Utils::Vector2D pos2)
 
+	// Test Boundary
+	BoundaryZone* boundaryZone = new BoundaryZone(
+		1.0f, 1.0f,
+		1000.0f, 200.0f,
+		32.0f, 1000.0f,
+		cameraPosition,
+		50.0f,
+		"./Assets/Textures/wall.png",
+		true,
+		Utils::Vector2D(1000, 0),
+		Utils::Vector2D(0, 0)
+	);
+	boundaryZone->setUUID(-5);
+
+	gameObjectManager->insert(boundaryZone);
 	gameObjectManager->insert(deathZone);
 	gameObjectManager->insert(platformObject);
 	gameObjectManager->insert(playerObject);
@@ -361,15 +378,25 @@ int main(int argc, char* argv[]) {
 		std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
 
 		// Loop through entities and display them all
-		for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
+		/*for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
 			Render::displayEntity((Entities::Entity) iterEnt->second);
+		}*/
+
+		// Display all entities
+		std::map<int, GameObject*>::iterator iterGO;
+		// Get entity map
+		std::map<int, GameObject*> objectMap = *gameObjectManager->getObjectMap();
+
+		// Loop through entities and display them all
+		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
+			Render::displayGameObject(*iterGO->second, *cameraPosition);
 		}
 		
-		Render::displayGameObject(*ball, *cameraPosition);
+		/*Render::displayGameObject(*ball, *cameraPosition);
 		Render::displayGameObject(*platformObject, *cameraPosition);
-		Render::displayGameObject(*playerObject, *cameraPosition);
+		Render::displayGameObject(*playerObject, *cameraPosition);*/
 
-		Render::displayEntity((Entities::Entity) *player);
+		/*Render::displayEntity((Entities::Entity) *player);*/
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();

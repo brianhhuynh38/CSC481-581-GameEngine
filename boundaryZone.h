@@ -15,6 +15,8 @@ protected:
 	Utils::Vector2D m_pos1;
 	/* Next camera position after collision */
 	Utils::Vector2D m_pos2;
+	/** Timer used to establish a cooldown between switching camera positions */
+	int m_timer;
 public:
 	BoundaryZone(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
 		std::string textureFilepath, bool isKinematic, Utils::Vector2D pos1, Utils::Vector2D pos2);
@@ -26,6 +28,12 @@ public:
 	Utils::Vector2D getPos1();
 
 	Utils::Vector2D getPos2();
+
+	void update(double deltaTimeInSecs) override;
+
+	void initiateTimer(int timeToSet);
+
+	bool checkCooldown();
 };
 
 #endif

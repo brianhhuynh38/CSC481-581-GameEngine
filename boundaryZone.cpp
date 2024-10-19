@@ -10,6 +10,7 @@ BoundaryZone::BoundaryZone(float scaleX, float scaleY, float positionX, float po
 	m_cameraOffset = cameraPos;
 	m_pos1 = pos1;
 	m_pos2 = pos2;
+	m_timer = 0;
 
 	// Adding specific components for StaticPlatform
 	addComponent<Components::Transform>(
@@ -28,6 +29,15 @@ BoundaryZone::BoundaryZone(float scaleX, float scaleY, float positionX, float po
 	addComponent<Components::TextureMesh>(textureFilepath);
 }
 
+void BoundaryZone::update(double deltaTimeInSecs) {
+	//std::cout << "Update all game object components\n";
+	m_currTimeStep = deltaTimeInSecs;
+	for (auto& [type, component] : m_components) {
+		component->update();  // Update each component
+	}
+	m_timer--;
+}
+
 Utils::Vector2D BoundaryZone::getCurrentPos() {
 	return *m_cameraOffset;
 }
@@ -43,4 +53,12 @@ Utils::Vector2D BoundaryZone::getPos1() {
 
 Utils::Vector2D BoundaryZone::getPos2() {
 	return m_pos2;
+}
+
+void BoundaryZone::initiateTimer(int timeToSet) {
+	m_timer = timeToSet;
+}
+
+bool BoundaryZone::checkCooldown() {
+	return m_timer <= 0;
 }
