@@ -217,13 +217,20 @@ int main(int argc, char* argv[]) {
 
 	// Test PlayerObject
 	PlayerGO* playerObject = new PlayerGO(
-		1.0, 1.0, 350.0, 400.0, 50.0, 50.0, 50,
+		1.0, 1.0,
+		350.0, 400.0,
+		32.0, 32.0,
+		50,
 		"./Assets/Textures/DefaultPlayerTexture1.png",
-		false, 50.0, 50.0, 50.0, inputHandler, gameObject
+		false,
+		100.0, 100.0,
+		50.0,
+		inputHandler,
+		gameObject
 	);
 
 	// Test DeathZone
-	DeathZone* deathZone = new DeathZone(1.0, 1.0, 350.0, 650.0, 2000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture4.png", true);
+	DeathZone* deathZone = new DeathZone(1.0, 1.0, 0.0, 650.0, 2000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture4.png", true);
 	deathZone->setUUID(-4);
 
 	//(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,

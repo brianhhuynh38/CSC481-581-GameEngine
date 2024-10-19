@@ -42,12 +42,14 @@ namespace Components {
 		if (!m_isKinematic) {
 
 			// Get hit information from checkCollisions
-			HitInfo m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
+			m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
 			// Check if the object collided with anything
 			if (m_mostRecentCollisionInfo.hit) {
 				if (m_mostRecentCollisionInfo.colliderType == 0) { // Standard collision
 					// Get Transform component of the GameObject to manipulate position
 					Transform* transform = m_parent->getComponent<Transform>();
+
+					//std::cout << "HitInfo: " << m_mostRecentCollisionInfo.hitVector.toString();
 
 					// Sets the amount of distance and velocity changed during the collision
 					m_mostRecentCollisionInfo.posMover = m_mostRecentCollisionInfo.hitVector.normalizeVector().multConst(m_velocity->getMagnitude() * m_parent->getDeltaTimeInSecsOfObject() * -1);
@@ -164,11 +166,13 @@ namespace Components {
 					hInfo.penetrationDepth = penetrationDepth;
 					hInfo.colliderType = rb->getColliderType();
 					hInfo.collidedObj = iterGO->second;
+
+					//std::cout << "HitInfo hit: " << hInfo.hit << "\nHitInfo direction: " << hInfo.hitVector.toString() <<
+					//	"\nHitInfo penetration depth: " << penetrationDepth.toString() << "\n";
 				}
 			}
 		}
 
-		std::cout << "Collided?: " << hInfo.hit << "\n";
 		return hInfo;
 	}
 
@@ -198,8 +202,8 @@ namespace Components {
 	*/
 	void RigidBody::updateVelocity(Utils::Vector2D other) {
 		Utils::Vector2D vel = (m_velocity->add(other));
-		vel.x = std::max(std::min(vel.x, 200.0f), -200.0f);
-		vel.y = std::max(std::min(vel.y, 200.0f), -200.0f);
+		vel.x = std::max(std::min(vel.x, 100.0f), -100.0f);
+		vel.y = std::max(std::min(vel.y, 100.0f), -100.0f);
 		*m_velocity = vel;
 	}
 
@@ -221,6 +225,10 @@ namespace Components {
 	* Updates the acceleration by adding the other parameter to the current value
 	*/
 	void RigidBody::updateAcceleration(Utils::Vector2D other) {
+		Utils::Vector2D acc = (m_velocity->add(other));
+		
+		acc.x = std::max(std::min(acc.x, 15.0f), -15.0f);
+		acc.y = std::max(std::min(acc.y, 15.0f), -15.0f);
 		*m_acceleration = m_acceleration->add(other);
 	}
 

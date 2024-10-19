@@ -125,14 +125,18 @@ namespace Components {
 		// Gets the most recent collision information frfom RigidBody
 		HitInfo hInfo = rb->getMostRecentCollisionInfo();
 
-		std::cout << "HitInfo inside player collider: " << hInfo.hit << "IsGrounded: " << m_isGrounded << "Axis: " << axis <<"\n";
+		//std::cout << "HitInfo inside player collider: " << hInfo.hit <<
+		//	"\nHitInfo direction: " << hInfo.hitVector.toString() << 
+		//	"HitInfo penetration depth: " << hInfo.penetrationDepth.toString() << 
+		//	"IsGrounded: " << m_isGrounded <<
+		//	"\nAxis: " << axis <<"\n";
 
 		// If the object collided with something
 		if (hInfo.hit && axis == 1) { // y-axis collision
 			//std::cout << "Y-HIT\n";
 			// set as grounded if player was moving down during y-axis collision
 			m_isGrounded = (velocity->y >= 0);
-			std::cout << "isGrounded?: " << m_isGrounded << "\n";
+			//std::cout << "\n\nWhoa it actually got into here?? Is it grounded though?: " << m_isGrounded << "\n\n";
 		}
 		// if there is no collision on the y-axis, set isGrounded to false
 		else if (axis == 1) {
@@ -143,7 +147,7 @@ namespace Components {
 	void PlayerInputPlatformer::update() {
 		if (m_canPressInput) {
 
-			std::cout << "Entered Player Input\n";
+			std::cout << "Entered Player Input, is grounded?: " << m_isGrounded << "\n";
 
 			Transform* transform = m_parent->getComponent<Transform>();
 			RigidBody* rb = m_parent->getComponent<RigidBody>();
@@ -173,11 +177,15 @@ namespace Components {
 			if (m_inputHandler->keyboard[SDL_SCANCODE_DOWN] == 1) {
 				// nothing
 			}
+
+			//std::cout << "Does it get the up input?: " << (m_inputHandler->keyboard[SDL_SCANCODE_UP] == 1 && m_isGrounded) << "\n";
+			
 			// Jump
 			if (m_inputHandler->keyboard[SDL_SCANCODE_UP] == 1 && m_isGrounded) {
+				//std::cout << "\n\nIt entered the jump stuff\n\n\n";
 				moveVector.y = m_jumpVector.y;
 				m_isGrounded = false;
-				std::cout << "JUMPER: " << moveVector.y << "\n";
+				std::cout << "\n\n\nJUMPER: " << moveVector.y << "\n\n\n";
 			}
 			else {
 				// gravity
