@@ -113,7 +113,7 @@ namespace PeerToPeer {
             // Remove clock value from serverInfo string
 
             std::getline(ss, firstLine);
-            //gameObjectManager->deserialize(firstLine, 2);
+            gameObjectManager->deserialize(firstLine, 2);
             //entityController->updateEntitiesByString(serverInfo.to_string(), 2);
         }
 

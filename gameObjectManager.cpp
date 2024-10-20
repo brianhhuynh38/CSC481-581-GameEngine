@@ -61,12 +61,17 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
-		GameObject* go = new GameObject();
-		// Get game object information from json
-		go->from_json(obj);
-		// insert game object into objects table
-		//insert(go);
-		
+		auto uuid = obj["uuid"];
+		if (!m_objects->count(uuid)) { // If it's a new game object
+			GameObject* go = new GameObject();//
+			go->from_json(obj);
+			// Insert new object into the map
+			insert(go);
+		}
+		else { // If it's an existing game object
+			GameObject* go = m_objects->at(uuid);//
+			go->from_json(obj);
+		}
 	}
 
 	// Handle network type if necessary
