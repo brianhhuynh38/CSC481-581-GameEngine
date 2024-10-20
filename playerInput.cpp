@@ -10,16 +10,14 @@ namespace Components {
 	PlayerInputPlatformer::PlayerInputPlatformer() {
 		m_maxMovementSpeed = 0;
 		m_jumpVector = Utils::Vector2D(1, 1);
-		m_inputHandler = nullptr;
 		m_parent = nullptr;
 		m_canPressInput = true;
 		m_isGrounded = false;
 	}
 
-	PlayerInputPlatformer::PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, InputHandler* inputHandler, GameObject* parentRef) {
+	PlayerInputPlatformer::PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, GameObject* parentRef) {
 		m_maxMovementSpeed = maxMovementSpeed;
 		m_jumpVector = jumpVector;
-		m_inputHandler = inputHandler;
 		m_parent = parentRef;
 		m_canPressInput = true;
 		m_isGrounded = false;
@@ -27,7 +25,7 @@ namespace Components {
 
 	void PlayerInputPlatformer::movePlayer(Utils::Vector2D movementVector, int axis, RigidBody* rb, Transform* transform) {
 		Utils::Vector2D moveVector;
-		std::cout << "The movementVector in movePlayer: " << movementVector.toString() << "\n";
+		//std::cout << "The movementVector in movePlayer: " << movementVector.toString() << "\n";
 		float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
 		Utils::Vector2D posMover = Utils::Vector2D(0, 0); // amount to change positon by
 		Utils::Vector2D velMover = Utils::Vector2D(0, 0); // amount to change velocity by
@@ -145,9 +143,9 @@ namespace Components {
 	}
 
 	void PlayerInputPlatformer::update() {
-		if (m_canPressInput) {
+		if (m_canPressInput && m_inputHandler) {
 
-			std::cout << "Entered Player Input, is grounded?: " << m_isGrounded << "\n";
+			//std::cout << "Entered Player Input, is grounded?: " << m_isGrounded << "\n";
 
 			Transform* transform = m_parent->getComponent<Transform>();
 			RigidBody* rb = m_parent->getComponent<RigidBody>();
@@ -185,7 +183,7 @@ namespace Components {
 				//std::cout << "\n\nIt entered the jump stuff\n\n\n";
 				moveVector.y = m_jumpVector.y;
 				m_isGrounded = false;
-				std::cout << "\n\n\nJUMPER: " << moveVector.y << "\n\n\n";
+				//std::cout << "\n\n\nJUMPER: " << moveVector.y << "\n\n\n";
 			}
 			else {
 				// gravity
@@ -197,7 +195,7 @@ namespace Components {
 			//player->updateVelocity(moveVector);
 
 
-			std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
+			//std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
 
 			// move on x axis
 			movePlayer(Utils::Vector2D(moveVector.x, NULL), 0, rb, transform);
@@ -217,4 +215,10 @@ namespace Components {
 	InputHandler* PlayerInputPlatformer::getInputHandler() {
 		return m_inputHandler;
 	}
+
+	void PlayerInputPlatformer::setInputHandler(InputHandler* inputHandler) {
+		m_inputHandler = inputHandler;
+	}
+
+
 }

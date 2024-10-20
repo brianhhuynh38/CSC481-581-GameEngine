@@ -34,6 +34,5 @@ namespace PhysCalc {
 		Utils::Vector2D gravityForce(0, m_gravity * mass);
 
 		*acceleration = Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs);
-		//*acceleration = acceleration->add(Utils::Vector2D(0, m_gravity * mass).multConst(deltaTimeInSecs));
 	}
 }

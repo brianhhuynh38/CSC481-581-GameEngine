@@ -12,10 +12,19 @@
 // - Player: TextureMesh, RigidBody (collision), PlayerInput
 class PlayerGO : public GameObject {
 protected:
+	/* Reference to the Player's spawn point. */
 	GameObject* m_spawnPoint;
 public:
+	/** 
+	 * Default constructor
+	 */
+	PlayerGO();
+	
+	/**
+	 * Constructor
+	 */
     PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY, float maxSpeed, InputHandler* inputHandler, GameObject* spawnPoint);
+		std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY, float maxSpeed, GameObject* spawnPoint);
 
 	void setSpawn(GameObject* spawnPoint);
 

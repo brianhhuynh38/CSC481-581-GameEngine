@@ -15,7 +15,7 @@ private:
 	// Map of GameObjects (Key: UUID, Value: GameObject)
 	std::map<int, GameObject*> *m_objects;
 	// Map of GameObjects controlled by the server
-	std::map<int, GameObject>* m_serverObjects;
+	std::map<int, GameObject*> *m_clientObjects;
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 public:
@@ -47,6 +47,15 @@ public:
 	void deserialize(std::string gameObjectString, int networkType);
 
 	/**
+	* Deserializes a string of playerGO and inserts those GameObjects into the client object map.
+	* This is meant to read in gameObject information sent from the server
+	*
+	* @param movingEntityString: string containing movingObject information from the server
+	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+	*/
+	void deserializeClient(std::string gameObjectString, int networkType);
+
+	/**
 	* Serializes a string of gameObjects
 	*
 	* @param gameObjectString: string containing movingObject information from the server
@@ -60,11 +69,23 @@ public:
 	std::map<int, GameObject*>* getObjectMap();
 
 	/**
+	* Returns the client objects map
+	*/
+	std::map<int, GameObject*>* getClientObjectMap();
+
+	/**
 	* Inserts the GameObject into the objects map
 	* 
 	* @param go GameObject to be added to end of the object map
 	*/
 	void insert(GameObject* go);
+	
+	/**
+	* Inserts the GameObject into the objects map
+	*
+	* @param go GameObject to be added to end of the object map
+	*/
+	void insertClient(GameObject* go);
 };
 
 #endif

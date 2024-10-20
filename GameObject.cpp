@@ -45,7 +45,6 @@ GameObject::GameObject(float scaleX, float scaleY, float positionX, float positi
 
 // Update all components attached to game object and the time step the object should be using for calculations
 void GameObject::update(double deltaTimeInSecs) {
-	//std::cout << "Update all game object components\n";
 	m_currTimeStep = deltaTimeInSecs;
 	for (auto& [type, component] : m_components) {
 		component->update();  // Update each component
@@ -108,7 +107,6 @@ void GameObject::from_json(const json& j) {
 		addComponent<Components::PlayerInputPlatformer>(
 			playerInputData["maxspeed"],
 			Utils::Vector2D(playerInputData["jumpvector"]["x"], playerInputData["jumpvector"]["y"]),
-			getComponent<Components::PlayerInputPlatformer>()->getInputHandler(), // Keep the input handler from client's main
 			this
 		);
 	}

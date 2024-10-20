@@ -6,6 +6,8 @@
 BoundaryZone::BoundaryZone(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
 	std::string textureFilepath, bool isKinematic, Utils::Vector2D pos1, Utils::Vector2D pos2) {
 
+	m_uuid = 0;
+
 	/** The reference to the global camera offset value used to keep track of the camera's position */
 	m_cameraOffset = cameraPos;
 	m_pos1 = pos1;

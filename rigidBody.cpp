@@ -138,7 +138,7 @@ namespace Components {
 				// Check if the collider does not belong to this RigidBody, then checks if there is an intersection between the two
 				if (collider != otherCollider && SDL_HasIntersection(collider, otherCollider)) {
 
-					std::cout << "SDL_HasIntersection returned true\n";
+					//std::cout << "SDL_HasIntersection returned true\n";
 
 					// Calculate penetration depth
 					int overlapX = std::min(collider->x + collider->w, otherCollider->x + otherCollider->w) -
@@ -255,6 +255,10 @@ namespace Components {
 
 	bool RigidBody::isKinematic() {
 		return m_isKinematic;
+	}
+
+	void RigidBody::setIsKinematic(bool isKinematic) {
+		m_isKinematic = isKinematic;
 	}
 
 	int RigidBody::getColliderType() {

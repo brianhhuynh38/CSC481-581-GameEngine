@@ -12,6 +12,8 @@
 #include "playerController.h"
 
 #include "playerGO.h"
+#include "gameObjectManager.h"
+#include "configIO.h"
 
 namespace PeerToPeer {
 	/**
@@ -20,13 +22,13 @@ namespace PeerToPeer {
 	* @param request Request to setup
 	*/
 	int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
-		PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config);
+		PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints);
 
 	/**
 	* Run the networking communication setup
 	* @param subscriber Subscriber to use
 	*/
-	int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player,
+	int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, PlayerGO*& player,
 		GameObjectManager*& gameObjectManager);
 }
 

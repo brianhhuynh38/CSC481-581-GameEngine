@@ -32,7 +32,7 @@ namespace Components {
 		PlayerInputPlatformer();
 
 		/* Constructor */
-		PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, InputHandler* inputHandler, GameObject* parentRef);
+		PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, GameObject* parentRef);
 
 		void update() override;
 
@@ -44,6 +44,8 @@ namespace Components {
 		Utils::Vector2D getJumpVector();
 
 		InputHandler* getInputHandler();
+
+		void setInputHandler(InputHandler* inputHandler);
 	};
 
 }

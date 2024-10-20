@@ -187,18 +187,30 @@ int main(int argc, char* argv[]) {
 
 	Input* input = new Input(inputHandler);
 
-	// Test GameObject: Spawn Point
-	GameObject* spawnPointObject1 = new GameObject(
-		1.0f, 1.0f,
-		350.0f, 400.0f,
-		32.0f, 32.0f
-	);
+	// Test SpawnPoints
+	std::vector<GameObject*> spawnPoints{
+		new GameObject(
+			1.0f, 1.0f,
+			350.0f, 400.0f,
+			32.0f, 32.0f
+		),
+		new GameObject(
+			1.0f, 1.0f,
+			450.0f, 400.0f,
+			32.0f, 32.0f
+		),
+		new GameObject(
+			1.0f, 1.0f,
+			550.0f, 400.0f,
+			32.0f, 32.0f
+		)
+	};
 
 	//Components::Transform* transform = spawnPointObject->getComponent<Components::Transform>();
 	//transform->setPosition(350.0, 400.0);
 
 	// Test PlayerObject with default values, will be changed later 
-	PlayerGO* playerObject = new PlayerGO(
+	PlayerGO* playerObject = new PlayerGO(); /*= new PlayerGO(
 		1.0, 1.0,
 		350.0, 400.0,
 		32.0, 32.0,
@@ -208,31 +220,25 @@ int main(int argc, char* argv[]) {
 		0.0f, -3000.0f,
 		50.0,
 		inputHandler,
-		spawnPointObject1
-	);
-
-	
+		nullptr
+	);*/
 
 	// Create a vector of client threads so that they can be joined later on
 	std::vector<std::thread> clientThreads = std::vector<std::thread>();
 
-	
-
 	// Update request and subscriber. Put on a new thread
 	if (settings.networkType == 2) {
-		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager, settings);
+		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager, settings, spawnPoints);
 	}
 	else {
 		Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
 	}
-	
-	playerController = new Controllers::PlayerController(player, entityController, timeline);
+	// Set the input handler in main
+	playerObject->getComponent<Components::PlayerInputPlatformer>()->setInputHandler(inputHandler);
+
+	//playerController = new Controllers::PlayerController(player, entityController, timeline);
 
 	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
-
-	
-
-	
 
 	// Test StaticObject
 	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
@@ -241,8 +247,6 @@ int main(int argc, char* argv[]) {
 	// Test other StaticObject
 	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png", true);
 	//ball->setUUID(-3);
-
-	
 
 	// Test DeathZone
 	DeathZone* deathZone = new DeathZone(1.0, 1.0, 0.0, 650.0, 2000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture4.png", true);
@@ -254,23 +258,23 @@ int main(int argc, char* argv[]) {
 	// Test Boundary
 	BoundaryZone* boundaryZone = new BoundaryZone(
 		1.0f, 1.0f,
-		1000.0f, 200.0f,
+		600.0f, 200.0f,
 		32.0f, 1000.0f,
 		cameraPosition,
 		50.0f,
 		"./Assets/Textures/wall.png",
 		true,
-		Utils::Vector2D(1000, 0),
-		Utils::Vector2D(0, 0)
+		Utils::Vector2D(600.0f, 0.0f),
+		Utils::Vector2D(0.0f, 0.0f)
 	);
 	//boundaryZone->setUUID(-5);
 
 	gameObjectManager->insert(boundaryZone);
 	gameObjectManager->insert(deathZone);
 	gameObjectManager->insert(platformObject);
-	gameObjectManager->insert(playerObject);
+	//gameObjectManager->insert(playerObject);
 	gameObjectManager->insert(ball);
-	gameObjectManager->insert(spawnPointObject);
+	//gameObjectManager->insert(spawnPointObject1);
 
 	/*Entities::Entity* ball = new Entities::Entity
 	(
@@ -347,16 +351,16 @@ int main(int argc, char* argv[]) {
 			timeline->updateTime();
 
 			// Handle movement inputs and actions
-			playerController->movementInput(inputHandler);
+			//playerController->movementInput(inputHandler);
 
-			playerController->actionInput(inputHandler);
+			//playerController->actionInput(inputHandler);
 
 			playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
 
 			gameObjectManager->update();
 
 			// Handle physics
-			playerController->updatePlayerPhysics(physics);
+			//playerController->updatePlayerPhysics(physics);
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(16));
 		}
@@ -369,7 +373,7 @@ int main(int argc, char* argv[]) {
 		// TODO: Send client information update to the server
 		// Update request and subscriber
 		if (settings.networkType == 2) {
-			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, gameObjectManager);
+			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager);
 		}
 		else {
 			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
@@ -385,26 +389,21 @@ int main(int argc, char* argv[]) {
 
 		//std::cout << "Acc: " << player->getAcceleration()->x << ", " << player->getAcceleration()->y << " | Vel:" << player->getVelocity()->x << ", " << player->getVelocity()->y << "\n";
 
-		// Respawn Player
-		if (player->getPosition()->y > 1000) {
-			player->setPosition(250.0f, 400.0f);
-		}
-
 		if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
 			playerObject->getComponent<Components::Transform>()->setPosition(350.0f, 400.0f);
 		}
 
-		// Display all entities
-		std::map<int, Entities::Entity>::iterator iterEnt;
-		// Get entity map
-		std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
+		//// Display all entities
+		//std::map<int, Entities::Entity>::iterator iterEnt;
+		//// Get entity map
+		//std::map<int, Entities::Entity> entityMap = *entityController->getEntities();
 
 		// Loop through entities and display them all
 		/*for (iterEnt = entityMap.begin(); iterEnt != entityMap.end(); ++iterEnt) {
 			Render::displayEntity((Entities::Entity) iterEnt->second);
 		}*/
 
-		// Display all entities
+		// Display all GameObjects
 		std::map<int, GameObject*>::iterator iterGO;
 		// Get entity map
 		std::map<int, GameObject*> objectMap = *gameObjectManager->getObjectMap();
@@ -412,6 +411,16 @@ int main(int argc, char* argv[]) {
 		// Loop through entities and display them all
 		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
 			Render::displayGameObject(*iterGO->second, *cameraPosition);
+		}
+
+		// Display all GameObjects sent by clients
+		std::map<int, GameObject*>::iterator iterClientGO;
+		// Get entity map
+		std::map<int, GameObject*> clientMap = *gameObjectManager->getClientObjectMap();
+
+		// Loop through entities and display them all
+		for (iterClientGO = clientMap.begin(); iterClientGO != clientMap.end(); ++iterClientGO) {
+			Render::displayGameObject(*iterClientGO->second, *cameraPosition);
 		}
 		
 		/*Render::displayGameObject(*ball, *cameraPosition);

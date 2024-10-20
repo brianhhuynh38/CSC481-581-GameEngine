@@ -95,6 +95,8 @@ namespace Components {
 
 		bool isKinematic();
 
+		void setIsKinematic(bool isKinematic);
+
 		int getColliderType();
 
 		HitInfo getMostRecentCollisionInfo();

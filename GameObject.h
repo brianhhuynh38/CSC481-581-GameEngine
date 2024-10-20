@@ -27,14 +27,12 @@ using json = nlohmann::json;
 */
 class GameObject {
 protected:
-    // UUID
+    // Game Object UUID
     int m_uuid;
     // Store components in a map using std::type_index as the key
     std::map<std::type_index, std::unique_ptr<Components::Component>> m_components;
     // The deltaTime for the object passed down by the Manager
     double m_currTimeStep;
-    
-    // Put stuff in struct?
 public:
     // Default constructor for GameObject. Adds a Transform component (required)
     GameObject();
@@ -42,7 +40,11 @@ public:
     // Constructor with fields for GameObject. Adds a Transform component (required)
     GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height);
 
-    // Function to add component to the game object
+    /**
+    * Creates a component using the type id, creating a unique pointer and storing it into the map of components
+    * 
+    * @param args Component specified by template type
+    */
     template<typename T, typename... Args>
     void addComponent(Args&&... args) {
         // Create a unique_ptr for the component and store it using its typeid
@@ -57,12 +59,8 @@ public:
     */
     template<typename T>
     T* getComponent() {
-
-        //std::cout << "I made it in getComponent\n";
-
         auto it = m_components.find(typeid(T));
         if (it != m_components.end()) {
-
             return dynamic_cast<T*>(it->second.get());  // Safely cast the component to its type
         }
         return nullptr;

@@ -3,6 +3,7 @@
 #include "component.h"
 #include "rigidBody.h"
 #include "definitions.h"
+#include "playerInput.h"
 
 /**
 * Constructor for the GameObjectManager that takes in a reference to the Timeline
@@ -17,7 +18,7 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	// Instantiate empty map of GameObjects with UUIDs as the key
 	m_objects = new std::map<int, GameObject*>();
 
-	m_serverObjects = new std::map<int, GameObject>();
+	m_clientObjects = new std::map<int, GameObject*>();
 }
 
 /**
@@ -67,9 +68,42 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 			go->from_json(obj);
 			// Insert new object into the map
 			insert(go);
+			if (go->getComponent<Components::PlayerInputPlatformer>()) {
+				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+				insertClient(go);
+			}
 		}
 		else { // If it's an existing game object
-			GameObject* go = m_objects->at(uuid);//
+			GameObject* go = m_objects->at(uuid);
+			go->from_json(obj);
+		}
+	}
+
+	// Handle network type if necessary
+}
+
+/**
+* Deserializes a string of gameObjects and inserts those GameObjects into the object map.
+* This is meant to read in gameObject information sent from the server
+*
+* @param movingEntityString: string containing movingObject information from the server
+* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+*/
+void GameObjectManager::deserializeClient(std::string gameObjectString, int networkType) {
+	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
+	json j = json::parse(gameObjectString);
+
+	// Loop through objects in JSON array
+	for (const auto& obj : j) {
+		auto uuid = obj["uuid"];
+		if (!m_clientObjects->count(uuid)) { // If it's a new game object
+			GameObject* go = m_objects->at(uuid);
+			go->from_json(obj);
+			// Insert new object into the map
+			insertClient(go);
+		}
+		else { // If it's an existing game object
+			GameObject* go = m_clientObjects->at(uuid);
 			go->from_json(obj);
 		}
 	}
@@ -106,6 +140,13 @@ std::map<int, GameObject*>* GameObjectManager::getObjectMap() {
 }
 
 /**
+* Returns a pointer to the client objects map
+*/
+std::map<int, GameObject*>* GameObjectManager::getClientObjectMap() {
+	return m_clientObjects;
+}
+
+/**
 * Inserts the GameObject into the objects map
 *
 * @param go GameObject to be added to end of the object map
@@ -113,8 +154,8 @@ std::map<int, GameObject*>* GameObjectManager::getObjectMap() {
 void GameObjectManager::insert(GameObject* go) {
 	// Sets UUID for the inserted object before adding it, if new
 	if (go->getUUID() == 0) {
-		go->setUUID(m_idTracker);
 		m_idTracker--;
+		go->setUUID(m_idTracker);
 	}
 
 	// TODO: It may be better to change so that it updates each of the components individually
@@ -123,4 +164,14 @@ void GameObjectManager::insert(GameObject* go) {
 	
 	// Adds or inserts existing information into the Manager
 	m_objects->insert_or_assign(go->getUUID(), go);
+}
+
+/**
+* Inserts the GameObject into the objects map
+*
+* @param go GameObject to be added to end of the object map
+*/
+void GameObjectManager::insertClient(GameObject* go) {
+	// Adds or inserts existing information into the Manager
+	m_clientObjects->insert_or_assign(go->getUUID(), go);
 }
