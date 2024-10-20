@@ -188,11 +188,16 @@ int main(int argc, char* argv[]) {
 	Input* input = new Input(inputHandler);
 
 	// Test GameObject: Spawn Point
-	GameObject* gameObject = new GameObject();
-	Components::Transform* transform = gameObject->getComponent<Components::Transform>();
-	transform->setPosition(350.0, 400.0);
+	GameObject* spawnPointObject1 = new GameObject(
+		1.0f, 1.0f,
+		350.0f, 400.0f,
+		32.0f, 32.0f
+	);
 
-	// Test PlayerObject
+	//Components::Transform* transform = spawnPointObject->getComponent<Components::Transform>();
+	//transform->setPosition(350.0, 400.0);
+
+	// Test PlayerObject with default values, will be changed later 
 	PlayerGO* playerObject = new PlayerGO(
 		1.0, 1.0,
 		350.0, 400.0,
@@ -203,8 +208,10 @@ int main(int argc, char* argv[]) {
 		0.0f, -3000.0f,
 		50.0,
 		inputHandler,
-		gameObject
+		spawnPointObject1
 	);
+
+	
 
 	// Create a vector of client threads so that they can be joined later on
 	std::vector<std::thread> clientThreads = std::vector<std::thread>();
@@ -263,7 +270,7 @@ int main(int argc, char* argv[]) {
 	gameObjectManager->insert(platformObject);
 	gameObjectManager->insert(playerObject);
 	gameObjectManager->insert(ball);
-	gameObjectManager->insert(gameObject);
+	gameObjectManager->insert(spawnPointObject);
 
 	/*Entities::Entity* ball = new Entities::Entity
 	(
