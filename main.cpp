@@ -183,37 +183,14 @@ int main(int argc, char* argv[]) {
 	// The default player controller
 	Controllers::PlayerController* playerController;
 
-	// Create a vector of client threads so that they can be joined later on
-	std::vector<std::thread> clientThreads = std::vector<std::thread>();
-
-	// Update request and subscriber. Put on a new thread
-	if (settings.networkType == 2) {
-		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController, playerController, settings);
-	}
-	else {
-		Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
-	}
-	
-	playerController = new Controllers::PlayerController(player, entityController, timeline);
-
-	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
-
 	InputHandler* inputHandler = new InputHandler();
 
 	Input* input = new Input(inputHandler);
 
-	// Test GameObject
+	// Test GameObject: Spawn Point
 	GameObject* gameObject = new GameObject();
-	Components::Transform *transform = gameObject->getComponent<Components::Transform>();
+	Components::Transform* transform = gameObject->getComponent<Components::Transform>();
 	transform->setPosition(350.0, 400.0);
-
-	// Test StaticObject
-	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
-	//platformObject->setUUID(-2);
-
-	// Test other StaticObject
-	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png", true);
-	//ball->setUUID(-3);
 
 	// Test PlayerObject
 	PlayerGO* playerObject = new PlayerGO(
@@ -228,6 +205,37 @@ int main(int argc, char* argv[]) {
 		inputHandler,
 		gameObject
 	);
+
+	// Create a vector of client threads so that they can be joined later on
+	std::vector<std::thread> clientThreads = std::vector<std::thread>();
+
+	
+
+	// Update request and subscriber. Put on a new thread
+	if (settings.networkType == 2) {
+		PeerToPeer::startup(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager, settings);
+	}
+	else {
+		Client::startup(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController, playerController);
+	}
+	
+	playerController = new Controllers::PlayerController(player, entityController, timeline);
+
+	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
+
+	
+
+	
+
+	// Test StaticObject
+	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
+	//platformObject->setUUID(-2);
+
+	// Test other StaticObject
+	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png", true);
+	//ball->setUUID(-3);
+
+	
 
 	// Test DeathZone
 	DeathZone* deathZone = new DeathZone(1.0, 1.0, 0.0, 650.0, 2000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture4.png", true);

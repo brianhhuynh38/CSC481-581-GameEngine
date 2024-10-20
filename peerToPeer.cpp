@@ -1,3 +1,5 @@
+#include "peerToPeer.h"
+
 #include <iostream>
 #include <string>
 #include "entity.h"
@@ -23,9 +25,8 @@ namespace PeerToPeer {
     * @param subscriber Subscriber to setup
     * @param request Request to setup
     */
-    int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher,
-    zmq::socket_t* p2psubscriber, Entities::Player*& player, EntityController*& entityController,
-    Controllers::PlayerController*& playerController, ConfigSettings config) {
+    int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
+        PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config) {
         // Set socket options
         int conflate = 1;
         zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
@@ -43,17 +44,24 @@ namespace PeerToPeer {
         // Receive response from server 
         zmq::message_t reply;
         request->recv(reply);
-        //std::cout << "Received client identifier: " << reply.to_string() << "\n";
+        std::cout << "Received client identifier: " << reply.to_string() << "\n";
 
-        // Should continue from after uuid
-        std::string playerString = reply.to_string();
+        // Trim the identifier off the json
+        std::string playerString = reply.to_string().substr(reply.to_string().find('\n') + 1);
         //playerString.erase(0, playerString.find("\n") + 1);
 
         //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n";
 
-        player = Entities::Player::fromString(playerString);
+        //player = Entities::Player::fromString(playerString);
 
-        int portNum = 5558 + player->getUUID();
+        // Parse the json string received from the server into playerGO
+        json j = json::parse(playerString);
+        playerGO->from_json(j);
+
+        gameObjectManager->insert(playerGO);
+
+        // Use the player ID to establish a unique socket for connections
+        int portNum = 5558 + playerGO->getUUID();
 
         std::stringstream ss;
         ss << "tcp://localhost:" << portNum;
@@ -63,7 +71,7 @@ namespace PeerToPeer {
         zmq_setsockopt(p2psubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
 
         p2ppublisher->bind(ss.str());
-        entityController->setPlayerID(player->getUUID());
+        //entityController->setPlayerID(player->getUUID());
 
         // Set the client identifier (SECTION 5)
         subscriber->set(zmq::sockopt::subscribe, "");

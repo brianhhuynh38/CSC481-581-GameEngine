@@ -35,7 +35,11 @@ namespace Components {
 		* @param textureFilePath
 		*/
 	void TextureMesh::setTextureFilePath(std::string textureFilePath) {
-		m_textureFilePath = textureFilePath;
+		// Only load in a new texture if the filepath is actually new (experimental)
+		if (textureFilePath != m_textureFilePath) {
+			m_textureFilePath = textureFilePath;
+			m_texture = Render::loadTexture(m_textureFilePath);
+		}
 	}
 
 	/**
