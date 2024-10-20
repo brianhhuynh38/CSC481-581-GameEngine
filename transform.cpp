@@ -23,7 +23,7 @@ namespace Components {
 	}
 
 	void Transform::update(void) {
-		// modify position using offset
+		// Nothing happens currently in transform that needs updating
 	}
 
 	/**
