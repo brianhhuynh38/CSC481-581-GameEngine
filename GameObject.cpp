@@ -23,7 +23,7 @@ using json = nlohmann::json;
 // Default constructor for GameObject. Adds a Transform component (required)
 GameObject::GameObject(){
 	// Add default GameObject values
-	m_uuid = -1;
+	m_uuid = 0;
 	addComponent<Components::Transform>(
 		Utils::Vector2D(0, 0),
 		Utils::Vector2D(1, 1), 
@@ -34,7 +34,7 @@ GameObject::GameObject(){
 // Constructor with fields for GameObject. Adds a Transform component (required)
 GameObject::GameObject(float scaleX, float scaleY, float positionX, float positionY, float width, float height) {
 	// Add default GameObject ID
-	m_uuid = -1;
+	m_uuid = 0;
 	// Add Transform component, which is required for all GameObjects
 	addComponent<Components::Transform>(
 		Utils::Vector2D(positionX, positionY),
@@ -103,15 +103,15 @@ void GameObject::from_json(const json& j) {
 		);
 	}
 
-	//if (j.contains("playerinput")) {
-	//	auto playerInputData = j["playerinput"];
-	//	addComponent<Components::PlayerInputPlatformer>(
-	//		playerInputData["maxspeed"],
-	//		Utils::Vector2D(playerInputData["jumpvector"]["x"], playerInputData["jumpvector"]["y"]),
-	//		getComponent<Components::PlayerInputPlatformer>()->getInputHandler(), // Keep the input handler from client's main
-	//		this
-	//	);
-	//}
+	if (j.contains("playerinput")) {
+		auto playerInputData = j["playerinput"];
+		addComponent<Components::PlayerInputPlatformer>(
+			playerInputData["maxspeed"],
+			Utils::Vector2D(playerInputData["jumpvector"]["x"], playerInputData["jumpvector"]["y"]),
+			getComponent<Components::PlayerInputPlatformer>()->getInputHandler(), // Keep the input handler from client's main
+			this
+		);
+	}
 }
 
 void GameObject::to_json(json& j) {
@@ -145,13 +145,13 @@ void GameObject::to_json(json& j) {
 		};
 	}
 
-	//Components::PlayerInputPlatformer* playerInput = getComponent<Components::PlayerInputPlatformer>();
-	//if (playerInput) {
-	//	j["playerinput"] = {
-	//		{"maxspeed", playerInput->getMaxSpeed()},
-	//		{"jumpvector", {{"x", playerInput->getJumpVector().x}, {"y", playerInput->getJumpVector().y}}}
-	//	};
-	//}
+	Components::PlayerInputPlatformer* playerInput = getComponent<Components::PlayerInputPlatformer>();
+	if (playerInput) {
+		j["playerinput"] = {
+			{"maxspeed", playerInput->getMaxSpeed()},
+			{"jumpvector", {{"x", playerInput->getJumpVector().x}, {"y", playerInput->getJumpVector().y}}}
+		};
+	}
 }
 
 // Example for main:

@@ -65,7 +65,8 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 		// Get game object information from json
 		go->from_json(obj);
 		// insert game object into objects table
-		insert(go);
+		//insert(go);
+		
 	}
 
 	// Handle network type if necessary
@@ -106,9 +107,9 @@ std::map<int, GameObject*>* GameObjectManager::getObjectMap() {
 */
 void GameObjectManager::insert(GameObject* go) {
 	// Sets UUID for the inserted object before adding it, if new
-	if (go->getUUID() < 0) {
+	if (go->getUUID() == 0) {
 		go->setUUID(m_idTracker);
-		m_idTracker++;
+		m_idTracker--;
 	}
 
 	// TODO: It may be better to change so that it updates each of the components individually

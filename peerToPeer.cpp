@@ -12,6 +12,7 @@
 #include "entityController.h"
 #include "playerController.h"
 #include "configIO.h"
+#include "gameObjectManager.h"
 
 namespace PeerToPeer {
     // Map to store players by their ID from the client
@@ -75,7 +76,8 @@ namespace PeerToPeer {
     * Run the networking communication setup
     * @param subscriber Subscriber to use
     */
-    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player, EntityController*& entityController) {
+    int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
+    Entities::Player*& player, GameObjectManager*& gameObjectManager) {
         // Receive messages from the server as a subscriber for MovingEntities only
         zmq::message_t serverInfo;
         zmq_connect(subscriber, "tcp://localhost:5555");
@@ -86,6 +88,8 @@ namespace PeerToPeer {
             std::stringstream ss;
             ss.clear();
             ss.str(serverInfo.to_string());
+
+            std::cout << "Received from Server: " << serverInfo.to_string() << "\n";
 
             // Read the first line to extract the clock value
             std::string firstLine;
@@ -106,46 +110,50 @@ namespace PeerToPeer {
                 // return -1;
             }
 
-            entityController->updateEntitiesByString(serverInfo.to_string(), 2);
+            // Remove clock value from serverInfo string
+
+            std::getline(ss, firstLine);
+            //gameObjectManager->deserialize(firstLine, 2);
+            //entityController->updateEntitiesByString(serverInfo.to_string(), 2);
         }
 
         // PEER TO PEER
         zmq::message_t playerInfo("Client\n" + player->toString());
 
-        // Iterate through opposing players
-		std::map<int, Entities::Entity>::iterator iter;
-        std::map<int, Entities::Entity> playerMap = *entityController->getOpposingPlayers();
+  //      // Iterate through opposing players
+		//std::map<int, Entities::Entity>::iterator iter;
+  //      std::map<int, Entities::Entity> playerMap = *entityController->getOpposingPlayers();
 
-		// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
-		for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
+		//// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
+		//for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
 
-			int entityId = iter->first; // Get the ID of the current entity
-            std::cout << "Hello, playerMap is populated\n";
+		//	int entityId = iter->first; // Get the ID of the current entity
+  //          std::cout << "Hello, playerMap is populated\n";
 
-            // Calculate port and connect with both
-            int portNum = 5558 + entityId;
-            std::stringstream ss;
-            ss << "tcp://localhost:" << portNum;
-            p2ppublisher->connect(ss.str());
-            p2psubscriber->connect(ss.str());
+  //          // Calculate port and connect with both
+  //          int portNum = 5558 + entityId;
+  //          std::stringstream ss;
+  //          ss << "tcp://localhost:" << portNum;
+  //          p2ppublisher->connect(ss.str());
+  //          p2psubscriber->connect(ss.str());
 
-            //send messages
-            p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+  //          //send messages
+  //          p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
 
-            // Receive client info
-            zmq::message_t clientInfo;
-            p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+  //          // Receive client info
+  //          zmq::message_t clientInfo;
+  //          p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
 
-            if (!clientInfo.empty()) {
-                std::cout << "Print peer's player info: " << clientInfo.to_string() << "\n";
-                // Create player from string and update their information
-                Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
-                // Update the player using the string 
-                entityController->insertOpposingPlayer(updatedPlayer);
-                entityController->insertEntity(updatedPlayer);
-                std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
-            }
-        }
+  //          if (!clientInfo.empty()) {
+  //              std::cout << "Print peer's player info: " << clientInfo.to_string() << "\n";
+  //              // Create player from string and update their information
+  //              //Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
+  //              // Update the player using the string 
+  //              //entityController->insertOpposingPlayer(updatedPlayer);
+  //              //entityController->insertEntity(updatedPlayer);
+  //              //std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
+  //          }
+  //      }
         return 0;
     }
 

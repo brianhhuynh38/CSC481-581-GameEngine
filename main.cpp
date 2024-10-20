@@ -209,11 +209,11 @@ int main(int argc, char* argv[]) {
 
 	// Test StaticObject
 	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
-	platformObject->setUUID(-2);
+	//platformObject->setUUID(-2);
 
 	// Test other StaticObject
 	StaticObject* ball = new StaticObject(1.0, 1.0, 550.0, 200.0, 20.0, 20.0, 10.0, "./Assets/Textures/BallTexture.png", true);
-	ball->setUUID(-3);
+	//ball->setUUID(-3);
 
 	// Test PlayerObject
 	PlayerGO* playerObject = new PlayerGO(
@@ -231,7 +231,7 @@ int main(int argc, char* argv[]) {
 
 	// Test DeathZone
 	DeathZone* deathZone = new DeathZone(1.0, 1.0, 0.0, 650.0, 2000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture4.png", true);
-	deathZone->setUUID(-4);
+	//deathZone->setUUID(-4);
 
 	//(float scaleX, float scaleY, float positionX, float positionY, float width, float height, Utils::Vector2D* cameraPos, float mass,
 	// std::string textureFilepath, bool isKinematic, Utils::Vector2D pos1, Utils::Vector2D pos2)
@@ -248,7 +248,7 @@ int main(int argc, char* argv[]) {
 		Utils::Vector2D(1000, 0),
 		Utils::Vector2D(0, 0)
 	);
-	boundaryZone->setUUID(-5);
+	//boundaryZone->setUUID(-5);
 
 	gameObjectManager->insert(boundaryZone);
 	gameObjectManager->insert(deathZone);
@@ -354,7 +354,7 @@ int main(int argc, char* argv[]) {
 		// TODO: Send client information update to the server
 		// Update request and subscriber
 		if (settings.networkType == 2) {
-			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, entityController);
+			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, player, gameObjectManager);
 		}
 		else {
 			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, player, entityController);
