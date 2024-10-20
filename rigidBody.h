@@ -34,10 +34,6 @@ namespace Components {
 
 		// Reference to the parent GameObject to communicate with other components
 		GameObject *m_parent;
-		// Reference to physics object
-		//Physics *m_physics;
-
-		
 
 	public:
 
