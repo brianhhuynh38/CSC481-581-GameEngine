@@ -282,44 +282,67 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
-	std::mutex *m;
-	std::condition_variable* cv;
+	// Global mutex and condition variable to be used across threads
+	std::mutex mtx;
+	std::condition_variable cv;
 
-	std::thread entityThread([&]() {
+	std::thread gameObjectThread([&]() {
 		while (true) {
-			// EntityController thread
+			{
+				std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
+				cv.wait(lock);
+				std::cout << "GameObject thread loop.\n";
 
-			// Update the physics of all entities
-			entityController->updateEntities(timeline);
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+				// Safely update the physics of all entities
+				gameObjectManager->update();
+				mtx.unlock();
+				cv.notify_all();
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
 
 	std::thread playerThread([&]() {
 		while (true) {
-			// PlayerController thread
+			{
+				std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
+				cv.wait(lock);
+				std::cout << "Player thread loop.\n";
 
-			// Updates to get a new deltaTime
-			timeline->updateTime();
-
-			playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
-
-			gameObjectManager->update();
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+				// Safely update the player object with the new deltaTime
+				timeline->updateTime(); // Update the timeline for deltaTime
+				//playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
+				mtx.unlock();
+				cv.notify_all();
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
+
+	std::thread networkThread([&]() {
+		while (true) {
+			{
+				std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
+				std::cout << "Network thread loop.\n";
+
+				// Safely run the networking code
+				if (settings.networkType == 2) {
+					PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager);
+				}
+				else {
+					Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
+				}
+				mtx.unlock();
+				cv.notify_all();
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
+		}
+	});
+
 
 	while (true) {
 		// TODO: Send client information update to the server
 		// Update request and subscriber
-		if (settings.networkType == 2) {
-			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager);
-		}
-		else {
-			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
-		}
 
 		// Prepares scene for rendering
 		Render::prepareScene();
@@ -360,8 +383,9 @@ int main(int argc, char* argv[]) {
 		capFrameRate(timeline, &then, &remainder);
 	}
 
-	entityThread.join();
+	gameObjectThread.join();
 	playerThread.join();
+	networkThread.join();
 
 	delete w;
 	delete h;

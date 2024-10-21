@@ -36,7 +36,7 @@ namespace PeerToPeer {
         request->connect("tcp://localhost:5556");
         
         // Send message to server and wait to receive client identifier
-        zmq::message_t msg(std::to_string(config.networkType));
+        zmq::message_t msg(std::to_string(2));
         
         request->send(msg, zmq::send_flags::none);
 

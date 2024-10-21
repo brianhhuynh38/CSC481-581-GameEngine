@@ -30,7 +30,7 @@ namespace Client {
         request->connect("tcp://localhost:5556");
         
         // Send message to server and wait to receive client identifier
-        zmq::message_t msg(std::to_string(config.networkType));
+        zmq::message_t msg(std::to_string(1));
 
         request->send(msg, zmq::send_flags::none);
 
@@ -121,8 +121,13 @@ namespace Client {
         // CLIENT-SERVER
         json stringPlayer;
         player->to_json(stringPlayer);
-        zmq::message_t playerInfo("Server\n" + stringPlayer.dump());
+        std::cout << "Translated Player: " << stringPlayer.dump() << "\n";
+        zmq::message_t playerInfo(stringPlayer.dump());
+
+        std::cout << "PUB TO SERVER: " << playerInfo.to_string() << "\n";
         publisher->send(playerInfo, zmq::send_flags::dontwait);
+
+       
 
         return 0;
     }
