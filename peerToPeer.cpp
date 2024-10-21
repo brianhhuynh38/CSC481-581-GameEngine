@@ -199,7 +199,7 @@ namespace PeerToPeer {
         return 0;
     }
 
-    int startThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, Entities::Player*& player) {
+    int startThread(zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, PlayerGO*& player) {
 
         // Get client port number
         int portNum = 5558 + player->getUUID();

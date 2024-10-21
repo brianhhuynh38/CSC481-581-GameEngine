@@ -96,26 +96,23 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
 	json j = json::parse(gameObjectString);
 
-	// Loop through objects in JSON array
-	//for (const auto& obj : j) {
-		std::cout << "Game Object String: " << gameObjectString << "\n";
-		int uuid = j["uuid"].get<int>();
-		// Determine whether the object is new or existing
-		if (!m_clientObjects->count(uuid)) { // If it's a new game object
-			GameObject* go = m_clientObjects->at(uuid);
-			go->from_json(j);
-			// Insert new object into the map
-			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-			insertClient(go);
-		}
-		else { // If it's an existing game object
-			GameObject* go = m_clientObjects->at(uuid);
-			go->from_json(j);
-			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-			//m_clientObjects->insert_or_assign(uuid, go);
-		}
-	//}
-		int i;
+	// Read in JSON array (should only be one object in peer to peer)
+	std::cout << "Game Object String: " << gameObjectString << "\n";
+	int uuid = j["uuid"].get<int>();
+	// Determine whether the object is new or existing
+	if (!m_clientObjects->count(uuid)) { // If it's a new game object
+		GameObject* go = m_clientObjects->at(uuid);
+		go->from_json(j);
+		// Insert new object into the map
+		go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+		insertClient(go);
+	}
+	else { // If it's an existing game object
+		GameObject* go = m_clientObjects->at(uuid);
+		go->from_json(j);
+		go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+		//m_clientObjects->insert_or_assign(uuid, go);
+	}
 	// Handle network type if necessary
 }
 
