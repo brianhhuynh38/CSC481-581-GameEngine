@@ -15,6 +15,9 @@
 #include "gameObjectManager.h"
 #include "configIO.h"
 
+#include <thread>
+
+
 namespace PeerToPeer {
 	/**
 	* Sets up client parameters and interactions
@@ -23,7 +26,7 @@ namespace PeerToPeer {
 	*/
 	int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
 		PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints,
-		std::vector<std::thread> threads);
+		std::vector<std::thread> *threads);
 
 	/**
 	* Run the networking communication setup

@@ -1,7 +1,8 @@
 # Introduction
 This is Team 1's game engine repository for CSC 581 - Game Engine Foundations. Below are 
 compilation instructions, as well as our references for each of the tutorials we used while 
-making this project.
+making this project. Our network server implementation is also necessary to run in conjunction 
+with the server in order to run the program. The code for the network server can be found [here](https://github.com/masonsluder/CSC481_581_NetworkServer).
 
 ## Table of Contents
 

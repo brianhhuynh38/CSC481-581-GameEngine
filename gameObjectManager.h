@@ -78,7 +78,7 @@ public:
 	/**
 	* Erases the object from the client map
 	*/
-	void terminateClient();
+	void terminateClient(int uuidKey);
 
 	/**
 	* Inserts the GameObject into the objects map

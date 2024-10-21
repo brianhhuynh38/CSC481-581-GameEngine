@@ -78,7 +78,7 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 		}
 		else if (uuid != m_playerID) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
-			if (!go->getComponent<Components::PlayerInputPlatformer>()) { go->from_json(obj); }
+			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) { go->from_json(obj); }
 		}
 	}
 
@@ -149,6 +149,13 @@ std::map<int, GameObject*>* GameObjectManager::getObjectMap() {
 */
 std::map<int, GameObject*>* GameObjectManager::getClientObjectMap() {
 	return m_clientObjects;
+}
+
+/**
+* Erases the object from the client map
+*/
+void GameObjectManager::terminateClient(int uuidKey) {
+	m_clientObjects->erase(uuidKey);
 }
 
 /**
