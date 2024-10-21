@@ -17,7 +17,7 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	m_timeline = timelineRef;
 	// Instantiate empty map of GameObjects with UUIDs as the key
 	m_objects = new std::map<int, GameObject*>();
-
+	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
 }
 

@@ -22,7 +22,8 @@ namespace PeerToPeer {
 	* @param request Request to setup
 	*/
 	int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
-		PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints);
+		PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints,
+		std::vector<std::thread> threads);
 
 	/**
 	* Run the networking communication setup

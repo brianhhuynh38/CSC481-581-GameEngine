@@ -76,6 +76,11 @@ public:
 	std::map<int, GameObject*>* getClientObjectMap();
 
 	/**
+	* Erases the object from the client map
+	*/
+	void terminateClient();
+
+	/**
 	* Inserts the GameObject into the objects map
 	* 
 	* @param go GameObject to be added to end of the object map
@@ -93,6 +98,7 @@ public:
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 	 */
 	void setPlayerID(int uuid);
+
 };
 
 #endif
