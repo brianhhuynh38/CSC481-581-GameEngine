@@ -210,3 +210,17 @@ well, both with their naming schemes and their contents ([`Transform`](transform
 | [`transform.cpp`](transform.cpp) | [`transform.h`](transform.h) |
 | [`rigidBody.cpp`](rigidBody.cpp) | [`rigidBody.h`](rigidBody.h) |
 | [`textureMesh.cpp`](textureMesh.cpp) | [`textureMesh.h`](textureMesh.h) |
+
+
+### [Nlohmann's JSON Library Documentation](https://github.com/nlohmann/json)
+
+This JSON library was provided on Moodle and is usable for Homework 3. This library is used primarily 
+for serialization and deserialization of the GameObjects when being sent through the network, from both 
+the server and the peer clients. The documentation provided on the GitHub repository was used to figure 
+out the necessary functions and techniques to properly read in and write out json statements.
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+| [`GameObject.cpp`](GameObject.cpp) | [`GameObject.h`](GameObject.h) |
+| [`peerToPeer.cpp`](peerToPeer.cpp) | [`peerToPeer.h`](peerToPeer.h) |
+

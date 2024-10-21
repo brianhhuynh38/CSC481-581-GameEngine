@@ -62,7 +62,7 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
-		int uuid = obj["uuid"];
+		auto uuid = obj["uuid"];
 		if (uuid == m_playerID) {
 			continue;
 		}
@@ -98,7 +98,7 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
-		int uuid = obj["uuid"];
+		auto uuid = obj["uuid"];
 		// Prevent deserializing self
 		if (uuid == m_playerID) {
 			continue;
