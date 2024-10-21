@@ -80,7 +80,7 @@ namespace Utils {
 	* @returns The result of the constant division
 	*/
 	Vector2D Vector2D::divideConst(float constant) {
-		return Vector2D(this->x / constant, this->y / constant);
+		return Vector2D(x / constant, y / constant);
 	}
 
 	/**

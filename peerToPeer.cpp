@@ -60,9 +60,13 @@ namespace PeerToPeer {
 
         // Sets a spawn point based off the size of the list of SpawnPoints
         playerGO->setSpawn(spawnPoints[playerGO->getUUID() % spawnPoints.size()]);
-
+        // Insert PlayerGO into the gameObject Manager
         gameObjectManager->insert(playerGO);
+        gameObjectManager->insertClient(playerGO);
+        // Sets the playerID into GameObjectManager so that it does not update incorrectly
+        gameObjectManager->setPlayerID(playerGO->getUUID());
 
+        // Convert the player game object into JSON
         json stringPrint;
         playerGO->to_json(stringPrint);
         std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
@@ -98,6 +102,8 @@ namespace PeerToPeer {
         zmq_connect(subscriber, "tcp://localhost:5555");
         subscriber->recv(serverInfo, zmq::recv_flags::dontwait);
         zmq_disconnect(subscriber, "tcp://localhost:5555");
+
+        //std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
 
         if (!serverInfo.empty()) {
             std::stringstream ss;
@@ -137,6 +143,8 @@ namespace PeerToPeer {
         player->to_json(stringPlayer);
         zmq::message_t playerInfo("Client\n" + stringPlayer.dump());
 
+        std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
+
         // Iterate through opposing players
 	    std::map<int, GameObject*>::iterator iter;
         std::map<int, GameObject*> playerMap = *gameObjectManager->getClientObjectMap();
@@ -160,17 +168,16 @@ namespace PeerToPeer {
             // Receive client info
             zmq::message_t clientInfo;
             p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
-            
+
             if (!clientInfo.empty()) {
-                //std::cout << "Print peer's player info: " << clientInfo.to_string() << "\n";
-                // Create player from string and update their information
-                //Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
-                // Update the player using the string 
-                gameObjectManager->deserialize(clientInfo.to_string(), 2);
-                gameObjectManager->deserializeClient(clientInfo.to_string(), 2);
-                //entityController->insertOpposingPlayer(updatedPlayer);
-                //entityController->insertEntity(updatedPlayer);
-                //std::cout << "Player toString: " << updatedPlayer.toString() << "\n";
+                // Trim the client info string
+                std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
+
+                std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
+
+                // Update the player using the string
+                //gameObjectManager->deserialize(clientString, 2);
+                gameObjectManager->deserializeClient(clientString, 2);
             }
         }
         return 0;

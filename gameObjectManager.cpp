@@ -62,7 +62,10 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
-		auto uuid = obj["uuid"];
+		int uuid = obj["uuid"];
+		if (uuid == m_playerID) {
+			continue;
+		}
 		if (!m_objects->count(uuid)) { // If it's a new game object
 			GameObject* go = new GameObject();//
 			go->from_json(obj);
@@ -95,7 +98,12 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
-		auto uuid = obj["uuid"];
+		int uuid = obj["uuid"];
+		// Prevent deserializing self
+		if (uuid == m_playerID) {
+			continue;
+		}
+		// Determine whether the object is new or existing
 		if (!m_clientObjects->count(uuid)) { // If it's a new game object
 			GameObject* go = m_objects->at(uuid);
 			go->from_json(obj);
@@ -174,4 +182,11 @@ void GameObjectManager::insert(GameObject* go) {
 void GameObjectManager::insertClient(GameObject* go) {
 	// Adds or inserts existing information into the Manager
 	m_clientObjects->insert_or_assign(go->getUUID(), go);
+}
+
+/**
+* Sets the player ID so that the object with this ID will not be updated via JSON, only locally
+*/
+void GameObjectManager::setPlayerID(int uuid) {
+	m_playerID = uuid;
 }

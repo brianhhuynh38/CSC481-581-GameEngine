@@ -16,6 +16,8 @@ private:
 	std::map<int, GameObject*> *m_objects;
 	// Map of GameObjects controlled by the server
 	std::map<int, GameObject*> *m_clientObjects;
+	// The ID of the player under control of this client, maintained so that it is not updated externally
+	int m_playerID;
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 public:
@@ -86,6 +88,11 @@ public:
 	* @param go GameObject to be added to end of the object map
 	*/
 	void insertClient(GameObject* go);
+
+	/**
+	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
+	 */
+	void setPlayerID(int uuid);
 };
 
 #endif
