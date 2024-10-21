@@ -7,6 +7,8 @@
 #include "timeline.h"
 
 #include <map>
+#include <mutex>
+#include <condition_variable>
 
 class GameObjectManager {
 private:
@@ -20,6 +22,15 @@ private:
 	int m_playerID;
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
+
+	// Mutex used to lock gameObject (ie. rendering)
+	std::mutex *m_mutex;
+	// Conditition Variable used to block processes to avoid collisions inbetween functions
+	std::condition_variable *m_cv;
+	// The current ID of the GameObject being updated
+	int m_currentUUID;
+	// The current ID of the GameObject being updated via network connections
+	int m_currentClientUUID;
 public:
 
 	/**
@@ -27,7 +38,7 @@ public:
 	* 
 	* @param timeline: Reference to the timeline
 	*/
-	GameObjectManager(Timeline *timelineRef);
+	GameObjectManager(Timeline *timelineRef, std::mutex *mutex, std::condition_variable *cv);
 
 	/**
 	* Destructor that frees any allocated memory for the GameObjects
@@ -98,6 +109,13 @@ public:
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 	 */
 	void setPlayerID(int uuid);
+
+	/**
+	* Checks if there are any objects currently being modified
+	*/
+	bool checkForObjectConflict(int uuid) {
+		return m_currentUUID != uuid && m_currentClientUUID != uuid;
+	}
 
 };
 

@@ -174,8 +174,12 @@ int main(int argc, char* argv[]) {
 	// Create the entityController
 	EntityController* entityController = new EntityController(physics);
 	
+	// Global mutex and condition variable to be used across threads
+	std::mutex renderMtx;
+	std::condition_variable renderCV;
+
 	// Create gameObjectManager
-	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
+	GameObjectManager* gameObjectManager = new GameObjectManager(timeline, &renderMtx, &renderCV);
 
 	// The entity that the player is able to control
 	Entities::Player* player;
@@ -255,7 +259,7 @@ int main(int argc, char* argv[]) {
 	BoundaryZone* boundaryZone = new BoundaryZone(
 		1.0f, 1.0f,
 		600.0f, 200.0f,
-		32.0f, 1000.0f,
+		1.0f, 1000.0f,
 		cameraPosition,
 		50.0f,
 		"./Assets/Textures/wall.png",
@@ -282,84 +286,83 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
-	// Global mutex and condition variable to be used across threads
-	std::mutex mtx;
-	std::condition_variable cv;
+	int currentRenderingID = 0;
 
 	std::thread gameObjectThread([&]() {
 		while (true) {
-			{
-				std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-				cv.wait(lock);
-				std::cout << "GameObject thread loop.\n";
+			
+			//std::unique_lock<std::mutex> lock(renderMtx); // Lock the mutex
+			//renderCV.wait(lock, [&] { return currentRenderingID == false; });
+			//std::cout << "GameObject thread loop.\n";
+		
+			// Safely update the player object with the new deltaTime
+			timeline->updateTime(); // Update the timeline for deltaTime
+			// Safely update the physics of all entities
+			gameObjectManager->update();
 
-				// Safely update the physics of all entities
-				gameObjectManager->update();
-				mtx.unlock();
-				cv.notify_all();
-			}
+			//renderMtx.unlock();
+			//renderCV.notify_all();
+			
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
 
-	std::thread playerThread([&]() {
+	std::thread inputThread([&]() {
 		while (true) {
-			{
-				std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-				cv.wait(lock);
-				std::cout << "Player thread loop.\n";
 
-				// Safely update the player object with the new deltaTime
-				timeline->updateTime(); // Update the timeline for deltaTime
-				//playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
-				mtx.unlock();
-				cv.notify_all();
-			}
+			//std::cout << "Player thread loop.\n";
+
+			
+			
+			// Handles player input, including exit
+			input->takeInput();
+
+			//playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
+
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
 
-	std::thread networkThread([&]() {
-		while (true) {
-			{
-				std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-				std::cout << "Network thread loop.\n";
+	//std::thread networkThread([&]() {
+	//	while (true) {
+	//		
+	//		//std::unique_lock<std::mutex> lock(renderMtx); // Lock the mutex
+	//		std::cout << "Network thread loop.\n";
 
-				// Safely run the networking code
-				if (settings.networkType == 2) {
-					PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager);
-				}
-				else {
-					Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
-				}
-				mtx.unlock();
-				cv.notify_all();
-			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
-		}
-	});
+	//		
+	//		//renderMtx.unlock();
+	//		//renderCV.notify_all();
+	//		std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
+	//	}
+	//});
 
 
 	while (true) {
 		// TODO: Send client information update to the server
 		// Update request and subscriber
+		// Safely run the networking code
+		if (settings.networkType == 2) {
+			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager);
+		}
+		else {
+			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
+		}
 
 		// Prepares scene for rendering
 		Render::prepareScene();
 
+
+		std::cout << "Player Position: " << playerObject->getComponent<Components::Transform>()->getPosition()->toString();
+
 		// Updates the keyboard inputs
 		SDL_PumpEvents();
-		// Handles player input, including exit
-		input->takeInput();
-
-		if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
-			playerObject->getComponent<Components::Transform>()->setPosition(350.0f, 400.0f);
-		}
 
 		// Display all GameObjects
 		std::map<int, GameObject*>::iterator iterGO;
 		// Get entity map
 		std::map<int, GameObject*> objectMap = *gameObjectManager->getObjectMap();
+
+		//std::cout << "\n\n\nStart Rendering...\n\n\n";
 
 		// Loop through entities and display them all
 		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
@@ -384,8 +387,8 @@ int main(int argc, char* argv[]) {
 	}
 
 	gameObjectThread.join();
-	playerThread.join();
-	networkThread.join();
+	inputThread.join();
+	//networkThread.join();
 
 	delete w;
 	delete h;

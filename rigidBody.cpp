@@ -67,7 +67,7 @@ namespace Components {
 					Transform* transform = m_parent->getComponent<Transform>();
 					auto* player = static_cast<PlayerGO*>(m_parent);
 					Transform* spawnTransform = player->getSpawn()->getComponent<Transform>();
-					transform->updatePosition(*(spawnTransform->getPosition()));
+					transform->setPosition(spawnTransform->getPosition()->x, spawnTransform->getPosition()->y);
 				}
 				else if (m_mostRecentCollisionInfo.colliderType == 2) { // Boundary collision
 					auto* boundaryZone = static_cast<BoundaryZone*>(m_mostRecentCollisionInfo.collidedObj);

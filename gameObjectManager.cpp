@@ -10,7 +10,7 @@
 *
 * @param timeline: Reference to the timeline
 */
-GameObjectManager::GameObjectManager(Timeline* timelineRef) {
+GameObjectManager::GameObjectManager(Timeline* timelineRef, std::mutex *mutex, std::condition_variable *cv) {
 	// Set starting ID value
 	m_idTracker = 0;
 	// Set reference to timeline
@@ -19,6 +19,12 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	m_objects = new std::map<int, GameObject*>();
 	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
+
+	// Set mutex and condition variable, alongside any fields meant to track them
+	m_mutex = mutex;
+	m_cv = cv;
+	m_currentUUID = 0;
+	m_currentClientUUID = 0;
 }
 
 /**
