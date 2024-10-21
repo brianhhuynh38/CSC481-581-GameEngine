@@ -62,7 +62,7 @@ namespace PeerToPeer {
         playerGO->setSpawn(spawnPoints[playerGO->getUUID() % spawnPoints.size()]);
         // Insert PlayerGO into the gameObject Manager
         gameObjectManager->insert(playerGO);
-        gameObjectManager->insertClient(playerGO);
+        //gameObjectManager->insertClient(playerGO);
         // Sets the playerID into GameObjectManager so that it does not update incorrectly
         gameObjectManager->setPlayerID(playerGO->getUUID());
 
@@ -103,9 +103,10 @@ namespace PeerToPeer {
         subscriber->recv(serverInfo, zmq::recv_flags::dontwait);
         zmq_disconnect(subscriber, "tcp://localhost:5555");
 
-        //std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
-
         if (!serverInfo.empty()) {
+
+            //std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
+
             std::stringstream ss;
             ss.clear();
             ss.str(serverInfo.to_string());
@@ -143,11 +144,26 @@ namespace PeerToPeer {
         player->to_json(stringPlayer);
         zmq::message_t playerInfo("Client\n" + stringPlayer.dump());
 
-        std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
+        //std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
 
         // Iterate through opposing players
 	    std::map<int, GameObject*>::iterator iter;
         std::map<int, GameObject*> playerMap = *gameObjectManager->getClientObjectMap();
+
+		//// Receive client info
+		//zmq::message_t clientInfo;
+		//p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+
+		//if (!clientInfo.empty()) {
+		//	// Trim the client info string
+		//	std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
+
+		//	std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
+
+		//	// Update the player using the string
+		//	//gameObjectManager->deserialize(clientString, 2);
+		//	gameObjectManager->deserializeClient(clientString, 2);
+		//}
 
 		// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
 	    for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {

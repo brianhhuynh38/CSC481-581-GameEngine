@@ -44,7 +44,9 @@ void GameObjectManager::update() {
 		go->update(deltaTimeInSecs);
 		// If GameObject has a RigidBody, update collisions
 		if (Components::RigidBody *rb = go->getComponent<Components::RigidBody>()) {
-			rb->updateCollisions(*m_objects);
+			if (go->getUUID() == m_playerID) {
+				rb->updateCollisions(*m_objects);
+			}
 		}
 	}
 }
@@ -63,9 +65,7 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
 		auto uuid = obj["uuid"];
-		if (uuid == m_playerID) {
-			continue;
-		}
+		
 		if (!m_objects->count(uuid)) { // If it's a new game object
 			GameObject* go = new GameObject();//
 			go->from_json(obj);
@@ -76,9 +76,9 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 				insertClient(go);
 			}
 		}
-		else { // If it's an existing game object
+		else if (uuid != m_playerID) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
-			go->from_json(obj);
+			if (!go->getComponent<Components::PlayerInputPlatformer>()) { go->from_json(obj); }
 		}
 	}
 
@@ -97,25 +97,25 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	json j = json::parse(gameObjectString);
 
 	// Loop through objects in JSON array
-	for (const auto& obj : j) {
-		auto uuid = obj["uuid"];
-		// Prevent deserializing self
-		if (uuid == m_playerID) {
-			continue;
-		}
+	//for (const auto& obj : j) {
+		std::cout << "Game Object String: " << gameObjectString << "\n";
+		int uuid = j["uuid"].get<int>();
 		// Determine whether the object is new or existing
 		if (!m_clientObjects->count(uuid)) { // If it's a new game object
-			GameObject* go = m_objects->at(uuid);
-			go->from_json(obj);
+			GameObject* go = m_clientObjects->at(uuid);
+			go->from_json(j);
 			// Insert new object into the map
+			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 			insertClient(go);
 		}
 		else { // If it's an existing game object
 			GameObject* go = m_clientObjects->at(uuid);
-			go->from_json(obj);
+			go->from_json(j);
+			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+			//m_clientObjects->insert_or_assign(uuid, go);
 		}
-	}
-
+	//}
+		int i;
 	// Handle network type if necessary
 }
 
