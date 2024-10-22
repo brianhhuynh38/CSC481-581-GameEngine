@@ -103,7 +103,7 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	json j = json::parse(gameObjectString);
 
 	// Read in JSON array (should only be one object in peer to peer)
-	std::cout << "Game Object String: " << gameObjectString << "\n";
+	//std::cout << "Game Object String: " << gameObjectString << "\n";
 	int uuid = j["uuid"].get<int>();
 	// Determine whether the object is new or existing
 	if (!m_clientObjects->count(uuid)) { // If it's a new game object
@@ -161,7 +161,11 @@ std::map<int, GameObject*>* GameObjectManager::getClientObjectMap() {
 * Erases the object from the client map
 */
 void GameObjectManager::terminateClient(int uuidKey) {
-	m_clientObjects->erase(uuidKey);
+	// Find GameObject, then delete it
+	if (GameObject *go = m_clientObjects->at(uuidKey)) {
+		m_clientObjects->erase(uuidKey);
+		delete go;
+	}
 }
 
 /**

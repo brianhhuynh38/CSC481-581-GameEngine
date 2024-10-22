@@ -49,12 +49,12 @@ namespace Client {
             )
         );
 
-        std::cout << "Client identifier: " << clientIdentifier << "\n";
+       // std::cout << "Client identifier: " << clientIdentifier << "\n";
 
         // Trim the identifier off the json
         std::string playerString = reply.to_string().substr(reply.to_string().find('\n') + 1);
 
-        std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
+        //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
 
         // Parse the json string received from the server into playerGO
         json j = json::parse(playerString);
@@ -70,7 +70,7 @@ namespace Client {
         // Convert the player game object into JSON
         json stringPrint;
         playerGO->to_json(stringPrint);
-        std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
+        //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
 
         // Use the player ID to establish a unique socket for connections
         int portNum = 5558 + clientIdentifier;
@@ -88,7 +88,7 @@ namespace Client {
         subscriber->connect(ss.str());
         publisher->connect(ss2.str());
 
-        std::cout << "Server bound to ports: " << portNum << " and " << portNum2 << "\n";
+        //std::cout << "Server bound to ports: " << portNum << " and " << portNum2 << "\n";
 
 		subscriber->set(zmq::sockopt::subscribe, "");
 
@@ -121,10 +121,10 @@ namespace Client {
         // CLIENT-SERVER
         json stringPlayer;
         player->to_json(stringPlayer);
-        std::cout << "Translated Player: " << stringPlayer.dump() << "\n";
+        //std::cout << "Translated Player: " << stringPlayer.dump() << "\n";
         zmq::message_t playerInfo(stringPlayer.dump());
 
-        std::cout << "PUB TO SERVER: " << playerInfo.to_string() << "\n";
+        //std::cout << "PUB TO SERVER: " << playerInfo.to_string() << "\n";
         publisher->send(playerInfo, zmq::send_flags::dontwait);
 
        

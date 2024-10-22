@@ -61,11 +61,6 @@ namespace PeerToPeer {
                 // Parse the json received
                 json clientJSON = json::parse(clientString);
 
-                //std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
-
-                // Update the player using the string
-                //gameObjectManager->deserializeClient(clientString, 2);
-
                 // Update client from JSON and set to Kinematic to lessen performance impact on current client
                 clientGO->from_json(clientJSON);
                 clientGO->getComponent<Components::RigidBody>()->setIsKinematic(true);
@@ -77,21 +72,64 @@ namespace PeerToPeer {
                 int64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch).count();
 
                 // Terminate if 10 seconds or more have elapsed
-                if (currentTime - timeSinceLastMessage >= 10000) {
+                if (currentTime - timeSinceLastMessage >= 5000) {
                     gameObjectManager->terminateClient(uuid);
                     terminate = true;
                 }
             }
+			std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
 
         // TODO: If necessary send server disconnect information
 
-        return -1;
+        return 0;
     }
 
-    int runPlayerThread(zmq::socket_t* p2ppublisher, PlayerGO*& player) {
+    int runServerThread(std::string connectionAddress, GameObjectManager *gameObjectManager) {
+
+        zmq::context_t context { 1 };
+
+        zmq::socket_t subscriber { context, zmq::socket_type::sub };
+
+		// Set conflate value to only take most recent message
+		int conflate = 1;
+		zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+
+		// Set so that it only receives the information for the specified client
+		subscriber.connect(connectionAddress);
+		subscriber.set(zmq::sockopt::subscribe, "");
+
+        // Whether the thread should terminate
+        bool terminate = false;
+
+        while (!terminate) {
+            // Receive messages from the server as a subscriber for MovingEntities only
+		    zmq::message_t serverInfo;
+		    subscriber.recv(serverInfo, zmq::recv_flags::dontwait);
+
+		    if (!serverInfo.empty()) {
+			    //std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
+
+				// Trim the client info string
+				std::string serverString = serverInfo.to_string().substr(serverInfo.to_string().find('\n') + 1);
+
+                // Deserialize the string into json, then insert into the objects
+			    gameObjectManager->deserialize(serverString, 2);
+		    }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(15));
+        }
+
+        return 0;
+    }
+
+    int runPlayerThread(PlayerGO*& player) {
         // Get player UUID
         int uuid = player->getUUID();
+
+        zmq::context_t context { 1 };
+        zmq::socket_t p2ppublisher { context, zmq::socket_type::pub };
+
         // Populate json message to send
         json stringPlayer;
         // Bool to determine if the player has terminated
@@ -103,8 +141,10 @@ namespace PeerToPeer {
             player->to_json(stringPlayer);
             zmq::message_t playerInfo(std::to_string(uuid) + "\n" + stringPlayer.dump());
 
-            //send messages
-            p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+            // Send messages to all listeners
+            p2ppublisher.send(playerInfo, zmq::send_flags::dontwait);
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
 
         // TODO: Handle disconnect here, make a sub on the server to receive the information of client disconnect,
@@ -148,12 +188,12 @@ namespace PeerToPeer {
             )
         );
 
-        std::cout << "Client identifier: " << clientIdentifier << "\n";
+        //std::cout << "Client identifier: " << clientIdentifier << "\n";
 
         // Trim the identifier off the json
         std::string playerString = reply.to_string().substr(reply.to_string().find('\n') + 1);
 
-        std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
+        //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
 
         // Parse the json string received from the server into playerGO
         json j = json::parse(playerString);
@@ -166,16 +206,17 @@ namespace PeerToPeer {
         // Sets the playerID into GameObjectManager so that it does not update incorrectly
         gameObjectManager->setPlayerID(playerGO->getUUID());
 
-        threads->push_back(std::thread(runPlayerThread, std::ref(p2ppublisher), std::ref(playerGO)));
-
+        // Create thread for player publisher
+        //threads->push_back(std::thread(runPlayerThread, std::ref(playerGO)));
+        
         // Convert the player game object into JSON
         json stringPrint;
         playerGO->to_json(stringPrint);
-        std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
+        //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
 
         // Use the player ID to establish a unique socket for connections
         int portNum = 5558 + clientIdentifier;
-        int p2pPortNum = 5558 + playerGO->getUUID();
+        int p2pPortNum = 6558 + playerGO->getUUID();
 
         std::stringstream ss;
         ss << "tcp://localhost:" << portNum;
@@ -222,20 +263,20 @@ namespace PeerToPeer {
             std::string firstLine;
             std::getline(ss, firstLine);
 
-            // Now, extract the clock from the first line
-            std::stringstream clockStream(firstLine);
-            int64_t clock;
-            if (!(clockStream >> clock)) {
-                std::cerr << "Failed to parse clock value." << std::endl;
-                // return -1;
-            }
+            //// Now, extract the clock from the first line
+            //std::stringstream clockStream(firstLine);
+            //int64_t clock;
+            //if (!(clockStream >> clock)) {
+            //    std::cerr << "Failed to parse clock value." << std::endl;
+            //    // return -1;
+            //}
 
-            // Calculate the delay (SUICIDE-SNAIL SOLUTION)
-            const auto delay = std::clock() - clock;
-            if (delay > MAX_ALLOWED_DELAY) {
-                std::cerr << "E: subscriber cannot keep up, aborting. Delay=" << delay << std::endl;
-                // return -1;
-            }
+            //// Calculate the delay (SUICIDE-SNAIL SOLUTION)
+            //const auto delay = std::clock() - clock;
+            //if (delay > MAX_ALLOWED_DELAY) {
+            //    std::cerr << "E: subscriber cannot keep up, aborting. Delay=" << delay << std::endl;
+            //    // return -1;
+            //}
 
             // Remove clock value from serverInfo string
 
@@ -262,10 +303,16 @@ namespace PeerToPeer {
 
             // Calculate port and connect with both
             int portNum = 5558 + objectId;
+            int portNum2 = 6558 + objectId;
+
             std::stringstream ss;
             ss << "tcp://localhost:" << portNum;
+
+            std::stringstream ss2;
+            ss2 << "tcp://localhost:" << portNum2;
+
             p2ppublisher->connect(ss.str());
-            p2psubscriber->connect(ss.str());
+            p2psubscriber->connect(ss2.str());
 
             //send messages
             p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
@@ -278,7 +325,7 @@ namespace PeerToPeer {
                 // Trim the client info string
                 std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
 
-                std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
+                //std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
 
                 // Update the player using the string
                 //gameObjectManager->deserialize(clientString, 2);

@@ -352,7 +352,7 @@ int main(int argc, char* argv[]) {
 		Render::prepareScene();
 
 
-		std::cout << "Player Position: " << playerObject->getComponent<Components::Transform>()->getPosition()->toString();
+		//std::cout << "Player Position: " << playerObject->getComponent<Components::Transform>()->getPosition()->toString();
 
 		// Updates the keyboard inputs
 		SDL_PumpEvents();
