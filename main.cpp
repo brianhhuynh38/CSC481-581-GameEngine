@@ -213,37 +213,6 @@ int main(int argc, char* argv[]) {
 	// Test PlayerObject
 	PlayerGO* playerObject = new PlayerGO();
 
-	// Create a vector of client threads so that they can be joined later on
-	std::vector<std::thread> clientThreads = std::vector<std::thread>();
-
-	// Update request and subscriber. Put on a new thread
-	if (settings.networkType == 2) {
-		PeerToPeer::startup(
-			&serverToClientSubscriber,
-			&clientToServerRequest,
-			&peerToPeerPublisher,
-			&peerToPeerSubscriber,
-			playerObject,
-			gameObjectManager,
-			settings,
-			spawnPoints,
-			&clientThreads
-		);
-	}
-	else {
-		Client::startup(
-			&serverToClientSubscriber,
-			&clientToServerRequest,
-			&clientToServerPublisher,
-			playerObject,
-			gameObjectManager,
-			settings,
-			spawnPoints
-		);
-	}
-	// Set the input handler in main
-	playerObject->getComponent<Components::PlayerInputPlatformer>()->setInputHandler(inputHandler);
-
 	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
 
 	// Test StaticObject
@@ -284,9 +253,47 @@ int main(int argc, char* argv[]) {
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
 	proportionalScalingActive = false;
 
+	// Create a vector of client threads so that they can be joined later on
+	std::vector<std::thread> clientThreads = std::vector<std::thread>();
+
 	std::cout << "globalScaling: " << globalScaling.x << "x" << globalScaling.y << "\n";
 
 	int currentRenderingID = 0;
+
+	std::mutex playerMutex;
+
+	// Update request and subscriber. Put on a new thread
+	if (settings.networkType == 2) {
+		PeerToPeer::startup(
+			&serverToClientSubscriber,
+			&clientToServerRequest,
+			&peerToPeerPublisher,
+			&peerToPeerSubscriber,
+			playerObject,
+			gameObjectManager,
+			settings,
+			spawnPoints,
+			&clientThreads
+		);
+	}
+	else {
+		Client::startup(
+			&serverToClientSubscriber,
+			&clientToServerRequest,
+			&clientToServerPublisher,
+			playerObject,
+			gameObjectManager,
+			settings,
+			spawnPoints
+		);
+	}
+	// Set the input handler in main
+	{
+		std::lock_guard<std::mutex> lock(playerMutex);
+		playerObject->getComponent<Components::PlayerInputPlatformer>()->setInputHandler(inputHandler);
+	}
+	
+
 
 	std::thread gameObjectThread([&]() {
 		while (true) {
@@ -298,7 +305,10 @@ int main(int argc, char* argv[]) {
 			// Safely update the player object with the new deltaTime
 			timeline->updateTime(); // Update the timeline for deltaTime
 			// Safely update the physics of all entities
-			gameObjectManager->update();
+			{
+				std::lock_guard<std::mutex> lock(playerMutex);
+				gameObjectManager->update();
+			}
 
 			//renderMtx.unlock();
 			//renderCV.notify_all();
@@ -312,8 +322,6 @@ int main(int argc, char* argv[]) {
 
 			//std::cout << "Player thread loop.\n";
 
-			
-			
 			// Handles player input, including exit
 			input->takeInput();
 
@@ -342,7 +350,7 @@ int main(int argc, char* argv[]) {
 		// Update request and subscriber
 		// Safely run the networking code
 		if (settings.networkType == 2) {
-			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager);
+			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager, &clientThreads);
 		}
 		else {
 			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);

@@ -74,6 +74,10 @@
     <IncludePath>$(ProjectDir)\Libs\SDL2_image-2.8.2\include;$(ProjectDir)\Libs\SDL2-2.30.6\include;$(ProjectDir)\Libs\libzmq-mt-4_3_5\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Libs\SDL2-2.30.6\lib\x64;$(ProjectDir)\Libs\SDL2_image-2.8.2\lib\x64;$(ProjectDir)\Libs\libzmq-mt-4_3_5\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)\Libs\SDL2_image-2.8.2\include;$(ProjectDir)\Libs\SDL2-2.30.6\include;$(ProjectDir)\Libs\libzmq-mt-4_3_5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Libs\SDL2-2.30.6\lib\x64;$(ProjectDir)\Libs\SDL2_image-2.8.2\lib\x64;$(ProjectDir)\Libs\libzmq-mt-4_3_5\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -130,6 +134,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;libzmq-mt-4_3_5.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

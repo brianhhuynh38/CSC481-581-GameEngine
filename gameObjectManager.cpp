@@ -44,16 +44,26 @@ void GameObjectManager::update() {
 	std::map<int, GameObject*>::iterator iter;
 	// Updates each GameObject in the map
 	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
-		// Get GameObject
+		// Get GameObject and set current ID being updated for mutex
 		GameObject* go = iter->second;
-		// Update each GameObject component
-		go->update(deltaTimeInSecs);
-		// If GameObject has a RigidBody, update collisions
-		if (Components::RigidBody *rb = go->getComponent<Components::RigidBody>()) {
-			if (go->getUUID() == m_playerID) {
-				rb->updateCollisions(*m_objects);
+		m_currentUUID = go->getUUID();
+		{ // Lock if the object isn't being updated anywhere else
+			std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
+			m_cv->wait(lock, [&] { return m_currentClientUUID != m_currentUUID && m_currentDeserializeUUID != m_currentUUID; });
+
+			// Update each GameObject component
+			go->update(deltaTimeInSecs);
+			// If GameObject has a RigidBody, update collisions
+			if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
+				if (go->getUUID() == m_playerID) {
+					rb->updateCollisions(*m_objects);
+				}
 			}
+			// Unlock for another function once this
+			m_currentUUID = 0;
+			m_cv->notify_one();
 		}
+		
 	}
 }
 
@@ -64,9 +74,12 @@ void GameObjectManager::update() {
 * @param movingEntityString: string containing movingObject information from the server
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
-void GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
-	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
+std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
+	// Parse json
 	json j = json::parse(gameObjectString);
+
+	// Create vector of integers: the IDs of any new player clients added
+	std::vector<int> intVector = std::vector<int>();
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
@@ -80,15 +93,27 @@ void GameObjectManager::deserialize(std::string gameObjectString, int networkTyp
 			if (go->getComponent<Components::PlayerInputPlatformer>()) {
 				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 				insertClient(go);
+				if (uuid != m_playerID) {
+					intVector.push_back(go->getUUID());
+				}
 			}
 		}
 		else if (uuid != m_playerID) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
-			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) { go->from_json(obj); }
+			m_currentDeserializeUUID = go->getUUID();
+			{
+				std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
+				m_cv->wait(lock, [&] { return m_currentUUID != m_currentDeserializeUUID && m_currentSerializeUUID != m_currentDeserializeUUID; });
+
+				if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) { go->from_json(obj); }
+
+				m_currentDeserializeUUID = 0;
+				m_cv->notify_one();
+			}
 		}
 	}
-
-	// Handle network type if necessary
+	// Return the vector of new playerIDs
+	return intVector;
 }
 
 /**
@@ -115,8 +140,19 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	}
 	else { // If it's an existing game object
 		GameObject* go = m_clientObjects->at(uuid);
-		go->from_json(j);
-		go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+
+		m_currentClientUUID = go->getUUID();
+		{
+			std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
+			m_cv->wait(lock, [&] { return m_currentUUID != m_currentClientUUID && m_currentSerializeUUID != m_currentClientUUID; });
+
+			go->from_json(j);
+			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+
+			m_currentClientUUID = 0;
+			m_cv->notify_one();
+		}
+		
 		//m_clientObjects->insert_or_assign(uuid, go);
 	}
 	// Handle network type if necessary
@@ -135,9 +171,18 @@ void GameObjectManager::serialize(std::string& outputString) {
 	json j;
 
 	for (const auto& [id, go] : *m_objects) {
-		json gameObjectJson;
-		go->to_json(gameObjectJson);
-		j.push_back(gameObjectJson);
+		m_currentSerializeUUID = go->getUUID();
+		{
+			std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
+			m_cv->wait(lock, [&] { return m_currentUUID != m_currentSerializeUUID && m_currentDeserializeUUID != m_currentSerializeUUID; });
+			
+			json gameObjectJson;
+			go->to_json(gameObjectJson);
+			j.push_back(gameObjectJson);
+
+			m_currentSerializeUUID = 0;
+			m_cv->notify_one();
+		}
 	}
 
 	outputString = j.dump(); // Convert JSON to string

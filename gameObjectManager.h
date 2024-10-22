@@ -27,10 +27,15 @@ private:
 	std::mutex *m_mutex;
 	// Conditition Variable used to block processes to avoid collisions inbetween functions
 	std::condition_variable *m_cv;
+
 	// The current ID of the GameObject being updated
 	int m_currentUUID;
 	// The current ID of the GameObject being updated via network connections
 	int m_currentClientUUID;
+	// The current ID of the GameObject being written out via serialize
+	int m_currentSerializeUUID;
+	// The current ID of the GameObject being deserialized and updated
+	int m_currentDeserializeUUID;
 public:
 
 	/**
@@ -57,7 +62,7 @@ public:
 	* @param movingEntityString: string containing movingObject information from the server
 	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 	*/
-	void deserialize(std::string gameObjectString, int networkType);
+	std::vector<int> deserialize(std::string gameObjectString, int networkType);
 
 	/**
 	* Deserializes a string of playerGO and inserts those GameObjects into the client object map.

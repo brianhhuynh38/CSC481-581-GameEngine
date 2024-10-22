@@ -49,6 +49,7 @@ void GameObject::update(double deltaTimeInSecs) {
 	for (auto& [type, component] : m_components) {
 		component->update();  // Update each component
 	}
+	//std::mutex::unlock(lock);
 }
 
 void GameObject::setUUID(int uuid) {
@@ -110,9 +111,11 @@ void GameObject::from_json(const json& j) {
 			this
 		);
 	}
+	
 }
 
 void GameObject::to_json(json& j) {
+
 	// Set UUID
 	j["uuid"] = m_uuid;
 
@@ -150,6 +153,7 @@ void GameObject::to_json(json& j) {
 			{"jumpvector", {{"x", playerInput->getJumpVector().x}, {"y", playerInput->getJumpVector().y}}}
 		};
 	}
+	
 }
 
 // Example for main:

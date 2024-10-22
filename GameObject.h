@@ -19,6 +19,7 @@ using json = nlohmann::json;
 #include <map>
 #include <vector>
 #include <string>
+#include <mutex>
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-
