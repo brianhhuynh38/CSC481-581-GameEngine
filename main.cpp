@@ -251,7 +251,7 @@ int main(int argc, char* argv[]) {
 	// Sets global scaling to 80 by default (1280x720), 
 	// Sets it to be on proportional scaling by default
 	globalScaling = Utils::Vector2D((float) *w / (float) DEFAULT_SCALING_WIDTH, (float) *h / (float) DEFAULT_SCALING_HEIGHT);
-	proportionalScalingActive = false;
+	proportionalScalingActive = true;
 
 	// Create a vector of client threads so that they can be joined later on
 	std::vector<std::thread> clientThreads = std::vector<std::thread>();
@@ -289,7 +289,7 @@ int main(int argc, char* argv[]) {
 	}
 	// Set the input handler in main
 	{
-		std::lock_guard<std::mutex> lock(playerMutex);
+		//std::lock_guard<std::mutex> lock(playerMutex);
 		playerObject->getComponent<Components::PlayerInputPlatformer>()->setInputHandler(inputHandler);
 	}
 	
@@ -306,10 +306,10 @@ int main(int argc, char* argv[]) {
 			timeline->updateTime(); // Update the timeline for deltaTime
 			// Safely update the physics of all entities
 			{
-				std::lock_guard<std::mutex> lock(playerMutex);
+				//std::lock_guard<std::mutex> lock(playerMutex);
 				gameObjectManager->update();
 			}
-
+			
 			//renderMtx.unlock();
 			//renderCV.notify_all();
 			

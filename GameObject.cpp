@@ -97,10 +97,17 @@ void GameObject::from_json(const json& j) {
 	}
 
 	if (j.contains("texturemesh")) {
+		Components::TextureMesh *tm = getComponent<Components::TextureMesh>();
 		auto textureMeshData = j["texturemesh"];
-		addComponent<Components::TextureMesh>(
-			textureMeshData["texturefilepath"]
-		);
+		if (tm) {
+			tm->setTextureFilePath(textureMeshData["texturefilepath"]);
+		}
+		else {
+			addComponent<Components::TextureMesh>(
+				textureMeshData["texturefilepath"]
+			);
+		}
+		
 	}
 
 	if (j.contains("playerinput")) {

@@ -79,7 +79,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 			insert(go);
 			if (go->getComponent<Components::PlayerInputPlatformer>()) {
 				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-				insertClient(go);
+				//insertClient(go);
 				if (uuid != m_playerID) {
 					intVector.push_back(go->getUUID());
 				}
@@ -87,7 +87,9 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 		}
 		else if (uuid != m_playerID) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
-			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) { go->from_json(obj); }
+			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) {
+				go->from_json(obj);
+			}
 		}
 	}
 	// Return the vector of new playerIDs
@@ -105,22 +107,33 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
 	json j = json::parse(gameObjectString);
 
+	std::cout << "JSON from deserialize: " << j.dump() << "\n";
+
 	// Read in JSON array (should only be one object in peer to peer)
 	//std::cout << "Game Object String: " << gameObjectString << "\n";
 	int uuid = j["uuid"].get<int>();
 	// Determine whether the object is new or existing
-	if (!m_clientObjects->count(uuid)) { // If it's a new game object
-		GameObject* go = m_clientObjects->at(uuid);
-		go->from_json(j);
-		// Insert new object into the map
-		go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-		insertClient(go);
+	try {
+		if (!m_clientObjects->count(uuid)) { // If it's a new game object
+			GameObject* go = new GameObject();
+			go->from_json(j);
+			// Insert new object into the map
+			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+			insertClient(go);
+			insert(go);
+		}
+		else { // If it's an existing game object
+			GameObject* go = m_clientObjects->at(uuid);
+			go->from_json(j);
+			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+
+			std::cout << "Update existing player \n";
+		}
 	}
-	else { // If it's an existing game object
-		GameObject* go = m_clientObjects->at(uuid);
-		go->from_json(j);
-		go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+	catch (std::exception e) {
+		//std::cout << e.what() << "\n";
 	}
+	
 	// Handle network type if necessary
 }
 
@@ -166,6 +179,7 @@ void GameObjectManager::terminateClient(int uuidKey) {
 	// Find GameObject, then delete it
 	if (GameObject *go = m_clientObjects->at(uuidKey)) {
 		m_clientObjects->erase(uuidKey);
+		m_objects->erase(uuidKey);
 		delete go;
 	}
 }

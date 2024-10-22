@@ -77,13 +77,15 @@ namespace PeerToPeer {
                 int64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch).count();
 
                 // Terminate if 10 seconds or more have elapsed
-                if (currentTime - timeSinceLastMessage >= 5000) {
+                if (currentTime - timeSinceLastMessage >= 10000) {
                     gameObjectManager->terminateClient(clientID);
                     terminate = true;
 
                     // Send client UUID to the server to terminate
                     zmq::message_t disconnectMessage(std::to_string(clientID));
                     disconnectSocket.send(disconnectMessage, zmq::send_flags::none);
+
+                    std::cout << "\n\n\nTerminated Other Client at PlayerID " << clientID << "\n\n\n";
                 }
             }
 			std::this_thread::sleep_for(std::chrono::milliseconds(15));
@@ -480,6 +482,8 @@ namespace PeerToPeer {
 		subscriber->recv(serverInfo, zmq::recv_flags::dontwait);
 		//zmq_disconnect(subscriber, "tcp://localhost:5555");
 
+        std::vector<int> idVector;
+
 		if (!serverInfo.empty()) {
 			//std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
 
@@ -511,58 +515,178 @@ namespace PeerToPeer {
 			// Remove clock value from serverInfo string
 
 			std::getline(ss, firstLine);
-			gameObjectManager->deserialize(firstLine, 2);
+			idVector = gameObjectManager->deserialize(firstLine, 2);
+
+            if (!idVector.empty()) {
+                std::cout << "ID Vector Results: ";
+                for (int id : idVector) {
+                    std::cout << id << ", ";
+                }
+                std::cout << "\n";
+            }
+
 			//entityController->updateEntitiesByString(serverInfo.to_string(), 2);
 		}
 
 		// PEER TO PEER
 		json stringPlayer;
 		player->to_json(stringPlayer);
-		zmq::message_t playerInfo("Client\n" + stringPlayer.dump());
+		zmq::message_t playerInfo(std::to_string(player->getUUID()) + "\n" + stringPlayer.dump());
+
+
+        int portNum = 6558 + player->getUUID();
+        p2ppublisher->connect("tcp://localhost:" + std::to_string(portNum));
+
+        // Send playerInfo
+        p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
 
 		//std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
 
+        for (int id : idVector) {
+            threads->push_back(std::thread(runClientThread, id, std::ref(gameObjectManager)));
+        }
+
 		// Iterate through opposing players
-		std::map<int, GameObject*>::iterator iter;
-		std::map<int, GameObject*> playerMap = *gameObjectManager->getClientObjectMap();
+		//std::map<int, GameObject*>::iterator iter;
+		//std::map<int, GameObject*> playerMap = *gameObjectManager->getClientObjectMap();
 
-		// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
-		for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
+		//// Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
+		//for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
 
-			int objectId = iter->first; // Get the ID of the current entity
+		//	int objectId = iter->first; // Get the ID of the current entity
 
-			// Calculate port and connect with both
-			int portNum = 5558 + objectId;
-			int portNum2 = 6558 + objectId;
+		//	// Calculate port and connect with both
+		//	int portNum = 5558 + objectId;
+		//	int portNum2 = 6558 + objectId;
 
-			std::stringstream ss;
-			ss << "tcp://localhost:" << portNum;
+		//	std::stringstream ss;
+		//	ss << "tcp://localhost:" << portNum;
 
-			std::stringstream ss2;
-			ss2 << "tcp://localhost:" << portNum2;
+		//	std::stringstream ss2;
+		//	ss2 << "tcp://localhost:" << portNum2;
 
-			p2ppublisher->connect(ss.str());
-			p2psubscriber->connect(ss2.str());
+		//	p2ppublisher->connect(ss.str());
+		//	p2psubscriber->connect(ss2.str());
 
-			//send messages
-			p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+		//	//send messages
+		//	p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
 
-			// Receive client info
-			zmq::message_t clientInfo;
-			p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+            
 
-			if (!clientInfo.empty()) {
-				// Trim the client info string
-				std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
+			//// Receive client info
+			//zmq::message_t clientInfo;
+			//p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
 
-				//std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
+			//if (!clientInfo.empty()) {
+			//	// Trim the client info string
+			//	std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
 
-				// Update the player using the string
-				//gameObjectManager->deserialize(clientString, 2);
-				gameObjectManager->deserializeClient(clientString, 2);
-			}
-		}
+			//	//std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
+
+			//	// Update the player using the string
+			//	//gameObjectManager->deserialize(clientString, 2);
+			//	/*std::vector<int> idVector = */gameObjectManager->deserializeClient(clientString, 2);
+			//}
+		//}
 		return 0;
 	}
+
+    ///**
+    //* Run the networking communication setup
+    //* @param subscriber Subscriber to use
+    //*/
+    //int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, PlayerGO*& player,
+    //    GameObjectManager*& gameObjectManager, std::vector<std::thread>* threads) {
+
+    //    // Receive messages from the server as a subscriber for MovingEntities only
+    //    zmq::message_t serverInfo;
+    //    //zmq_connect(subscriber, "tcp://localhost:5555");
+    //    subscriber->recv(serverInfo, zmq::recv_flags::dontwait);
+    //    //zmq_disconnect(subscriber, "tcp://localhost:5555");
+
+    //    if (!serverInfo.empty()) {
+    //        //std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
+
+    //        std::stringstream ss;
+    //        ss.clear();
+    //        ss.str(serverInfo.to_string());
+
+    //        //std::cout << "Received from Server: " << serverInfo.to_string() << "\n";
+
+    //        // Read the first line to extract the clock value
+    //        std::string firstLine;
+    //        std::getline(ss, firstLine);
+
+    //        //// Now, extract the clock from the first line
+    //        //std::stringstream clockStream(firstLine);
+    //        //int64_t clock;
+    //        //if (!(clockStream >> clock)) {
+    //        //    std::cerr << "Failed to parse clock value." << std::endl;
+    //        //    // return -1;
+    //        //}
+
+    //        //// Calculate the delay (SUICIDE-SNAIL SOLUTION)
+    //        //const auto delay = std::clock() - clock;
+    //        //if (delay > MAX_ALLOWED_DELAY) {
+    //        //    std::cerr << "E: subscriber cannot keep up, aborting. Delay=" << delay << std::endl;
+    //        //    // return -1;
+    //        //}
+
+    //        // Remove clock value from serverInfo string
+
+    //        std::getline(ss, firstLine);
+    //        gameObjectManager->deserialize(firstLine, 2);
+    //        //entityController->updateEntitiesByString(serverInfo.to_string(), 2);
+    //    }
+
+    //    // PEER TO PEER
+    //    json stringPlayer;
+    //    player->to_json(stringPlayer);
+    //    zmq::message_t playerInfo(std::to_string(player->getUUID()) + "\n" + stringPlayer.dump());
+
+    //    //std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
+
+    //    // Iterate through opposing players
+    //    std::map<int, GameObject*>::iterator iter;
+    //    std::map<int, GameObject*> playerMap = *gameObjectManager->getClientObjectMap();
+
+    //    // Updates the physics vectors for each entity in the list of entities that is tagged as "affectedByPhysics"
+    //    for (iter = playerMap.begin(); iter != playerMap.end(); ++iter) {
+
+    //        int objectId = iter->first; // Get the ID of the current entity
+
+    //        // Calculate port and connect with both
+    //        int portNum = 5558 + objectId;
+    //        int portNum2 = 6558 + objectId;
+
+    //        std::stringstream ss;
+    //        ss << "tcp://localhost:" << portNum;
+
+    //        std::stringstream ss2;
+    //        ss2 << "tcp://localhost:" << portNum2;
+
+    //        p2ppublisher->connect(ss.str());
+    //        p2psubscriber->connect(ss2.str());
+
+    //        //send messages
+    //        p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+
+    //        // Receive client info
+    //        zmq::message_t clientInfo;
+    //        p2psubscriber->recv(clientInfo, zmq::recv_flags::dontwait);
+
+    //        if (!clientInfo.empty()) {
+    //            // Trim the client info string
+    //            std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
+
+    //            //std::cout << "Subscriber Client Info: " << clientString << "\n\n\n\n\n";
+
+    //            // Update the player using the string
+    //            //gameObjectManager->deserialize(clientString, 2);
+    //            gameObjectManager->deserializeClient(clientString, 2);
+    //        }
+    //    }
+    //    return 0;
+    //}
     
 }
