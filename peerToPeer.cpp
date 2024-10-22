@@ -29,14 +29,18 @@ namespace PeerToPeer {
         zmq::context_t context{ 1 };
         // Create a subscriber using a Sub model
         zmq::socket_t p2psubscriber{ context, zmq::socket_type::sub };
+        zmq::socket_t disconnectSocket{ context, zmq::socket_type::pub };
 
         // Set conflate value to only take most recent message
         int conflate = 1;
         zmq_setsockopt(p2psubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+        zmq_setsockopt(disconnectSocket, ZMQ_CONFLATE, &conflate, sizeof(conflate));
 
         // Set so that it only receives the information for the specified client
         p2psubscriber.connect(addressString);
         p2psubscriber.set(zmq::sockopt::subscribe, std::to_string(uuid));
+
+        disconnectSocket.bind("tcp://*:5550");
 
         // Set method of thread termination
         bool terminate = false;
@@ -75,13 +79,15 @@ namespace PeerToPeer {
                 if (currentTime - timeSinceLastMessage >= 5000) {
                     gameObjectManager->terminateClient(uuid);
                     terminate = true;
+
+                    // Send client UUID to the server to terminate
+                    zmq::message_t disconnectMessage(std::to_string(uuid));
+                    disconnectSocket.send(disconnectMessage);
+
                 }
             }
 			std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
-
-        // TODO: If necessary send server disconnect information
-
         return 0;
     }
 
@@ -89,15 +95,15 @@ namespace PeerToPeer {
 
         zmq::context_t context { 1 };
 
-        zmq::socket_t subscriber { context, zmq::socket_type::sub };
+        zmq::socket_t serverSubscriber { context, zmq::socket_type::sub };
 
 		// Set conflate value to only take most recent message
 		int conflate = 1;
-		zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+		zmq_setsockopt(serverSubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
 
 		// Set so that it only receives the information for the specified client
-		subscriber.connect(connectionAddress);
-		subscriber.set(zmq::sockopt::subscribe, "");
+		serverSubscriber.connect(connectionAddress);
+		serverSubscriber.set(zmq::sockopt::subscribe, "");
 
         // Whether the thread should terminate
         bool terminate = false;
@@ -105,7 +111,7 @@ namespace PeerToPeer {
         while (!terminate) {
             // Receive messages from the server as a subscriber for MovingEntities only
 		    zmq::message_t serverInfo;
-		    subscriber.recv(serverInfo, zmq::recv_flags::dontwait);
+		    serverSubscriber.recv(serverInfo, zmq::recv_flags::dontwait);
 
 		    if (!serverInfo.empty()) {
 			    //std::cout << "Information from the server: " << serverInfo.to_string() << "\n";
@@ -127,8 +133,17 @@ namespace PeerToPeer {
         // Get player UUID
         int uuid = player->getUUID();
 
-        zmq::context_t context { 1 };
+        zmq::context_t context { 2 };
         zmq::socket_t p2ppublisher { context, zmq::socket_type::pub };
+
+        // Set to only receive last message (theoretically)
+        int conflate = 1;
+        zmq_setsockopt(p2ppublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+
+        // Bind publisher to an address string
+        int portNum = 5558 + uuid;
+        std::string address = "tcp://localhost:" + uuid;
+        p2ppublisher.bind(address);
 
         // Populate json message to send
         json stringPlayer;
@@ -147,8 +162,6 @@ namespace PeerToPeer {
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
 
-        // TODO: Handle disconnect here, make a sub on the server to receive the information of client disconnect,
-        // then remove from the GameObjectManager and from
 
         return 0;
     }
@@ -159,6 +172,84 @@ namespace PeerToPeer {
     * @param request Request to setup
     */
     int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
+        PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints,
+        std::vector<std::thread>* threads) {
+
+        // Set socket options
+        int conflate = 1;
+        zmq_setsockopt(subscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+
+        request->connect("tcp://localhost:5556");
+
+        // Send message to server and wait to receive client identifier
+        zmq::message_t msg(std::to_string(2));
+        request->send(msg, zmq::send_flags::none);
+
+        // Sleep for 2 seconds to guarantee connection
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+
+        // Receive response from server 
+        zmq::message_t reply;
+        request->recv(reply);
+
+        //std::cout << "Received client identifier: " << reply.to_string() << "\n";
+        // TODO: Get the number from the end of the first line identifier (ex. Client_1, get 1 and store in int)
+        int clientIdentifier = std::stoi(
+            reply.to_string().substr(
+                reply.to_string().find('_') + 1
+            )
+        );
+
+        //std::cout << "Client identifier: " << clientIdentifier << "\n";
+
+        // Trim the identifier off the json
+        std::string playerString = reply.to_string().substr(reply.to_string().find('\n') + 1);
+
+        // Parse the json string received from the server into playerGO
+        json j = json::parse(playerString);
+        playerGO->from_json(j);
+
+        // Sets a spawn point based off the size of the list of SpawnPoints
+        playerGO->setSpawn(spawnPoints[playerGO->getUUID() % spawnPoints.size()]);
+        // Insert PlayerGO into the gameObject Manager
+        gameObjectManager->insert(playerGO);
+        // Sets the playerID into GameObjectManager so that it does not update incorrectly
+        gameObjectManager->setPlayerID(playerGO->getUUID());
+
+        // Create thread for player publisher
+        threads->push_back(std::thread(runPlayerThread, std::ref(playerGO)));
+
+        // Convert the player game object into JSON
+        json stringPrint;
+        playerGO->to_json(stringPrint);
+        //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
+
+        // Use the player ID to establish a unique socket for connections
+        int portNum = 5558 + clientIdentifier;
+        int p2pPortNum = 6558 + playerGO->getUUID();
+
+        std::stringstream ss;
+        ss << "tcp://localhost:" << portNum;
+
+        // Set to only receive last message (theoretically)
+        zmq_setsockopt(p2ppublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+        zmq_setsockopt(p2psubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+
+        subscriber->connect(ss.str());
+
+        // Set the client identifier (SECTION 5)
+        subscriber->set(zmq::sockopt::subscribe, "");
+        p2psubscriber->set(zmq::sockopt::subscribe, "");
+
+        return 0;
+    }
+
+    /**
+    * Sets up client parameters and interactions
+    * @param subscriber Subscriber to setup
+    * @param request Request to setup
+    */
+    int oldStartup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
         PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints,
         std::vector<std::thread> *threads) {
 
