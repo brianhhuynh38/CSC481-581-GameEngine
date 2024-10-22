@@ -76,8 +76,8 @@ namespace PeerToPeer {
                 auto timeCheckEpoch = std::chrono::high_resolution_clock::now().time_since_epoch();
                 int64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch).count();
 
-                // Terminate if 10 seconds or more have elapsed
-                if (currentTime - timeSinceLastMessage >= 10000) {
+                // Terminate if 5 seconds or more have elapsed without any messages
+                if (currentTime - timeSinceLastMessage >= 5000) {
                     gameObjectManager->terminateClient(clientID);
                     terminate = true;
 
