@@ -77,15 +77,16 @@ namespace PeerToPeer {
                 int64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch).count();
 
                 // Terminate if 5 seconds or more have elapsed without any messages
-                if (currentTime - timeSinceLastMessage >= 5000) {
+                if (currentTime - timeSinceLastMessage >= 5000 and gameObjectManager->getClientObjectMap()->count(clientID)) {
+                    std::cout << "\n\n\nTry to terminate client " << clientID << "\n\n\n";
                     gameObjectManager->terminateClient(clientID);
                     terminate = true;
 
                     // Send client UUID to the server to terminate
                     zmq::message_t disconnectMessage(std::to_string(clientID));
                     disconnectSocket.send(disconnectMessage, zmq::send_flags::none);
-
                     std::cout << "\n\n\nTerminated Other Client at PlayerID " << clientID << "\n\n\n";
+                    
                 }
             }
 			std::this_thread::sleep_for(std::chrono::milliseconds(15));
