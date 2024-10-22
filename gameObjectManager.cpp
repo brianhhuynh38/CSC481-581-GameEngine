@@ -107,7 +107,7 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
 	json j = json::parse(gameObjectString);
 
-	std::cout << "JSON from deserialize: " << j.dump() << "\n";
+	//std::cout << "JSON from deserialize: " << j.dump() << "\n";
 
 	// Read in JSON array (should only be one object in peer to peer)
 	//std::cout << "Game Object String: " << gameObjectString << "\n";
@@ -127,7 +127,7 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 			go->from_json(j);
 			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 
-			std::cout << "Update existing player \n";
+			//std::cout << "Update existing player \n";
 		}
 	}
 	catch (std::exception e) {
@@ -177,11 +177,15 @@ std::map<int, GameObject*>* GameObjectManager::getClientObjectMap() {
 */
 void GameObjectManager::terminateClient(int uuidKey) {
 	// Find GameObject, then delete it
-	if (GameObject *go = m_clientObjects->at(uuidKey)) {
-		m_clientObjects->erase(uuidKey);
+	if (GameObject *go = m_objects->at(uuidKey)) {
 		m_objects->erase(uuidKey);
+		m_clientObjects->erase(uuidKey);
 		delete go;
-	}
+	}	
+	/*if (GameObject* go = m_clientObjects->at(uuidKey)) {
+		
+		delete go;
+	}*/
 }
 
 /**

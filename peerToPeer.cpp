@@ -22,15 +22,15 @@ namespace PeerToPeer {
     int runClientThread(int clientID, GameObjectManager* gameObjectManager) {
 
         // Create the context for this thread
-        zmq::context_t context{ 2 };
+        zmq::context_t context{ 4 };
         // Create a subscriber using a Sub model
         zmq::socket_t p2psubscriber{ context, zmq::socket_type::sub };
-        zmq::socket_t disconnectSocket{ context, zmq::socket_type::pub };
+        zmq::socket_t disconnectSocket{ context, zmq::socket_type::req };
 
         // Set conflate value to only take most recent message
         int conflate = 1;
         zmq_setsockopt(p2psubscriber, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-        zmq_setsockopt(disconnectSocket, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+        //zmq_setsockopt(disconnectSocket, ZMQ_CONFLATE, &conflate, sizeof(conflate));
 
         int portNum = 6558 + clientID;
 
@@ -79,14 +79,19 @@ namespace PeerToPeer {
                 // Terminate if 5 seconds or more have elapsed without any messages
                 if (currentTime - timeSinceLastMessage >= 5000 and gameObjectManager->getClientObjectMap()->count(clientID)) {
                     std::cout << "\n\n\nTry to terminate client " << clientID << "\n\n\n";
-                    gameObjectManager->terminateClient(clientID);
-                    terminate = true;
 
                     // Send client UUID to the server to terminate
                     zmq::message_t disconnectMessage(std::to_string(clientID));
                     disconnectSocket.send(disconnectMessage, zmq::send_flags::none);
                     std::cout << "\n\n\nTerminated Other Client at PlayerID " << clientID << "\n\n\n";
-                    
+
+                    zmq::message_t reply;
+                    disconnectSocket.recv(reply);
+
+                    if (!reply.empty()) {
+                        gameObjectManager->terminateClient(clientID);
+                        terminate = true;
+                    }
                 }
             }
 			std::this_thread::sleep_for(std::chrono::milliseconds(15));
@@ -328,7 +333,7 @@ namespace PeerToPeer {
         //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
 
         // Use the player ID to establish a unique socket for connections
-        int portNum = 5558 + clientIdentifier;
+        int portNum = 6658 + clientIdentifier;
         int p2pPortNum = 6558 + playerGO->getUUID();
 
         std::stringstream ss;
@@ -519,7 +524,7 @@ namespace PeerToPeer {
 			idVector = gameObjectManager->deserialize(firstLine, 2);
 
             if (!idVector.empty()) {
-                std::cout << "ID Vector Results: ";
+                //std::cout << "ID Vector Results: ";
                 for (int id : idVector) {
                     std::cout << id << ", ";
                 }
