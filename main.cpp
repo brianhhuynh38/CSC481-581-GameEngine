@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
 	std::condition_variable renderCV;
 
 	// Create gameObjectManager
-	GameObjectManager* gameObjectManager = new GameObjectManager(timeline, &renderMtx, &renderCV);
+	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
 
 	// The entity that the player is able to control
 	Entities::Player* player;

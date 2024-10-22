@@ -12,6 +12,7 @@
 
 class GameObjectManager {
 private:
+
 	// Keeps track of the current ID and assigns it to added GameObjects
 	int m_idTracker;
 	// Map of GameObjects (Key: UUID, Value: GameObject)
@@ -23,19 +24,11 @@ private:
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 
-	// Mutex used to lock gameObject (ie. rendering)
-	std::mutex *m_mutex;
-	// Conditition Variable used to block processes to avoid collisions inbetween functions
-	std::condition_variable *m_cv;
+	// Mutex used to lock gameObject from updating
+	std::mutex m_mutexUpdate;
+	// Mutex used to lock gameObject from deserializing
+	std::mutex* m_mutexDeserialize;
 
-	// The current ID of the GameObject being updated
-	int m_currentUUID;
-	// The current ID of the GameObject being updated via network connections
-	int m_currentClientUUID;
-	// The current ID of the GameObject being written out via serialize
-	int m_currentSerializeUUID;
-	// The current ID of the GameObject being deserialized and updated
-	int m_currentDeserializeUUID;
 public:
 
 	/**
@@ -43,7 +36,7 @@ public:
 	* 
 	* @param timeline: Reference to the timeline
 	*/
-	GameObjectManager(Timeline *timelineRef, std::mutex *mutex, std::condition_variable *cv);
+	GameObjectManager(Timeline *timelineRef);
 
 	/**
 	* Destructor that frees any allocated memory for the GameObjects
@@ -114,13 +107,6 @@ public:
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 	 */
 	void setPlayerID(int uuid);
-
-	/**
-	* Checks if there are any objects currently being modified
-	*/
-	bool checkForObjectConflict(int uuid) {
-		return m_currentUUID != uuid && m_currentClientUUID != uuid;
-	}
 
 };
 

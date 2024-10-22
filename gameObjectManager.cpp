@@ -10,7 +10,8 @@
 *
 * @param timeline: Reference to the timeline
 */
-GameObjectManager::GameObjectManager(Timeline* timelineRef, std::mutex *mutex, std::condition_variable *cv) {
+GameObjectManager::GameObjectManager(Timeline* timelineRef) {
+
 	// Set starting ID value
 	m_idTracker = 0;
 	// Set reference to timeline
@@ -20,11 +21,6 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef, std::mutex *mutex, s
 	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
 
-	// Set mutex and condition variable, alongside any fields meant to track them
-	m_mutex = mutex;
-	m_cv = cv;
-	m_currentUUID = 0;
-	m_currentClientUUID = 0;
 }
 
 /**
@@ -46,22 +42,13 @@ void GameObjectManager::update() {
 	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
 		// Get GameObject and set current ID being updated for mutex
 		GameObject* go = iter->second;
-		m_currentUUID = go->getUUID();
-		{ // Lock if the object isn't being updated anywhere else
-			std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
-			m_cv->wait(lock, [&] { return m_currentClientUUID != m_currentUUID && m_currentDeserializeUUID != m_currentUUID; });
-
-			// Update each GameObject component
-			go->update(deltaTimeInSecs);
-			// If GameObject has a RigidBody, update collisions
-			if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
-				if (go->getUUID() == m_playerID) {
-					rb->updateCollisions(*m_objects);
-				}
+		// Update each GameObject component
+		go->update(deltaTimeInSecs);
+		// If GameObject has a RigidBody, update collisions
+		if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
+			if (go->getUUID() == m_playerID) {
+				rb->updateCollisions(*m_objects);
 			}
-			// Unlock for another function once this
-			m_currentUUID = 0;
-			m_cv->notify_one();
 		}
 		
 	}
@@ -100,16 +87,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 		}
 		else if (uuid != m_playerID) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
-			m_currentDeserializeUUID = go->getUUID();
-			{
-				std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
-				m_cv->wait(lock, [&] { return m_currentUUID != m_currentDeserializeUUID && m_currentSerializeUUID != m_currentDeserializeUUID; });
-
-				if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) { go->from_json(obj); }
-
-				m_currentDeserializeUUID = 0;
-				m_cv->notify_one();
-			}
+			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) { go->from_json(obj); }
 		}
 	}
 	// Return the vector of new playerIDs
@@ -140,20 +118,8 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 	}
 	else { // If it's an existing game object
 		GameObject* go = m_clientObjects->at(uuid);
-
-		m_currentClientUUID = go->getUUID();
-		{
-			std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
-			m_cv->wait(lock, [&] { return m_currentUUID != m_currentClientUUID && m_currentSerializeUUID != m_currentClientUUID; });
-
-			go->from_json(j);
-			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-
-			m_currentClientUUID = 0;
-			m_cv->notify_one();
-		}
-		
-		//m_clientObjects->insert_or_assign(uuid, go);
+		go->from_json(j);
+		go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 	}
 	// Handle network type if necessary
 }
@@ -171,18 +137,9 @@ void GameObjectManager::serialize(std::string& outputString) {
 	json j;
 
 	for (const auto& [id, go] : *m_objects) {
-		m_currentSerializeUUID = go->getUUID();
-		{
-			std::unique_lock<std::mutex> lock(*m_mutex); // Lock the mutex
-			m_cv->wait(lock, [&] { return m_currentUUID != m_currentSerializeUUID && m_currentDeserializeUUID != m_currentSerializeUUID; });
-			
-			json gameObjectJson;
-			go->to_json(gameObjectJson);
-			j.push_back(gameObjectJson);
-
-			m_currentSerializeUUID = 0;
-			m_cv->notify_one();
-		}
+		json gameObjectJson;
+		go->to_json(gameObjectJson);
+		j.push_back(gameObjectJson);
 	}
 
 	outputString = j.dump(); // Convert JSON to string

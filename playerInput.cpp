@@ -43,7 +43,7 @@ namespace Components {
 			if (movementVector.x == 0) { // decelerate-x
 				// moves velocity towards zero.
 				// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no decceleration.
-				if (transform->getPosition()->x > 2) {
+				if (rb->getVelocity()->x > 2) {
 					velMover = Utils::Vector2D((-decelerationRate * Utils::Vector2D(velocity->x, 0).multConst(deltaTimeInSecs).getMagnitude()), 0);
 				}
 				else if (rb->getVelocity()->x < -2) {
