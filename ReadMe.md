@@ -192,11 +192,6 @@ We ended up doing a very simplistic threading example in main that splits Entiti
 
 ## Homework 3
 
-### Guide here
-
-
-### Other Guide here
-
 
 ### [*Game Engine Architecture* by Jason Gregory](https://www.gameenginebook.com/)
 

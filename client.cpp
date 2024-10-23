@@ -73,7 +73,7 @@ namespace Client {
         //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
 
         // Use the player ID to establish a unique socket for connections
-        int portNum = 5558 + clientIdentifier;
+        int portNum = 6658 + clientIdentifier;
         int portNum2 = 6558 + clientIdentifier;
         std::stringstream ss;
         ss << "tcp://localhost:" << portNum;
