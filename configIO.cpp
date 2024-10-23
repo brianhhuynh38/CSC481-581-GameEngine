@@ -7,7 +7,7 @@
 /**
 * Loads variables defined in the config.ini file and sets them to their proper places
 */
-void loadConfigFile(void) {
+void loadConfigFile(ConfigSettings *settings) {
 
 	// File to open
 	std::ifstream file;
@@ -21,15 +21,20 @@ void loadConfigFile(void) {
 			std::cout << "Config Value" << value << "\n";
 			// If gravity, convert to float and set gravity
 			if (identifier == "gravity") {
-				physics.setGravity(std::stof(value));
-			}
+				std::cout << "Gravity: " << value << "\n";
+				settings->gravity = std::stof(value);
+			} // Get resolution width
 			else if (identifier == "resolutionWidth") {
 				std::cout << value;
-				resolutionWidth = std::stoi(value);
-			}
+				settings->resolutionWidth = std::stoi(value);
+			} // Get resolution height
 			else if (identifier == "resolutionHeight") {
 				std::cout << value;
-				resolutionHeight = std::stoi(value);
+				settings->resolutionHeight = std::stoi(value);
+			}
+			else if (identifier == "networkType") {
+				std::cout << "Network Type: " << value << "\n";
+				settings->networkType = std::stoi(value);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -71,8 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\Libs\SDL2_image-2.8.2\include;$(ProjectDir)\Libs\SDL2-2.30.6\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Libs\SDL2-2.30.6\lib\x64;$(ProjectDir)\Libs\SDL2_image-2.8.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Libs\SDL2_image-2.8.2\include;$(ProjectDir)\Libs\SDL2-2.30.6\include;$(ProjectDir)\Libs\libzmq-mt-4_3_5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Libs\SDL2-2.30.6\lib\x64;$(ProjectDir)\Libs\SDL2_image-2.8.2\lib\x64;$(ProjectDir)\Libs\libzmq-mt-4_3_5\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)\Libs\SDL2_image-2.8.2\include;$(ProjectDir)\Libs\SDL2-2.30.6\include;$(ProjectDir)\Libs\libzmq-mt-4_3_5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Libs\SDL2-2.30.6\lib\x64;$(ProjectDir)\Libs\SDL2_image-2.8.2\lib\x64;$(ProjectDir)\Libs\libzmq-mt-4_3_5\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;libzmq-mt-4_3_5.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,30 +128,46 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;libzmq-mt-4_3_5.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boundaryZone.cpp" />
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="collisions.cpp" />
     <ClCompile Include="configIO.cpp" />
+    <ClCompile Include="deathZone.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="entityController.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movingEntity.cpp" />
+    <ClCompile Include="peerToPeer.cpp" />
+    <ClCompile Include="physicsCalculator.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerController.cpp" />
+    <ClCompile Include="playerGO.cpp" />
+    <ClCompile Include="playerInput.cpp" />
+    <ClCompile Include="rigidBody.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="stageRenderer.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="stageManager.cpp" />
+    <ClCompile Include="staticObject.cpp" />
+    <ClCompile Include="textureMesh.cpp" />
+    <ClCompile Include="thread.cpp" />
     <ClCompile Include="timeline.cpp" />
+    <ClCompile Include="transform.cpp" />
     <ClCompile Include="vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,22 +175,37 @@
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="boundaryZone.h" />
+    <ClInclude Include="client.h" />
     <ClInclude Include="collisions.h" />
+    <ClInclude Include="component.h" />
     <ClInclude Include="configIO.h" />
+    <ClInclude Include="deathZone.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="entityController.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="movingEntity.h" />
+    <ClInclude Include="peerToPeer.h" />
     <ClInclude Include="physics.h" />
+    <ClInclude Include="physicsCalculator.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerController.h" />
+    <ClInclude Include="playerGO.h" />
+    <ClInclude Include="playerInput.h" />
+    <ClInclude Include="rigidBody.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="stageManager.h" />
+    <ClInclude Include="staticObject.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="textureMesh.h" />
+    <ClInclude Include="thread.h" />
     <ClInclude Include="timeline.h" />
+    <ClInclude Include="transform.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>
   <ItemGroup>

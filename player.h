@@ -34,15 +34,9 @@ namespace Entities {
 		 * @param maxSpeed The maximum speed at whihc the player can move
 		 */
 		Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-			const char* textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
+			std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY,
 			float maxSpeed);
 
-		/**
-		 * Moves the player given a movement vector
-		 * 
-		 * @param movementVector The vector used to move by adding to velocity
-		 */
-		void move(Utils::Vector2D movementVector);
 
 		/**
 		 * Returns the max speed of the entity
@@ -79,6 +73,16 @@ namespace Entities {
 		 * @param grounded value
 		 */
 		void setIsGrounded(bool grounded);
+
+		/**
+		* Creates a string containing all information for the Player
+		*/
+		std::string toString();
+
+		/**
+		* Takes a string containing information for a MovingEntity and creates one
+		*/
+		static Player* fromString(const std::string& data);
 	};
 }
 

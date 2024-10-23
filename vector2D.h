@@ -1,6 +1,7 @@
 #pragma once
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
+#include <string>
 
 namespace Utils {
 
@@ -20,6 +21,10 @@ namespace Utils {
 
 		Vector2D add(float x, float y);
 
+		Vector2D subtract(Vector2D other);
+
+		Vector2D subtract(float x, float y);
+
 		Vector2D multConst(float constant);
 
 		Vector2D divideConst(float constant);
@@ -28,6 +33,11 @@ namespace Utils {
 
 		Vector2D normalizeVector(void);
 
+		std::string toString();
+
+		static Vector2D fromString(std::stringstream& ss);
+
+		bool equals(Utils::Vector2D other);
 	};
 }
 

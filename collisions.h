@@ -1,9 +1,11 @@
 #include <SDL.h>
 #include <iostream>
+#include <map>
 
 #include "input.h"
 #include "structs.h"
 #include "global.h"
+#include "entity.h"
 
 #pragma once
 #ifndef COLLISIONS_H
@@ -21,6 +23,6 @@ bool checkCollision(SDL_Rect a, SDL_Rect b);
  * This was referenced from the SDL2 tutorial:
  * https://lazyfoo.net/tutorials/SDL/27_collision_detection/index.php
  */
-HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::list<Entities::Entity> *entities);
+HitInfo checkCollisions(std::list<SDL_Rect> *collisions, std::map<int, Entities::Entity>* entities);
 
 #endif

@@ -12,17 +12,17 @@ namespace Stages {
 	 */
 	void Stage::drawPlayers(void) {
 
-		// Display player texture at player location
-		Render::displayTexture(
-			player->getTexture(),
-			player->getPosition()->x,
-			player->getPosition()->y,
-			player->getSize()->x,
-			player->getSize()->y,
-			player->getScale()->x, 
-			player->getScale()->y
-		);
-		
+		//// Display player texture at player location
+		//Render::displayTexture(
+		//	player->getTexture(),
+		//	player->getPosition()->x,
+		//	player->getPosition()->y,
+		//	player->getSize()->x,
+		//	player->getSize()->y,
+		//	player->getScale()->x, 
+		//	player->getScale()->y
+		//);
+		//
 	}
 
 	/**
@@ -31,13 +31,13 @@ namespace Stages {
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
 	void Stage::drawEntities(void) {
-		// Create entity list iterator
-		std::list<Entities::Entity>::iterator iter;
-		std::list<Entities::Entity> entities = *entityController->getEntities();
-		// Draws each entity
-		for (iter = entities.begin(); iter != entities.end(); ++iter) {
-			Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getSize()->x, iter->getSize()->y, iter->getScale()->x, iter->getScale()->y);
-		}
+		//// Create entity list iterator
+		//std::list<Entities::Entity>::iterator iter;
+		//std::list<Entities::Entity> entities = *entityController->getEntities();
+		//// Draws each entity
+		//for (iter = entities.begin(); iter != entities.end(); ++iter) {
+		//	Render::displayTexture(iter->getTexture(), iter->getPosition()->x, iter->getPosition()->y, iter->getSize()->x, iter->getSize()->y, iter->getScale()->x, iter->getScale()->y);
+		//}
 	}
 
 	/**
@@ -67,7 +67,7 @@ namespace Stages {
 	 */
 	void Stage::doEntities(void) {
 
-		entityController->updateEntities();
+		//entityController->updateEntities();
 		
 	}
 
@@ -106,22 +106,22 @@ namespace Stages {
 	 * https://www.parallelrealities.co.uk/tutorials/shooter/shooter5.php
 	 */
 	void Stage::initPlayer(void) {
-		player = new Entities::Player(
-			1.0, 1.0,
-			250.0, 250.0,
-			15.0, 25.0,
-			10.0,
-			"./Assets/Textures/DefaultPlayerTexture1.png",
-			false,
-			true,
-			0.0f, -50.0f,
-			1.0
-		);
-		//m_players.insert();
+		//player = new Entities::Player(
+		//	1.0, 1.0,
+		//	250.0, 250.0,
+		//	15.0, 25.0,
+		//	10.0,
+		//	"./Assets/Textures/DefaultPlayerTexture1.png",
+		//	false,
+		//	true,
+		//	0.0f, -50.0f,
+		//	1.0
+		//);
+		////m_players.insert();
 
-		player->setTexture( (char*) "./Assets/Textures/DefaultPlayerTexture1.png");
-		Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getSize()->x, player->getSize()->y, player->getScale()->x, player->getScale()->y);
-		
+		//player->setTexture( (char*) "./Assets/Textures/DefaultPlayerTexture1.png");
+		//Render::displayTexture(player->getTexture(), player->getPosition()->x, player->getPosition()->y, player->getSize()->x, player->getSize()->y, player->getScale()->x, player->getScale()->y);
+		//
 	} 
 
 	/**
