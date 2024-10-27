@@ -215,6 +215,23 @@ int main(int argc, char* argv[]) {
 
 	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
 
+	//std::vector<StaticObject*> staticVector = std::vector<StaticObject*>();
+
+	//for (int i = 0; i < 50; i++) {
+	//	for (int j = 0; j < 5; j++) {
+	//		StaticObject* staticObject = new StaticObject(
+	//			1.0f, 1.0f,
+	//			250.0f + (i * 10.0f), 500.0f + (j * 10.0f),
+	//			20.0f, 20.0f,
+	//			10.0f,
+	//			"./Assets/Textures/BallTexture.png",
+	//			true
+	//		);
+	//		staticVector.push_back(staticObject);
+	//		gameObjectManager->insert(staticObject);
+	//	}
+	//}
+
 	// Test StaticObject
 	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
 
@@ -398,17 +415,18 @@ int main(int argc, char* argv[]) {
 		///  Iteration Testing for Homework 3-3: Iteration Testing  ///
 		///////////////////////////////////////////////////////////////
 
-		//auto timeCheckEpoch2 = std::chrono::high_resolution_clock::now().time_since_epoch();
-		//int64_t afterTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch2).count();
+		auto timeCheckEpoch2 = std::chrono::high_resolution_clock::now().time_since_epoch();
+		int64_t afterTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch2).count();
 
-		//if (gameObjectManager->getClientObjectMap()->size() == 0) {
-		//	totalTimeElapsed += afterTime - beforeTime;
-		//	iterationCounter++;
-		//}
 
-		//if (iterationCounter == 1000) {
-		//	std::cout << "Time it took for 1,000 iterations with " + std::to_string(gameObjectManager->getClientObjectMap()->size() + 1) + " clients: " + std::to_string(totalTimeElapsed) + "\n";
-		//}
+		if (gameObjectManager->getClientObjectMap()->size() == 1) {
+			totalTimeElapsed += afterTime - beforeTime;
+			iterationCounter++;
+		}
+
+		if (iterationCounter == 1000) {
+			std::cout << "Time it took for 1,000 iterations with " + std::to_string(gameObjectManager->getClientObjectMap()->size() + 1) + " clients: " + std::to_string(totalTimeElapsed) + "\n";
+		}
 
 
 		//SDL_Delay(16);

@@ -116,6 +116,8 @@ namespace Client {
 
             std::getline(ss, firstLine);
             gameObjectManager->deserialize(firstLine, 1);
+
+            //std::cout << "GameObject string from server: " << firstLine << "\n\n";
         }
 
         // CLIENT-SERVER

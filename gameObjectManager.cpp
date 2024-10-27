@@ -79,7 +79,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 			insert(go);
 			if (go->getComponent<Components::PlayerInputPlatformer>()) {
 				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-				//insertClient(go);
+				//insertClient(go); // Comment this out if using p2p
 				if (uuid != m_playerID) {
 					intVector.push_back(go->getUUID());
 				}
