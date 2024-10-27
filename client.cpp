@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include "entity.h"
-#include "player.h"
 #include <unordered_map>
 #include "structs.h"
 #include <chrono>
@@ -11,8 +9,6 @@
 
 #include <zmq.hpp>
 #include <zmq_addon.hpp>
-#include "entityController.h"
-#include "playerController.h"
 #include "configIO.h"
 #include "gameObjectManager.h"
 

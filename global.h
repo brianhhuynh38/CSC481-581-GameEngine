@@ -1,9 +1,6 @@
 #include "structs.h"
 #include "vector2D.h"
 #include "timeline.h"
-//#include "physics.h"
-#include "player.h"
-#include "entityController.h"
 
 #pragma once
 #ifndef GLOBAL_H

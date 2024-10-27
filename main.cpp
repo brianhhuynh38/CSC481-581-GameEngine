@@ -13,12 +13,6 @@
 #include "configIO.h"
 #include "physicsCalculator.h"
 
-#include "entity.h"
-#include "player.h"
-#include "movingEntity.h"
-
-#include "playerController.h"
-#include "entityController.h"
 #include "gameObjectManager.h"
 
 #include "client.h"
@@ -130,8 +124,6 @@ int main(int argc, char* argv[]) {
 
 	/// The timeline used to keep track of time intervals
 	Timeline *timeline = new Timeline();
-	// Create physics
-	Physics *physics = new Physics();
 	
 	// TODO: Initialize networking
 	// initialize the zmq context with a single IO thread
@@ -159,7 +151,6 @@ int main(int argc, char* argv[]) {
 	loadConfigFile(&settings);
 
 	// Set physics configured gravity
-	physics->setGravity(settings.gravity);
 	PhysCalc::setGravity(settings.gravity);
 
 	// Initialize SDL components
@@ -171,8 +162,6 @@ int main(int argc, char* argv[]) {
 	then = timeline->getTime();
 	remainder = 0;
 
-	// Create the entityController
-	EntityController* entityController = new EntityController(physics);
 	
 	// Global mutex and condition variable to be used across threads
 	std::mutex renderMtx;
@@ -180,12 +169,6 @@ int main(int argc, char* argv[]) {
 
 	// Create gameObjectManager
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
-
-	// The entity that the player is able to control
-	Entities::Player* player;
-	
-	// The default player controller
-	Controllers::PlayerController* playerController;
 
 	InputHandler* inputHandler = new InputHandler();
 
@@ -348,19 +331,6 @@ int main(int argc, char* argv[]) {
 		}
 	});
 
-	//std::thread networkThread([&]() {
-	//	while (true) {
-	//		
-	//		//std::unique_lock<std::mutex> lock(renderMtx); // Lock the mutex
-	//		std::cout << "Network thread loop.\n";
-
-	//		
-	//		//renderMtx.unlock();
-	//		//renderCV.notify_all();
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
-	//	}
-	//});
-
 	int iterationCounter = 0;
 	int64_t totalTimeElapsed = 0;
 	while (true) {
@@ -387,22 +357,22 @@ int main(int argc, char* argv[]) {
 
 		// Display all GameObjects
 		std::map<int, GameObject*>::iterator iterGO;
-		// Get entity map
+		// Get object map
 		std::map<int, GameObject*> objectMap = *gameObjectManager->getObjectMap();
 
 		//std::cout << "\n\n\nStart Rendering...\n\n\n";
 
-		// Loop through entities and display them all
+		// Loop through objects and display them all
 		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
 			Render::displayGameObject(*iterGO->second, *cameraPosition);
 		}
 
 		// Display all GameObjects sent by clients
 		std::map<int, GameObject*>::iterator iterClientGO;
-		// Get entity map
+		// Get client map
 		std::map<int, GameObject*> clientMap = *gameObjectManager->getClientObjectMap();
 
-		// Loop through entities and display them all
+		// Loop through clients and display them all
 		for (iterClientGO = clientMap.begin(); iterClientGO != clientMap.end(); ++iterClientGO) {
 			Render::displayGameObject(*iterClientGO->second, *cameraPosition);
 		}
