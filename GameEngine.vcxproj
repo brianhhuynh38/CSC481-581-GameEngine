@@ -171,6 +171,7 @@
     <ClInclude Include="deathZone.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="event.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="global.h" />

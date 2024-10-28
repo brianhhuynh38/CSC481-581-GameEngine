@@ -64,6 +64,12 @@
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{37f90c28-bb1b-478d-881f-9f674f670e45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{309bbf2d-fa8a-4cd6-864b-0aede8084e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{4ab82137-bd9b-408e-9783-4cf10f27f3b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,9 +91,6 @@
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="client.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="thread.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="thread.cpp">
@@ -200,6 +203,9 @@
     </ClInclude>
     <ClInclude Include="boundaryZone.h">
       <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
