@@ -144,6 +144,7 @@
     <ClCompile Include="configIO.cpp" />
     <ClCompile Include="deathZone.cpp" />
     <ClCompile Include="draw.cpp" />
+    <ClCompile Include="event.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="input.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="event.h" />
+    <ClInclude Include="eventManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="global.h" />

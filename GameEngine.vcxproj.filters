@@ -93,9 +93,6 @@
     <ClCompile Include="client.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="thread.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="peerToPeer.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -131,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="boundaryZone.cpp">
       <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="event.cpp">
+      <Filter>Source Files\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="event.h">
       <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="eventManager.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
