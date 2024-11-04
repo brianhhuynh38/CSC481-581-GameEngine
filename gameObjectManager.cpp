@@ -219,6 +219,21 @@ void GameObjectManager::insertClient(GameObject* go) {
 }
 
 /**
+* Finds a GameObject with the given idea, otherwise, returns null
+*
+* @param uuid: The ID of the object being serached for
+* @returns A reference to the GameObject or a nullptr if nothing is found
+*/
+GameObject* GameObjectManager::find(int uuid) {
+	try { // Try finding a GameObject in the objectMap
+		return m_objects->at(uuid);
+	}
+	catch (std::out_of_range &e) { // If there is no GameObject at the given ID, return nullptr
+		return nullptr;
+	}
+}
+
+/**
 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 */
 void GameObjectManager::setPlayerID(int uuid) {

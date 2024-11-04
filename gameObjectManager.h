@@ -104,6 +104,14 @@ public:
 	void insertClient(GameObject* go);
 
 	/**
+	* Finds a GameObject with the given idea, otherwise, returns null
+	* 
+	* @param uuid: The Id of the object being serached for
+	* @returns A reference to the GameObject or a nullptr if nothing is found
+	*/
+	GameObject* find(int uuid);
+
+	/**
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 	 */
 	void setPlayerID(int uuid);
