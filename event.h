@@ -20,7 +20,7 @@ namespace Events {
 	private:
 
 		// Reference to the GameObject that this Event should be attached to
-		GameObject* m_goRef;
+		std::vector<GameObject*> m_goRefVector;
 		// A Timestamp value that is used to determine when the Event should be dispatched
 		int64_t m_timeStampPriority;
 		// The priority integer value used to help sort the priority queue alongside the Timestamp
