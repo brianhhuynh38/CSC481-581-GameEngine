@@ -28,8 +28,16 @@ public:
 	*/
 	void registerEvent();
 
+	/**
+	* Adds the given event into the event queue
+	* @param Event to add
+	*/
 	void raiseEvent(Events::Event);
 
+	/**
+	* dispatches any events in the priority queue which 
+	* meet the time and priority requirements
+	*/
 	void dispatchEvent();
 };
 

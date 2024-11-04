@@ -35,12 +35,12 @@ namespace Events {
 		* @param timeStampPriority: The timestamp at which the Event should be deployed
 		* @param priority: A secondary priority
 		*/
-		Event(GameObject* goRef, int timeStampPriority, int priority);
+		Event(std::vector<GameObject*> goRef, int timeStampPriority, int priority);
 
 		/**
 		* Constructor using the GameObject's ID in order to find and link the GameObject to this Event
 		*/
-		Event(int goID, GameObjectManager* goManager, int timeStampPriority, int priority);
+		Event(std::vector<int> goIDs, GameObjectManager* goManager, int timeStampPriority, int priority);
 
 		/**
 		* Destructor for an Event that gets rid of the reference to GameObject

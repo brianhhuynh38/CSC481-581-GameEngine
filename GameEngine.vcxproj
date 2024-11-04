@@ -145,6 +145,7 @@
     <ClCompile Include="deathZone.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="event.cpp" />
+    <ClCompile Include="eventManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="input.cpp" />

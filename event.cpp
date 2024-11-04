@@ -9,8 +9,8 @@ namespace Events {
 	* @param timeStampPriority: The timestamp at which the Event should be deployed
 	* @param priority: A secondary priority
 	*/
-	Event::Event(GameObject* goRef, int timeStampPriority, int priority) {
-		this->m_goRef = goRef;
+	Event::Event(std::vector<GameObject*> goRefVector, int timeStampPriority, int priority) {
+		this->m_goRefVector = goRefVector;
 		this->m_timeStampPriority = timeStampPriority;
 		this->m_priority = priority;
 	}
@@ -18,8 +18,13 @@ namespace Events {
 	/**
 	* Constructor using the GameObject's ID in order to find and link the GameObject to this Event
 	*/
-	Event::Event(int goID, GameObjectManager* goManager, int timeStampPriority, int priority) {
-		this->m_goRef = goManager->find(goID);
+	Event::Event(std::vector<int> goIDs, GameObjectManager* goManager, int timeStampPriority, int priority) {
+		for (int id : goIDs) {
+			GameObject* go = goManager->find(id);
+			if (go) {
+				this->m_goRefVector.push_back(go);
+			}
+		}
 		this->m_timeStampPriority = timeStampPriority;
 		this->m_priority = priority;
 	}
@@ -28,7 +33,7 @@ namespace Events {
 	* Destructor for an Event that gets rid of the reference to GameObject
 	*/
 	Event::~Event() {
-		this->m_goRef = nullptr;
+		this->m_goRefVector.clear();
 	}
 
 	/**
@@ -37,7 +42,11 @@ namespace Events {
 	std::string Event::serialize() {
 		json j;
 		// Add all fields to the json, but records gameObject ID as 0 if there is no GameObject reference
-		j["goUUID"] = m_goRef ? m_goRef->getUUID() : 0;
+		std::vector<
+		for (GameObject *goRef : m_goRefVector) {
+
+		}
+		j["goUUIDs"] = m_goRef ? m_goRef->getUUID() : 0;
 		j["timeStampPriority"] = m_timeStampPriority;
 		j["priority"] = m_priority;
 		// Return json string
