@@ -17,7 +17,7 @@ EventManager::~EventManager() {
 /**
 * Registers an Event into the
 */
-void EventManager::registerEvent(Events::Event event) {
+void EventManager::registerEvent(Events::Event event, std::vector<GameObject> gameObjects) {
 	
 }
 
@@ -26,6 +26,6 @@ void EventManager::raiseEvent(Events::Event event) {
 }
 
 void EventManager::dispatchEvent() {
-
+	
 }
 

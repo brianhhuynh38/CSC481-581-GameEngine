@@ -48,8 +48,6 @@ namespace Events {
 		j["goUUIDs"] = idVector;
 		j["timeStampPriority"] = m_timeStampPriority;
 		j["priority"] = m_priority;
-		// Return json string
-		return j.dump();
 	}
 
 	/**

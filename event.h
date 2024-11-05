@@ -12,6 +12,8 @@ using json = nlohmann::json;
 
 namespace Events {
 
+	#define EVENTS_SEND_ALL = 0
+
 	/**
 	* Class representation of the Event that houses a reference to a GameObject (if applicable) and 
 	* multiple priority fields that help to compare between Events
@@ -41,6 +43,11 @@ namespace Events {
 		* Constructor using the GameObject's ID in order to find and link the GameObject to this Event
 		*/
 		Event(std::vector<int> goIDs, GameObjectManager* goManager, int timeStampPriority, int priority);
+
+		/**
+		* Constructor using Event flags to find and link the GameObjects to this Event
+		*/
+		Event(int flag, int timeStampPriority, int priority);
 
 		/**
 		* Destructor for an Event that gets rid of the reference to GameObject

@@ -24,9 +24,9 @@ public:
 	~EventManager();
 
 	/**
-	* Registers an Event into the 
+	* Registers a vector of GameObjects tp a given Event
 	*/
-	void registerEvent();
+	void registerEvent(Events::Event event, std::vector<GameObject> gameObjects);
 
 	/**
 	* Adds the given event into the event queue
