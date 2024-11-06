@@ -43,5 +43,6 @@ void EventManager::dispatchEvents(int64_t timeStamp) {
 	// Keep dispatching events until the priority is higher than the given timeStamp
 	while (m_eventQueue.top().getTimeStampPriority() <= timeStamp) {
 		m_goManager->receiveEvent(m_eventQueue.top());
+		m_eventQueue.pop();
 	}
 }
