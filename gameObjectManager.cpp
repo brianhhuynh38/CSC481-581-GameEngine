@@ -234,6 +234,13 @@ GameObject* GameObjectManager::find(int uuid) {
 }
 
 /**
+* Receive any events that are being dispatched from the EventManager
+*/
+void GameObjectManager::receiveEvent(Events::Event event) {
+	m_dispatchedEvents.push_back(event);
+}
+
+/**
 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 */
 void GameObjectManager::setPlayerID(int uuid) {

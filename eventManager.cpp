@@ -34,7 +34,14 @@ void EventManager::raiseEvent(Events::Event &event) {
 	m_eventQueue.push(event);
 }
 
-void EventManager::dispatchEvent(int64_t timeStampPriority) {
+void EventManager::dispatchEvents(int64_t timeStamp) {
+	// Return if the event queue is empty
+	if (m_eventQueue.empty()) {
+		return;
+	}
 	
+	// Keep dispatching events until the priority is higher than the given timeStamp
+	while (m_eventQueue.top().getTimeStampPriority() <= timeStamp) {
+		m_goManager->receiveEvent(m_eventQueue.top());
+	}
 }
-

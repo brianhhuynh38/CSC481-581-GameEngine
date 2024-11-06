@@ -5,6 +5,7 @@
 
 #include "GameObject.h"
 #include "timeline.h"
+#include "event.h"
 
 #include <map>
 #include <mutex>
@@ -21,8 +22,11 @@ private:
 	std::map<int, GameObject*> *m_clientObjects;
 	// The ID of the player under control of this client, maintained so that it is not updated externally
 	int m_playerID;
+
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
+	// The events that have been dispatched by the EventManager
+	std::vector<Events::Event> m_dispatchedEvents;
 
 	// Mutex used to lock gameObject from updating
 	std::mutex m_mutexUpdate;
@@ -110,6 +114,11 @@ public:
 	* @returns A reference to the GameObject or a nullptr if nothing is found
 	*/
 	GameObject* find(int uuid);
+
+	/**
+	* Receive any events that are being dispatched from the EventManager
+	*/
+	void receiveEvent(Events::Event event);
 
 	/**
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally

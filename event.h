@@ -67,7 +67,7 @@ namespace Events {
 		/**
 		* Return the timestamp the event should execute at
 		*/
-		int64_t getTimeStampPriority();
+		int64_t getTimeStampPriority() const;
 
 		/**
 		* Sets the time stamp to the specified parameter

@@ -4,6 +4,7 @@
 #define EVENTMANAGER_H
 
 #include "event.h"
+#include "gameObjectManager.h"
 
 #include <queue>
 #include <vector>
@@ -15,6 +16,10 @@ private:
 	std::priority_queue<Events::Event> m_eventQueue;
 	// Maintains the history of all GameObjects that are registered to a given Event
 	std::map<std::type_index, std::vector<GameObject*>> m_eventRegistry;
+
+	// Reference to the GameObjectManager
+	std::unique_ptr<GameObjectManager> m_goManager;
+
 public:
 	/**
 	* Constructor for EventManager that intializes the event queue
@@ -42,7 +47,7 @@ public:
 	* Dispatches any events in the priority queue which 
 	* meet the time and priority requirements
 	*/
-	void dispatchEvent(int64_t timeStampPriority);
+	void dispatchEvents(int64_t timeStampPriority);
 };
 
 #endif

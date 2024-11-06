@@ -53,7 +53,7 @@ namespace Events {
 	/**
 	* Return the timestamp the event should execute at
 	*/
-	int64_t Event::getTimeStampPriority() {
+	int64_t Event::getTimeStampPriority() const {
 		return m_timeStampPriority;
 	}
 
