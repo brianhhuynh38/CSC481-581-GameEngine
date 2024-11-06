@@ -7,11 +7,14 @@
 
 #include <queue>
 #include <vector>
+#include <typeindex>
 
 class EventManager {
 private:
 	// Queue of Events that are dispatched when their timestamp is less than or equal to the current time
-	std::priority_queue<Events::Event> eventQueue;
+	std::priority_queue<Events::Event> m_eventQueue;
+	// Maintains the history of all GameObjects that are registered to a given Event
+	std::map<std::type_index, std::vector<GameObject*>> m_eventRegistry;
 public:
 	/**
 	* Constructor for EventManager that intializes the event queue
@@ -24,21 +27,22 @@ public:
 	~EventManager();
 
 	/**
-	* Registers a vector of GameObjects tp a given Event
+	* Registers a vector of GameObjects to a given Event
 	*/
-	void registerEvent(Events::Event event, std::vector<GameObject> gameObjects);
+	template<typename E>
+	void registerEvent(GameObject *gameObject);
 
 	/**
 	* Adds the given event into the event queue
 	* @param Event to add
 	*/
-	void raiseEvent(Events::Event);
+	void raiseEvent(Events::Event &event);
 
 	/**
-	* dispatches any events in the priority queue which 
+	* Dispatches any events in the priority queue which 
 	* meet the time and priority requirements
 	*/
-	void dispatchEvent();
+	void dispatchEvent(int64_t timeStampPriority);
 };
 
 #endif
