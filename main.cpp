@@ -168,11 +168,11 @@ int main(int argc, char* argv[]) {
 	std::mutex renderMtx;
 	std::condition_variable renderCV;
 
-	// Create gameObjectManager
+	// Create EventManager
     EventManager* eventManager = new EventManager();
 
 	// Create gameObjectManager
-	GameObjectManager* gameObjectManager = new GameObjectManager(timeline/*, eventManager*/);
+	GameObjectManager* gameObjectManager = new GameObjectManager(timeline, eventManager);
 
 	InputHandler* inputHandler = new InputHandler();
 

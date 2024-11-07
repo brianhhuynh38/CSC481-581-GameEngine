@@ -1,5 +1,6 @@
 #include "eventManager.h"
 #include "gameObject.h"
+#include "event.h"
 
 /**
 * Constructor for EventManager that intializes the event queue

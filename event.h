@@ -3,10 +3,11 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-#include "GameObject.h"
 #include "json.hpp"
 
 using json = nlohmann::json;
+
+class GameObject;
 
 namespace Events {
 
@@ -26,6 +27,8 @@ namespace Events {
 
 	public:
 
+		Event();
+
 		/**
 		* Constructor for the Event struct
 		*
@@ -33,7 +36,7 @@ namespace Events {
 		* @param timeStampPriority: The timestamp at which the Event should be deployed
 		* @param priority: A secondary priority
 		*/
-		Event(std::vector<GameObject*> goRef, int timeStampPriority, int priority);
+		Event(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority);
 
 		/**
 		* Destructor for an Event that gets rid of the reference to GameObject

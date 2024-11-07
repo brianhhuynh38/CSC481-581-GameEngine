@@ -4,11 +4,13 @@
 #define EVENTMANAGER_H
 
 #include "event.h"
-#include "gameObject.h"
+//#include "gameObject.h"
 
 #include <queue>
 #include <vector>
 #include <typeindex>
+
+class GameObject;
 
 class EventManager {
 private:

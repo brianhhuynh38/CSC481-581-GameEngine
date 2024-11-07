@@ -3,6 +3,12 @@
 
 namespace Events {
 
+	Event::Event() {
+		this->m_goRefVector = std::vector<GameObject*>();
+		this->m_timeStampPriority = 0;
+		this->m_priority = 0;
+	}
+
 	/**
 	* Constructor for the Event struct
 	*
@@ -10,7 +16,8 @@ namespace Events {
 	* @param timeStampPriority: The timestamp at which the Event should be deployed
 	* @param priority: A secondary priority
 	*/
-	Event::Event(std::vector<GameObject*> goRefVector, int timeStampPriority, int priority) {
+	Event::Event(std::vector<GameObject*> goRefVector, int64_t timeStampPriority, int priority) {
+		this->m_goRefVector = std::vector<GameObject*>();
 		this->m_goRefVector = goRefVector;
 		this->m_timeStampPriority = timeStampPriority;
 		this->m_priority = priority;

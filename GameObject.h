@@ -10,7 +10,7 @@
 using json = nlohmann::json;
 
 #include "transform.h"
-//#include "eventManager.h"
+#include "eventManager.h"
 //#include "textureMesh.h"
 //#include "playerInput.h"
 //#include "rigidBody.h"
@@ -35,9 +35,11 @@ protected:
     std::map<std::type_index, std::unique_ptr<Components::Component>> m_components;
     // The deltaTime for the object passed down by the Manager
     double m_currTimeStep;
+    // The current timestamp this object is at
+    int64_t m_currentTime;
 
     // Reference to EventManager so that it can call
-    //EventManager* m_eventManager;
+    EventManager* m_eventManager;
     
 public:
     // Default constructor for GameObject. Adds a Transform component (required)
@@ -73,7 +75,7 @@ public:
     }
 
     // Update all components attached to game object
-    virtual void update(double deltaTimeInSecs);
+    virtual void update(double deltaTimeInSecs, int64_t currentTime);
 
     void setUUID(int uuid);
 
@@ -81,11 +83,15 @@ public:
 
     double getDeltaTimeInSecsOfObject();
 
+    int64_t getCurrentTimeStamp();
+
     void from_json(const json& j);
 
     void to_json(json& j);
 
-    //void setEventManager(EventManager *eventManager);
+    void setEventManager(EventManager *eventManager);
+
+    EventManager* getEventManager();
 };
 
 

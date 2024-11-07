@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "playerGO.h"
 #include "boundaryZone.h"
+#include "spawnEvent.h"
 //#include "transform.h"
 //#include "component.h"
 //#include "vector2D.h"
@@ -64,10 +65,15 @@ namespace Components {
 					m_collider->y = transform->getPosition()->y;
 				}
 				else if (m_mostRecentCollisionInfo.colliderType == 1) { // Death zone collision
-					Transform* transform = m_parent->getComponent<Transform>();
+					/*Transform* transform = m_parent->getComponent<Transform>();
 					auto* player = static_cast<PlayerGO*>(m_parent);
 					Transform* spawnTransform = player->getSpawn()->getComponent<Transform>();
-					transform->setPosition(spawnTransform->getPosition()->x, spawnTransform->getPosition()->y);
+					transform->setPosition(spawnTransform->getPosition()->x, spawnTransform->getPosition()->y);*/
+
+					// Call spawn event
+					std::vector<GameObject*> go = std::vector<GameObject*>();
+					go.push_back(m_parent);
+					m_parent->getEventManager()->raiseEvent(Events::SpawnEvent(go, m_parent->getCurrentTimeStamp(), 1));
 				}
 				else if (m_mostRecentCollisionInfo.colliderType == 2) { // Boundary collision
 					auto* boundaryZone = static_cast<BoundaryZone*>(m_mostRecentCollisionInfo.collidedObj);

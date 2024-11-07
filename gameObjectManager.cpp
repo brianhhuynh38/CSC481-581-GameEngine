@@ -4,16 +4,15 @@
 #include "playerInput.h"
 #include "rigidBody.h"
 
-//#include "eventManager.h"
+#include "eventManager.h"
 #include "definitions.h"
-
 
 /**
 * Constructor for the GameObjectManager that takes in a reference to the Timeline
 *
 * @param timeline: Reference to the timeline
 */
-GameObjectManager::GameObjectManager(Timeline* timelineRef/*, EventManager* eventManager*/) {
+GameObjectManager::GameObjectManager(Timeline* timelineRef, EventManager* eventManager) {
 
 	// Set starting ID value
 	m_idTracker = 0;
@@ -24,7 +23,7 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef/*, EventManager* even
 	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
 	// Add a reference to the event manager
-	//m_eventManager = eventManager;
+	m_eventManager = eventManager;
 }
 
 /**
@@ -40,6 +39,7 @@ GameObjectManager::~GameObjectManager() {
 void GameObjectManager::update() {
 	// Calculate current delta time in seconds
 	double deltaTimeInSecs = m_timeline->getDeltaTime() / MICROSEC_PER_SEC;
+	int64_t currentTime = m_timeline->getTime();
 	// Create iterator to iterate through the Map
 	std::map<int, GameObject*>::iterator iter;
 	// Updates each GameObject in the map
@@ -47,7 +47,7 @@ void GameObjectManager::update() {
 		// Get GameObject and set current ID being updated for mutex
 		GameObject* go = iter->second;
 		// Update each GameObject component
-		go->update(deltaTimeInSecs);
+		go->update(deltaTimeInSecs, currentTime);
 		// If GameObject has a RigidBody, update collisions
 		if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
 			if (go->getUUID() == m_playerID) {
@@ -203,7 +203,7 @@ void GameObjectManager::insert(GameObject* go) {
 		m_idTracker--;
 		go->setUUID(m_idTracker);
 		// Assigns every gameObject with ref to EventManager
-		//go->setEventManager(m_eventManager);
+		go->setEventManager(m_eventManager);
 	}
 
 	// TODO: It may be better to change so that it updates each of the components individually

@@ -6,6 +6,12 @@
 
 namespace Events {
 
+	SpawnEvent::SpawnEvent(std::vector<GameObject*> goRefVector, int64_t timeStampPriority, int priority) {
+		this->m_goRefVector = goRefVector;
+		this->m_timeStampPriority = timeStampPriority;
+		this->m_priority = priority;
+	}
+
 	void SpawnEvent::onEvent() const {
 		// Spawn each Player game object at its specified spawn point
 		for (GameObject *go : m_goRefVector) {
