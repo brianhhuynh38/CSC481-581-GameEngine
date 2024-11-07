@@ -1,12 +1,12 @@
 #include "eventManager.h"
+#include "gameObject.h"
 
 /**
-	* Constructor for EventManager that intializes the event queue
-	*/
-EventManager::EventManager(GameObjectManager *goManager) {
+* Constructor for EventManager that intializes the event queue
+*/
+EventManager::EventManager() {
 	m_eventQueue = std::priority_queue<Events::Event, std::vector<Events::Event>, std::greater<Events::Event>>();
 	m_eventRegistry = std::map<std::type_index, std::vector<GameObject*>>();
-	m_goManager = goManager;
 }
 
 /**
@@ -35,6 +35,16 @@ void EventManager::registerEvent(GameObject *gameObject) {
 */
 void EventManager::raiseEvent(Events::Event &event) {
 	m_eventQueue.push(event);
+}
+
+/**
+* Adds the given event into the event queue
+* @param timeStampPriority: The time that the event should be executed
+* @param priority: The priority of each event outside of the time priority
+*/
+template <typename E>
+void raiseEventAll(int64_t timeStampPriority, int priority) {
+	// TODO: Complete this
 }
 
 /**

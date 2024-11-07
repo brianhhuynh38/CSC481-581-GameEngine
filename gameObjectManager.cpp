@@ -1,16 +1,19 @@
 #include "gameObjectManager.h"
 
 #include "component.h"
-#include "rigidBody.h"
-#include "definitions.h"
 #include "playerInput.h"
+#include "rigidBody.h"
+
+//#include "eventManager.h"
+#include "definitions.h"
+
 
 /**
 * Constructor for the GameObjectManager that takes in a reference to the Timeline
 *
 * @param timeline: Reference to the timeline
 */
-GameObjectManager::GameObjectManager(Timeline* timelineRef) {
+GameObjectManager::GameObjectManager(Timeline* timelineRef/*, EventManager* eventManager*/) {
 
 	// Set starting ID value
 	m_idTracker = 0;
@@ -20,7 +23,8 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	m_objects = new std::map<int, GameObject*>();
 	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
-
+	// Add a reference to the event manager
+	//m_eventManager = eventManager;
 }
 
 /**
@@ -198,12 +202,14 @@ void GameObjectManager::insert(GameObject* go) {
 	if (go->getUUID() == 0) {
 		m_idTracker--;
 		go->setUUID(m_idTracker);
+		// Assigns every gameObject with ref to EventManager
+		//go->setEventManager(m_eventManager);
 	}
 
 	// TODO: It may be better to change so that it updates each of the components individually
 	// Might also want to make it so that it doesn't try to load texture in the constructor so that
 	// it doesn't call it every single time this function is called like last time
-	
+
 	// Adds or inserts existing information into the Manager
 	m_objects->insert_or_assign(go->getUUID(), go);
 }

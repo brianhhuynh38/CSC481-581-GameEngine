@@ -4,15 +4,11 @@
 #define EVENT_H
 
 #include "GameObject.h"
-#include "gameObjectManager.h"
-
 #include "json.hpp"
 
 using json = nlohmann::json;
 
 namespace Events {
-
-	#define EVENTS_SEND_ALL = 0
 
 	/**
 	* Class representation of the Event that houses a reference to a GameObject (if applicable) and 

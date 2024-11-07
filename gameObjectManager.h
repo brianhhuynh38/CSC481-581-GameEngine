@@ -5,7 +5,7 @@
 
 #include "GameObject.h"
 #include "timeline.h"
-#include "event.h"
+//#include "eventManager.h"
 
 #include <map>
 #include <mutex>
@@ -25,6 +25,8 @@ private:
 
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
+	// Reference to EventManager
+	//EventManager* m_eventManager;
 
 	// Mutex used to lock gameObject from updating
 	std::mutex m_mutexUpdate;
@@ -38,7 +40,7 @@ public:
 	* 
 	* @param timeline: Reference to the timeline
 	*/
-	GameObjectManager(Timeline *timelineRef);
+	GameObjectManager(Timeline *timelineRef/*, EventManager *eventManager*/);
 
 	/**
 	* Destructor that frees any allocated memory for the GameObjects

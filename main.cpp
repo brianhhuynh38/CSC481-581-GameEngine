@@ -13,6 +13,7 @@
 #include "configIO.h"
 #include "physicsCalculator.h"
 
+#include "eventManager.h"
 #include "gameObjectManager.h"
 
 #include "client.h"
@@ -168,7 +169,10 @@ int main(int argc, char* argv[]) {
 	std::condition_variable renderCV;
 
 	// Create gameObjectManager
-	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
+    EventManager* eventManager = new EventManager();
+
+	// Create gameObjectManager
+	GameObjectManager* gameObjectManager = new GameObjectManager(timeline/*, eventManager*/);
 
 	InputHandler* inputHandler = new InputHandler();
 
@@ -292,8 +296,6 @@ int main(int argc, char* argv[]) {
 		//std::lock_guard<std::mutex> lock(playerMutex);
 		playerObject->getComponent<Components::PlayerInputPlatformer>()->setInputHandler(inputHandler);
 	}
-	
-
 
 	std::thread gameObjectThread([&]() {
 		while (true) {

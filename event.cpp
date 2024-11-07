@@ -1,4 +1,5 @@
 #include "event.h"
+#include "GameObject.h"
 
 namespace Events {
 
