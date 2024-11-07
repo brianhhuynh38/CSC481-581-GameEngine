@@ -3,6 +3,14 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+
+// Bytes that represent the different directions that are possible to be inputted
+constexpr int8_t INPUT_UP = 0x1000;
+constexpr int8_t INPUT_DOWN = 0x0100;
+constexpr int8_t INPUT_RIGHT = 0x0010;
+constexpr int8_t INPUT_LEFT = 0x0001;
+
+
 class Input {
 private:
 	/// The InputHandler struct used to keep track of keypresses and other input.

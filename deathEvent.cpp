@@ -2,6 +2,7 @@
 
 #include "eventManager.h"
 #include "spawnEvent.h"
+#include "global.h"
 
 namespace Events {
 
@@ -13,7 +14,7 @@ namespace Events {
 
 	void DeathEvent::onEvent() const {
 		Events::SpawnEvent se = Events::SpawnEvent(m_goRefVector, m_timeStampPriority, m_priority);
-		EventManager::raiseEvent(se);
+		eventManager->raiseEvent(se);
 	}
 
 }

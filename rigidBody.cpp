@@ -7,6 +7,7 @@
 #include "playerGO.h"
 #include "boundaryZone.h"
 #include "spawnEvent.h"
+#include "global.h"
 //#include "transform.h"
 //#include "component.h"
 //#include "vector2D.h"
@@ -74,7 +75,8 @@ namespace Components {
 					std::vector<GameObject*> go = std::vector<GameObject*>();
 					go.push_back(m_parent);
 					Events::SpawnEvent se = Events::SpawnEvent(go, m_parent->getCurrentTimeStamp(), 1);
-					m_parent->getEventManager()->raiseEvent(se);
+					eventManager->raiseEvent(se);
+					//m_parent->getEventManager()->raiseEvent(se);
 					//EventManager::raiseEvent(se);
 				}
 				else if (m_mostRecentCollisionInfo.colliderType == 2) { // Boundary collision

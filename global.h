@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "vector2D.h"
 #include "timeline.h"
+#include "eventManager.h"
 
 #pragma once
 #ifndef GLOBAL_H
@@ -14,14 +15,8 @@ extern Utils::Vector2D globalScaling;
 /** Dictates whether proportional scaling is active */
 extern bool proportionalScalingActive;
 
-/** Handles control inputs to move the player */
-//extern InputHandler inputHandler;
-/** The timeline used to manage time used for physics calculations */
-//extern Timeline timeline;
-/** The space where physics calculations are done in relations to Entities */
-//extern Physics physics;
-/** controls entity logic */
-//extern EntityController *entityController;
+// The global instance of eventManager that everything has access to
+extern EventManager* eventManager;
 
 
 #endif

@@ -27,13 +27,15 @@
 #include "boundaryZone.h"
 
 // Global variables
-/// The Display struct used to initialize renderer and window
+
+// The Display struct used to initialize renderer and window
 Display *display;
-/// Controller for all entities and their physics
-/// Global scale factor
+// Global scale factor
 Utils::Vector2D globalScaling;
-/// Determines if proportional scaling is active
+// Determines if proportional scaling is active
 bool proportionalScalingActive;
+// Manager in charge of all queueing and execution of events
+EventManager* eventManager;
 
 /**
  * Frees any allocated memory on application exit
@@ -169,7 +171,7 @@ int main(int argc, char* argv[]) {
 	std::condition_variable renderCV;
 
 	// Create EventManager
-    EventManager* eventManager = new EventManager();
+    eventManager = new EventManager();
 
 	// Create gameObjectManager
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline, eventManager);
