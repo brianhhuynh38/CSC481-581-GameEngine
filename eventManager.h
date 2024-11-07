@@ -41,7 +41,7 @@ public:
 	* Adds the given event into the event queue
 	* @param Event to add
 	*/
-	void raiseEvent(Events::Event &event);
+	static void raiseEvent(Events::Event &event);
 
 	/**
 	* Adds the given event into the event queue

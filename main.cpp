@@ -311,6 +311,8 @@ int main(int argc, char* argv[]) {
 				//std::lock_guard<std::mutex> lock(playerMutex);
 				gameObjectManager->update();
 			}
+
+			eventManager->dispatchEvents(timeline->getTime());
 			
 			//renderMtx.unlock();
 			//renderCV.notify_all();
