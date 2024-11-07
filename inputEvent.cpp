@@ -2,11 +2,7 @@
 
 namespace Events {
 
-	class InputEvent : public virtual Event {
+	void InputEvent::onEvent() const {
 
-		void onEvent() {
-
-		}
-
-	};
+	}
 }

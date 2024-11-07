@@ -141,7 +141,9 @@
   <ItemGroup>
     <ClCompile Include="boundaryZone.cpp" />
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="collisionEvent.cpp" />
     <ClCompile Include="configIO.cpp" />
+    <ClCompile Include="deathEvent.cpp" />
     <ClCompile Include="deathZone.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="event.cpp" />
@@ -156,6 +158,7 @@
     <ClCompile Include="playerGO.cpp" />
     <ClCompile Include="playerInput.cpp" />
     <ClCompile Include="rigidBody.cpp" />
+    <ClCompile Include="spawnEvent.cpp" />
     <ClCompile Include="staticObject.cpp" />
     <ClCompile Include="textureMesh.cpp" />
     <ClCompile Include="timeline.cpp" />
@@ -169,8 +172,10 @@
   <ItemGroup>
     <ClInclude Include="boundaryZone.h" />
     <ClInclude Include="client.h" />
+    <ClInclude Include="collisionEvent.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="configIO.h" />
+    <ClInclude Include="deathEvent.h" />
     <ClInclude Include="deathZone.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="draw.h" />
@@ -186,6 +191,7 @@
     <ClInclude Include="playerGO.h" />
     <ClInclude Include="playerInput.h" />
     <ClInclude Include="rigidBody.h" />
+    <ClInclude Include="spawnEvent.h" />
     <ClInclude Include="staticObject.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="textureMesh.h" />

@@ -1,17 +1,17 @@
 #pragma once
 
-#ifndef INPUTEVENT_H
-#define INPUTEVENT_H
+#ifndef DEATHEVENT_H
+#define DEATHEVENT_H
 
 #include "event.h"
 
 namespace Events {
 
-	class InputEvent : public virtual Event {
+	class DeathEvent : public virtual Event {
+	public:
 		void onEvent() const override;
 	};
+
 }
-
-
 
 #endif

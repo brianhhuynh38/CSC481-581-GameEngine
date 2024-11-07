@@ -16,20 +16,6 @@ namespace Events {
 	}
 
 	/**
-	* Constructor using the GameObject's ID in order to find and link the GameObject to this Event
-	*/
-	Event::Event(std::vector<int> goIDs, GameObjectManager* goManager, int timeStampPriority, int priority) {
-		for (int id : goIDs) {
-			GameObject* go = goManager->find(id);
-			if (go) {
-				this->m_goRefVector.push_back(go);
-			}
-		}
-		this->m_timeStampPriority = timeStampPriority;
-		this->m_priority = priority;
-	}
-
-	/**
 	* Destructor for an Event that gets rid of the reference to GameObject
 	*/
 	Event::~Event() {

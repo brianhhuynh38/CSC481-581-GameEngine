@@ -1,17 +1,17 @@
 #pragma once
 
-#ifndef INPUTEVENT_H
-#define INPUTEVENT_H
+#ifndef SPAWNEVENT_H
+#define SPAWNEVENT_H
 
 #include "event.h"
 
 namespace Events {
 
-	class InputEvent : public virtual Event {
+	class SpawnEvent : public virtual Event {
+	public:
 		void onEvent() const override;
 	};
+
 }
-
-
 
 #endif
