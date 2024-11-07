@@ -74,8 +74,8 @@ namespace Components {
 					std::vector<GameObject*> go = std::vector<GameObject*>();
 					go.push_back(m_parent);
 					Events::SpawnEvent se = Events::SpawnEvent(go, m_parent->getCurrentTimeStamp(), 1);
-					//m_parent->getEventManager()->raiseEvent(se);
-					EventManager::raiseEvent(se);
+					m_parent->getEventManager()->raiseEvent(se);
+					//EventManager::raiseEvent(se);
 				}
 				else if (m_mostRecentCollisionInfo.colliderType == 2) { // Boundary collision
 					auto* boundaryZone = static_cast<BoundaryZone*>(m_mostRecentCollisionInfo.collidedObj);
