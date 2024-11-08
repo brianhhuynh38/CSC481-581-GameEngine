@@ -16,7 +16,7 @@ namespace Events {
 
 	void InputEvent::onEvent() const {
 		for (GameObject* go : m_goRefVector) {
-			Utils::Vector2D moveVector;
+			Utils::Vector2D moveVector = Utils::Vector2D(0, 0);
 			//std::cout << "The movementVector in movePlayer: " << movementVector.toString() << "\n";
 			float deltaTimeInSecs = go->getDeltaTimeInSecsOfObject();
 			Utils::Vector2D posMover = Utils::Vector2D(0, 0); // amount to change positon by
@@ -33,77 +33,62 @@ namespace Events {
 			if (m_movementVector.x != 0.0f) {
 
 				// The vector the player will move by at the end
-				moveVector = Utils::Vector2D(m_movementVector.x * deltaTimeInSecs, 0);
-
-				if (m_movementVector.x == 0) { // decelerate-x
-					// moves velocity towards zero.
-					// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no decceleration.
-					if (rb->getVelocity()->x > 2) {
-						velMover = Utils::Vector2D((-decelerationRate * Utils::Vector2D(velocity->x, 0).multConst(deltaTimeInSecs).getMagnitude()), 0);
-					}
-					else if (rb->getVelocity()->x < -2) {
-						velMover = Utils::Vector2D((decelerationRate * Utils::Vector2D(velocity->x, 0).multConst(deltaTimeInSecs).getMagnitude()), 0);
-					}
-					else {
-						velMover = Utils::Vector2D(-1 * velocity->x, 0);
-					}
-
-					//player->updateVelocity(Utils::Vector2D((*player->getVelocity()).multConst(-1).x, 0));
-
+				moveVector.x = m_movementVector.x * deltaTimeInSecs;
+				// check if changing directions
+				if ((m_movementVector.x > 0 && velocity->x < 0) || (m_movementVector.x < 0 && velocity->x > 0)) {
+					// increase rate of accelaration until moving in desired direction
+					velMover.x = moveVector.x * decelerationRate;
 				}
-				else { // accelerate-x
-					// check if changing directions
-					if ((m_movementVector.x > 0 && velocity->x < 0) || (m_movementVector.x < 0 && velocity->x > 0)) {
-						// increase rate of accelaration until moving in desired direction
-						velMover = moveVector.multConst(decelerationRate);
-					}
-					else {
-						velMover = moveVector;
-					}
-
+				else {
+					velMover = moveVector;
 				}
-
-				rb->updateVelocity(velMover);
-				posMover = Utils::Vector2D(velocity->x, 0).multConst(deltaTimeInSecs);
-				//player->setVelocity(moveVector.x, player->getVelocity()->y);
 
 			}
-			// moving on y-axis
-			else if (m_movementVector.y != 0.0f) {
-
-				moveVector = Utils::Vector2D(0, m_movementVector.y * deltaTimeInSecs);
-
-				if (m_movementVector.y == 0) { // decelerate-y
-					// moves velocity towards zero.
+			else {
+				// moves velocity towards zero.
 					// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no decceleration.
-					if (velocity->y > 2) {
-						velMover = Utils::Vector2D(0, (-5 * Utils::Vector2D(0, velocity->y).multConst(deltaTimeInSecs).getMagnitude()));
-					}
-					else if (velocity->y < -2) {
-						velMover = Utils::Vector2D(0, (5 * Utils::Vector2D(0, velocity->y).multConst(deltaTimeInSecs).getMagnitude()));
-					}
-					else {
-						velMover = Utils::Vector2D(0, -1 * velocity->y);
-					}
-
-					//player->updateVelocity(Utils::Vector2D(0, (*player->getVelocity()).multConst(-1).y));
-
+				if (rb->getVelocity()->x > 2) {
+					velMover.x = -decelerationRate * velocity->x * deltaTimeInSecs;
 				}
-				else { // accelerate-y
-					velMover = moveVector;
-
+				else if (rb->getVelocity()->x < -2) {
+					velMover.x = decelerationRate * velocity->x * deltaTimeInSecs;
+				}
+				else {
+					velMover.x = -velocity->x;
 				}
 
-				rb->updateVelocity(velMover);
-				posMover = Utils::Vector2D(0, velocity->y).multConst(deltaTimeInSecs);
+				//player->updateVelocity(Utils::Vector2D((*player->getVelocity()).multConst(-1).x, 0));
+
+			}
+
+			posMover.x = velocity->x * deltaTimeInSecs;
+
+			// moving on y-axis
+			if (m_movementVector.y != 0.0f) {
+
+				moveVector.y = m_movementVector.y * deltaTimeInSecs;
+				velMover.y = moveVector.y;
+
+				posMover.y = velocity->y * deltaTimeInSecs;
 				//player->setVelocity( player->getVelocity()->x, moveVector.y);
 
 			}
 			else {
-				moveVector = Utils::Vector2D(0, 0);
+				// moves velocity towards zero.
+					// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no decceleration.
+					if (velocity->y > 2) {
+						velMover.y = -5 * velocity->y * deltaTimeInSecs;
+					}
+					else if (velocity->y < -2) {
+						velMover.y = 5 * velocity->y * deltaTimeInSecs;
+					}
+					else {
+						velMover.y = -velocity->y;
+					}
 			}
 
 			// move player
+			rb->updateVelocity(velMover);
 			transform->updatePosition(posMover);
 
 			//std::cout << "Vel: " << velocity->x << ", " << velocity->y << "\n";
