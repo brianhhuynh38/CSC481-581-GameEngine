@@ -65,7 +65,7 @@ void EventManager::dispatchEvents(int64_t timeStamp) {
 		Events::Event* e = m_eventQueue.top();
 		// Run the onEvent, then delete
 		e->onEvent();
-		delete e;
+		//delete e;
 		// Remove the Event from the queue
 		m_eventQueue.pop();
 	}
