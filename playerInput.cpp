@@ -16,6 +16,7 @@ namespace Components {
 		m_canPressInput = true;
 		m_isGrounded = false;
 		m_inputHandler = nullptr;
+		eventManager->registerEvent<Events::InputEvent>(m_parent);
 	}
 
 	PlayerInputPlatformer::PlayerInputPlatformer(float maxMovementSpeed, Utils::Vector2D jumpVector, GameObject* parentRef) {
@@ -25,6 +26,7 @@ namespace Components {
 		m_canPressInput = true;
 		m_isGrounded = false;
 		m_inputHandler = nullptr;
+		eventManager->registerEvent<Events::InputEvent>(m_parent);
 	}
 
 	void PlayerInputPlatformer::update() {

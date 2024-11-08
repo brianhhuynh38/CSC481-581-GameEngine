@@ -1,6 +1,12 @@
 #include "eventManager.h"
+
 #include "gameObject.h"
+
 #include "event.h"
+#include "collisionEvent.h"
+#include "deathEvent.h"
+#include "inputEvent.h"
+#include "spawnEvent.h"
 
 /**
 * Constructor for EventManager that intializes the event queue
@@ -46,14 +52,42 @@ void EventManager::raiseEvent(Events::Event* event) {
 */
 template <typename E>
 void EventManager::raiseEventAll(int64_t timeStampPriority, int priority) {
+	//std::vector<GameObject*> gos;
 	//try {
-	//	std::vector<GameObject*> gos = m_eventRegistry.at(typeid(E));
-
+	//	gos = m_eventRegistry.at(typeid(E));
 	//}
 	//catch (std::out_of_range) {
-	//	std::cout << "Event registry accessed by nonexistent Event type";
+	//	std::cerr << "Event registry accessed by nonexistent Event type";
+	//	return;
 	//}
-	// TODO: Implement this (currently not necessary)
+	//switch (typeid(E)) {
+	//	case typeid(Events::CollisionEvent) :
+	//	{
+	//		//raiseEvent(new Events::CollisionEvent());
+	//		// This probably shouldn't be raised globally
+	//		break;
+	//	}
+	//	case typeid(Events::DeathEvent) :
+	//	{
+	//		raiseEvent(new Events::DeathEvent(gos, timeStampPriority, priority));
+	//		break;
+	//	}
+	//	case typeid(Events::InputEvent) :
+	//	{
+	//		// Debating whether this should be implemented
+	//		break;
+	//	}
+	//	case typeid(Events::SpawnEvent) :
+	//	{
+	//		raiseEvent(new Events::SpawnEvent(gos, timeStampPriority, priority));
+	//		break;
+	//	}
+	//	default:
+	//	{
+	//		std::cout << "Invalid Event type used for RaiseEventAll()\n";
+	//		break;
+	//	}
+	//}
 }
 
 /**
