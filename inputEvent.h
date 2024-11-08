@@ -12,10 +12,13 @@ namespace Events {
 
 	class InputEvent : public virtual Event {
 	private:
-		int8_t m_inputByte;
+		// InputHandler value containing inputByte used for reading movements
+		InputHandler m_inputHandler;
+		// Movement vector that defines the directional inputs being 
+		Utils::Vector2D m_movementVector;
 	public:
 
-		InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputByte);
+		InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputHandler, Utils::Vector2D movementVector);
 
 		void onEvent() const override;
 	};

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "playerGO.h"
 #include "boundaryZone.h"
-#include "spawnEvent.h"
+#include "deathEvent.h"
 #include "global.h"
 //#include "transform.h"
 //#include "component.h"
@@ -74,8 +74,8 @@ namespace Components {
 					// Call spawn event
 					std::vector<GameObject*> go = std::vector<GameObject*>();
 					go.push_back(m_parent);
-					Events::SpawnEvent se = Events::SpawnEvent(go, m_parent->getCurrentTimeStamp(), 1);
-					eventManager->raiseEvent(se);
+					Events::DeathEvent de = Events::DeathEvent(go, m_parent->getCurrentTimeStamp(), 1);
+					eventManager->raiseEvent(de);
 					//m_parent->getEventManager()->raiseEvent(se);
 					//EventManager::raiseEvent(se);
 				}

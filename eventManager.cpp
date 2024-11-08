@@ -36,6 +36,7 @@ void EventManager::registerEvent(GameObject *gameObject) {
 */
 void EventManager::raiseEvent(Events::Event &event) {
 	m_eventQueue.push(event);
+	std::cout << "Event Added\n";
 }
 
 /**
@@ -59,7 +60,7 @@ void EventManager::dispatchEvents(int64_t timeStamp) {
 	}
 	
 	// Keep dispatching events until the priority is higher than the given timeStamp
-	while (m_eventQueue.top().getTimeStampPriority() <= timeStamp) {
+	while (!m_eventQueue.empty() && m_eventQueue.top().getTimeStampPriority() <= timeStamp) {
 		m_eventQueue.top().onEvent();
 		m_eventQueue.pop();
 	}

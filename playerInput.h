@@ -43,6 +43,10 @@ namespace Components {
 
 		Utils::Vector2D getJumpVector();
 
+		bool isGrounded();
+
+		void setIsGrounded(bool isGrounded);
+
 		InputHandler* getInputHandler();
 
 		void setInputHandler(InputHandler* inputHandler);

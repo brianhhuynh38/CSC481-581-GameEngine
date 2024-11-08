@@ -216,6 +216,14 @@ namespace Components {
 		return m_inputHandler;
 	}
 
+    bool PlayerInputPlatformer::isGrounded() {
+		return m_isGrounded;
+	}
+
+    void PlayerInputPlatformer::setIsGrounded(bool isGrounded) {
+		m_isGrounded = isGrounded;
+	}
+
 	void PlayerInputPlatformer::setInputHandler(InputHandler* inputHandler) {
 		m_inputHandler = inputHandler;
 	}

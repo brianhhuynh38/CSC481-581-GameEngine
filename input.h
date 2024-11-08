@@ -7,10 +7,10 @@
 
 
 // Bytes that represent the different directions that are possible to be inputted
-constexpr uint8_t INPUT_UP = 0b1000;
-constexpr uint8_t INPUT_DOWN = 0b0100;
-constexpr uint8_t INPUT_RIGHT = 0b0010;
-constexpr uint8_t INPUT_LEFT = 0b0001;
+constexpr uint8_t INPUT_UP = 0b00001000;
+constexpr uint8_t INPUT_DOWN = 0b00000100;
+constexpr uint8_t INPUT_RIGHT = 0b00000010;
+constexpr uint8_t INPUT_LEFT = 0b00000001;
 
 
 /**
