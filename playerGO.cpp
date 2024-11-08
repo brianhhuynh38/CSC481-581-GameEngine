@@ -35,8 +35,8 @@ PlayerGO::PlayerGO() {
 		this
 	);
 	// Register the player GameObject for spawn and death events
-	eventManager->registerEvent<Events::SpawnEvent>(this);
-	eventManager->registerEvent<Events::DeathEvent>(this);
+	//eventManager->registerEvent<Events::SpawnEvent>(this);
+	//eventManager->registerEvent<Events::DeathEvent>(this);
 }
 
 PlayerGO::PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
