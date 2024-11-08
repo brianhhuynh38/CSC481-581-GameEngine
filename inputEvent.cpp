@@ -48,12 +48,9 @@ namespace Events {
 			}
 			else {
 				// moves velocity towards zero.
-				// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no deceleration.
-				if (rb->getVelocity()->x > 0) {
+				velMover.x = -decelerationRate * velocity->x * deltaTimeInSecs;
+				if (rb->getVelocity()->x > 2 || rb->getVelocity()->x < -2) {
 					velMover.x = -decelerationRate * velocity->x * deltaTimeInSecs;
-				}
-				else if (rb->getVelocity()->x < 0) {
-					velMover.x = decelerationRate * velocity->x * deltaTimeInSecs;
 				}
 				else {
 					velMover.x = -velocity->x;
