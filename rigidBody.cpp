@@ -6,14 +6,9 @@
 #include <algorithm>
 #include "playerGO.h"
 #include "boundaryZone.h"
-#include "deathEvent.h"
+#include "collisionEvent.h"
 #include "global.h"
-//#include "transform.h"
-//#include "component.h"
-//#include "vector2D.h"
-//#include "physics.h"
-//
-//#include <SDL.h>
+
 
 namespace Components {
 
@@ -47,53 +42,10 @@ namespace Components {
 			m_mostRecentCollisionInfo = checkObjectCollisions(m_collider, goMap);
 			// Check if the object collided with anything
 			if (m_mostRecentCollisionInfo.hit) {
-				if (m_mostRecentCollisionInfo.colliderType == 0) { // Standard collision
-					// Get Transform component of the GameObject to manipulate position
-					Transform* transform = m_parent->getComponent<Transform>();
-
-					//std::cout << "HitInfo: " << m_mostRecentCollisionInfo.hitVector.toString();
-
-					// Sets the amount of distance and velocity changed during the collision
-					m_mostRecentCollisionInfo.posMover = m_mostRecentCollisionInfo.hitVector.normalizeVector().multConst(m_velocity->getMagnitude() * m_parent->getDeltaTimeInSecsOfObject() * -1);
-					m_mostRecentCollisionInfo.velMover = Utils::Vector2D(0, m_velocity->y * -1);
-
-					// Updates the position and velocity of the object (TODO: Not sure if this would work)
-					transform->updatePosition(m_mostRecentCollisionInfo.posMover);
-					updateVelocity(m_mostRecentCollisionInfo.velMover);
-
-					// Set position of the collider to the position of the transform
-					m_collider->x = transform->getPosition()->x;
-					m_collider->y = transform->getPosition()->y;
-				}
-				else if (m_mostRecentCollisionInfo.colliderType == 1) { // Death zone collision
-					/*Transform* transform = m_parent->getComponent<Transform>();
-					auto* player = static_cast<PlayerGO*>(m_parent);
-					Transform* spawnTransform = player->getSpawn()->getComponent<Transform>();
-					transform->setPosition(spawnTransform->getPosition()->x, spawnTransform->getPosition()->y);*/
-
-					// Call spawn event
-					std::vector<GameObject*> go = std::vector<GameObject*>();
-					go.push_back(m_parent);
-					Events::DeathEvent* de = new Events::DeathEvent(go, m_parent->getCurrentTimeStamp(), 1);
-					eventManager->raiseEvent(de);
-					//m_parent->getEventManager()->raiseEvent(se);
-					//EventManager::raiseEvent(se);
-				}
-				else if (m_mostRecentCollisionInfo.colliderType == 2) { // Boundary collision
-					auto* boundaryZone = static_cast<BoundaryZone*>(m_mostRecentCollisionInfo.collidedObj);
-
-					// Check switch (which side collided from)
-					if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos1()) && boundaryZone->checkCooldown()) {
-						// Change camera location to the other one
-						boundaryZone->setCurrentPos(boundaryZone->getPos2());
-						boundaryZone->initiateTimer(15);
-					}
-					else if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos2()) && boundaryZone->checkCooldown()) {
-						// Change camera location to the other one
-						boundaryZone->setCurrentPos(boundaryZone->getPos1());
-						boundaryZone->initiateTimer(15);
-					}
-				}
+				// If it hits something, raise a collision event
+				std::vector<GameObject*> goVec = std::vector<GameObject*>();
+				goVec.push_back(m_parent);
+				eventManager->raiseEvent(new Events::CollisionEvent(goVec, m_parent->getCurrentTimeStamp(), 0, &m_mostRecentCollisionInfo));
 			}
 		}
 	}
