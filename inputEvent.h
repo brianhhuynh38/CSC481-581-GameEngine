@@ -4,6 +4,8 @@
 #define INPUTEVENT_H
 
 #include "event.h"
+#include "GameObject.h"
+#include "input.h"
 
 
 namespace Events {
@@ -13,7 +15,7 @@ namespace Events {
 		int8_t m_inputByte;
 	public:
 
-		InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, int8_t inputByte);
+		InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputByte);
 
 		void onEvent() const override;
 	};

@@ -1,14 +1,27 @@
 #pragma once
-#include "structs.h"
+
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "structs.h"
+
 
 // Bytes that represent the different directions that are possible to be inputted
-constexpr int8_t INPUT_UP = 0x1000;
-constexpr int8_t INPUT_DOWN = 0x0100;
-constexpr int8_t INPUT_RIGHT = 0x0010;
-constexpr int8_t INPUT_LEFT = 0x0001;
+constexpr uint8_t INPUT_UP = 0b1000;
+constexpr uint8_t INPUT_DOWN = 0b0100;
+constexpr uint8_t INPUT_RIGHT = 0b0010;
+constexpr uint8_t INPUT_LEFT = 0b0001;
+
+
+/**
+ * InputHandler holds the current input values for keypresses.
+ */
+typedef struct {
+	// List of all available keys and their states
+	int keyboard[MAX_KEYBOARD_KEYS];
+	// The byte representing 
+	uint8_t inputByte;
+} InputHandler;
 
 
 class Input {
