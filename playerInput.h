@@ -36,9 +36,6 @@ namespace Components {
 
 		void update() override;
 
-		// Helper method to move the player transform
-		void movePlayer(Utils::Vector2D movementVector, int axis, RigidBody* rb, Transform* transform);
-
 		float getMaxSpeed();
 
 		Utils::Vector2D getJumpVector();

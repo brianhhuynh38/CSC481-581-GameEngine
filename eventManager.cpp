@@ -45,8 +45,15 @@ void EventManager::raiseEvent(Events::Event* event) {
 * @param priority: The priority of each event outside of the time priority
 */
 template <typename E>
-void raiseEventAll(int64_t timeStampPriority, int priority) {
-	// TODO: Complete this
+void EventManager::raiseEventAll(int64_t timeStampPriority, int priority) {
+	//try {
+	//	std::vector<GameObject*> gos = m_eventRegistry.at(typeid(E));
+
+	//}
+	//catch (std::out_of_range) {
+	//	std::cout << "Event registry accessed by nonexistent Event type";
+	//}
+	// TODO: Implement this (currently not necessary)
 }
 
 /**
