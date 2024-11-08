@@ -43,6 +43,12 @@ public:
 	*/
 	void raiseEvent(Events::Event* event);
 
+    /**
+	* Instantly raises an Event and activates it, skips queue (primarily to preserve multi-threaded nature of networked events, maybe temp)
+	* @param Event to activate
+	*/
+    void raiseEventInstantly(Events::Event* event);
+
 	/**
 	* Adds the given event into the event queue
 	* @param timeStampPriority: The time that the event should be executed

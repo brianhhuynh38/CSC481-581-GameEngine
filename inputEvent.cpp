@@ -33,9 +33,6 @@ namespace Events {
 
 			// moving on x-axis
 			if (m_movementVector.x != 0.0f) {
-
-				// The vector the player will move by at the end
-				;
 				// check if changing directions
 				if ((m_movementVector.x > 0 && velocity->x < 0) || (m_movementVector.x < 0 && velocity->x > 0)) {
 					// increase rate of accelaration until moving in desired direction
@@ -44,7 +41,6 @@ namespace Events {
 				else {
 					velMover = moveVector;
 				}
-
 			}
 			else {
 				// moves velocity towards zero.
@@ -61,17 +57,14 @@ namespace Events {
 
 			// moving on y-axis
 			if (m_movementVector.y != 0.0f) {
-
 				moveVector.y = m_movementVector.y * deltaTimeInSecs;
 				velMover.y = moveVector.y;
 
 				posMover.y = velocity->y * deltaTimeInSecs;
-				//player->setVelocity( player->getVelocity()->x, moveVector.y);
-
 			}
 			else {
 				// moves velocity towards zero.
-					// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no decceleration.
+				// if the absolute value of the player's velocity is less than 2, it will then cancel out the velocity with no decceleration.
 				if (velocity->y > 2) {
 					velMover.y = -5 * velocity->y * deltaTimeInSecs;
 				}

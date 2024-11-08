@@ -32,8 +32,6 @@ namespace Components {
 	void PlayerInputPlatformer::update() {
 		if (m_canPressInput && m_inputHandler) {
 
-			//std::cout << "Entered Player Input, is grounded?: " << m_isGrounded << "\n";
-
 			Transform* transform = m_parent->getComponent<Transform>();
 			RigidBody* rb = m_parent->getComponent<RigidBody>();
 
@@ -63,26 +61,16 @@ namespace Components {
 				// nothing
 			}
 
-			//std::cout << "Does it get the up input?: " << (m_inputHandler->keyboard[SDL_SCANCODE_UP] == 1 && m_isGrounded) << "\n";
-			
 			// Jump
 			if ((m_inputHandler->inputByte & INPUT_UP) == INPUT_UP && m_isGrounded) {
-				//std::cout << "\n\nIt entered the jump stuff\n\n\n";
 				moveVector.y = m_jumpVector.y;
 				m_isGrounded = false;
-				//std::cout << "\n\n\nJUMPER: " << moveVector.y << "\n\n\n";
 			}
+
 			else {
 				// gravity
 				moveVector.y += rb->getAcceleration()->y;
 			}
-
-			// moveVector.multConst(m_timeline->getDeltaTime() / MICROSEC_PER_SEC);
-
-			//player->updateVelocity(moveVector);
-
-
-			//std::cout << "moveVector: " << moveVector.x << ", " << moveVector.y << "\n";
 
 			// Create GameObject vector
 			std::vector<GameObject*> goVec = std::vector<GameObject*>();

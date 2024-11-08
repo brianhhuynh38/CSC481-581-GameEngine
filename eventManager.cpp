@@ -42,7 +42,14 @@ void EventManager::registerEvent(GameObject *gameObject) {
 */
 void EventManager::raiseEvent(Events::Event* event) {
 	m_eventQueue.push(event);
-	std::cout << "Event Added\n";
+}
+
+/**
+  * Instantly raises an Event and activates it, skips queue (primarily to preserve multi-threaded nature of networked events, maybe temp)
+  * @param Event to activate
+  */
+void EventManager::raiseEventInstantly(Events::Event* event) {
+	event->onEvent();
 }
 
 /**

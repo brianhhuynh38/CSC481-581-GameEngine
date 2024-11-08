@@ -19,13 +19,11 @@ namespace Events {
 	void CollisionEvent::onEvent() const {
 		for (GameObject* go : m_goRefVector) {
 			switch (m_hitInfo->colliderType) {
-				case 0:
+				case 0: // Standard collision
 				{
 					// Get Transform component of the GameObject to manipulate position
 					Components::Transform* transform = go->getComponent<Components::Transform>();
 					Components::RigidBody* rb = go->getComponent<Components::RigidBody>();
-
-					//std::cout << "HitInfo: " << m_hitInfo.hitVector.toString();
 
 					// Sets the amount of distance and velocity changed during the collision
 					m_hitInfo->posMover = m_hitInfo->hitVector.normalizeVector().multConst(rb->getVelocity()->getMagnitude() * go->getDeltaTimeInSecsOfObject() * -1);
@@ -39,7 +37,7 @@ namespace Events {
 					rb->setColliderCoordinates(transform->getPosition()->x, transform->getPosition()->y);
 					break;
 				}
-				case 1:
+				case 1: // Death Boundary
 				{
 					// Call death event
 					std::vector<GameObject*> goVec = std::vector<GameObject*>();
@@ -48,7 +46,7 @@ namespace Events {
 					eventManager->raiseEvent(de);
 					break;
 				}
-				case 2:
+				case 2: // Camera Change Collision
 				{
 					BoundaryZone* boundaryZone = static_cast<BoundaryZone*>(m_hitInfo->collidedObj);
 
@@ -67,7 +65,7 @@ namespace Events {
 				}
 				default:
 				{
-					std::cout << "Invalid collider type: " << m_hitInfo->colliderType << "\n";
+					std::cerr << "Invalid collider type: " << m_hitInfo->colliderType << "\n";
 					break;
 				}
 			}
