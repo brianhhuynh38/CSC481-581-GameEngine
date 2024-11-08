@@ -12,7 +12,7 @@
 *
 * @param timeline: Reference to the timeline
 */
-GameObjectManager::GameObjectManager(Timeline* timelineRef, EventManager* eventManager) {
+GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 
 	// Set starting ID value
 	m_idTracker = 0;
@@ -22,8 +22,6 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef, EventManager* eventM
 	m_objects = new std::map<int, GameObject*>();
 	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
-	// Add a reference to the event manager
-	m_eventManager = eventManager;
 }
 
 /**
@@ -202,8 +200,6 @@ void GameObjectManager::insert(GameObject* go) {
 	if (go->getUUID() == 0) {
 		m_idTracker--;
 		go->setUUID(m_idTracker);
-		// Assigns every gameObject with ref to EventManager
-		go->setEventManager(m_eventManager);
 	}
 
 	// TODO: It may be better to change so that it updates each of the components individually

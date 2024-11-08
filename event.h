@@ -46,7 +46,7 @@ namespace Events {
 		/**
 		* A function that executes when an Event is dispatched
 		*/
-		virtual void onEvent() const {};
+		virtual void onEvent() const = 0;
 
 		/**
 		* Returns a string in JSON format for the Event, GameObjectUUID is sent as 0 (invalid) if there is no reference
@@ -79,10 +79,10 @@ namespace Events {
 		* @param other: The other event for comparison
 		* @returns Whether or not the Event is considered less than the other based on the two priority values
 		*/
-		bool operator<(Event other) const {
+		bool operator<(Event* other) const {
 			return
-				m_timeStampPriority < other.m_timeStampPriority || // Less than if timestamp is smaller than the other
-				(m_timeStampPriority == other.m_timeStampPriority && m_priority < other.m_priority); // or if the priority value is lower if the timestamp is the same
+				m_timeStampPriority < other->m_timeStampPriority || // Less than if timestamp is smaller than the other
+				(m_timeStampPriority == other->m_timeStampPriority && m_priority < other->m_priority); // or if the priority value is lower if the timestamp is the same
 		}
 
 		/**
@@ -91,10 +91,10 @@ namespace Events {
 		* @param other: The other event for comparison
 		* @returns Whether or not the Event is considered less than the other based on the two priority values
 		*/
-		bool operator>(Event other) const {
+		bool operator>(Event* other) const {
 			return
-				m_timeStampPriority > other.m_timeStampPriority || // Less than if timestamp is smaller than the other
-				(m_timeStampPriority == other.m_timeStampPriority && m_priority > other.m_priority); // or if the priority value is lower if the timestamp is the same
+				m_timeStampPriority > other->m_timeStampPriority || // Less than if timestamp is smaller than the other
+				(m_timeStampPriority == other->m_timeStampPriority && m_priority > other->m_priority); // or if the priority value is lower if the timestamp is the same
 		}
 	};
 }

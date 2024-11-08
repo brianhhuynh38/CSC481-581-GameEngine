@@ -74,7 +74,7 @@ namespace Components {
 					// Call spawn event
 					std::vector<GameObject*> go = std::vector<GameObject*>();
 					go.push_back(m_parent);
-					Events::DeathEvent de = Events::DeathEvent(go, m_parent->getCurrentTimeStamp(), 1);
+					Events::DeathEvent* de = new Events::DeathEvent(go, m_parent->getCurrentTimeStamp(), 1);
 					eventManager->raiseEvent(de);
 					//m_parent->getEventManager()->raiseEvent(se);
 					//EventManager::raiseEvent(se);

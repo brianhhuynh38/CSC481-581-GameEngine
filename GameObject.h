@@ -37,9 +37,6 @@ protected:
     double m_currTimeStep;
     // The current timestamp this object is at
     int64_t m_currentTime;
-
-    // Reference to EventManager so that it can call
-    EventManager* m_eventManager;
     
 public:
     // Default constructor for GameObject. Adds a Transform component (required)
@@ -89,9 +86,6 @@ public:
 
     void to_json(json& j);
 
-    void setEventManager(EventManager *eventManager);
-
-    EventManager* getEventManager();
 };
 
 

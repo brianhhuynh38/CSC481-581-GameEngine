@@ -16,7 +16,7 @@ class EventManager {
 private:
 	// Queue of Events that are dispatched when their timestamp is less than or equal to the current time
 	// Event, Storage container, Greatest to least/least to greatest
-	std::priority_queue<Events::Event, std::vector<Events::Event>, std::greater<Events::Event>> m_eventQueue;
+	std::priority_queue<Events::Event*, std::vector<Events::Event*>, std::greater<Events::Event*>> m_eventQueue;
 	// Maintains the history of all GameObjects that are registered to a given Event
 	std::map<std::type_index, std::vector<GameObject*>> m_eventRegistry;
 
@@ -41,7 +41,7 @@ public:
 	* Adds the given event into the event queue
 	* @param Event to add
 	*/
-	void raiseEvent(Events::Event &event);
+	void raiseEvent(Events::Event* event);
 
 	/**
 	* Adds the given event into the event queue

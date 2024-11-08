@@ -19,7 +19,7 @@ constexpr uint8_t INPUT_LEFT = 0b00000001;
 typedef struct {
 	// List of all available keys and their states
 	int keyboard[MAX_KEYBOARD_KEYS];
-	// The byte representing 
+	// The byte representing a combination of inputs
 	uint8_t inputByte;
 } InputHandler;
 

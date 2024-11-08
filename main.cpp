@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
     eventManager = new EventManager();
 
 	// Create gameObjectManager
-	GameObjectManager* gameObjectManager = new GameObjectManager(timeline, eventManager);
+	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
 
 	InputHandler* inputHandler = new InputHandler();
 

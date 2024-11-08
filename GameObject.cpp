@@ -169,13 +169,6 @@ void GameObject::to_json(json& j) {
 	
 }
 
-void GameObject::setEventManager(EventManager* eventManager) {
-	m_eventManager = eventManager;
-}
-
-EventManager* GameObject::getEventManager() {
-	return m_eventManager;
-}
 
 // Example for main:
 // Player player(1, 1, 0, 0, 50, 50, 10, "player_texture.png", false, true, 0, 10, 5.0f);
