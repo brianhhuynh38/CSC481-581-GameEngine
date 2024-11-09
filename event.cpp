@@ -33,7 +33,7 @@ namespace Events {
 	/**
 	* Returns a string in JSON format for the Event, GameObjectUUID is sent as 0 (invalid) if there is no reference
 	*/
-	void Event::to_json(json& j) {
+	void Event::to_json(json& j) const {
 		// Add all fields to the json, but records gameObject ID as 0 if there is no GameObject reference
 		std::vector<int> idVector = std::vector<int>();
 		for (GameObject *goRef : m_goRefVector) {

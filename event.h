@@ -51,7 +51,7 @@ namespace Events {
 		/**
 		* Returns a string in JSON format for the Event, GameObjectUUID is sent as 0 (invalid) if there is no reference
 		*/
-		virtual void to_json(json &j);
+		virtual void to_json(json &j) const;
 
 		/**
 		* Return the timestamp the event should execute at

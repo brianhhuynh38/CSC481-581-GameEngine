@@ -1,7 +1,6 @@
 #include "moveObjectEvent.h"
 
 
-
 namespace Events {
 
 	/**

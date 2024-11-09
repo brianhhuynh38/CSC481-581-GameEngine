@@ -113,7 +113,6 @@ void GameObject::from_json(const json& j) {
 				textureMeshData["texturefilepath"]
 			);
 		}
-		
 	}
 
 	if (j.contains("playerinput")) {
