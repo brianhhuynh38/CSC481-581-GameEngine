@@ -18,6 +18,8 @@ namespace Events {
 	private:
 		// true if this event is being received by another client
 		bool m_isReceiving;
+		// The client ID used to filter messages, this will not be used if it is passed in as 0
+		int m_clientIdentifier;
 		// socket reference for sending/receiving
 		zmq::socket_t* m_socketRef;
 		// JSON string containing positional update information for object
@@ -31,7 +33,7 @@ namespace Events {
 		/**
 		* constructor for PlayerUpdateEvent for outbound events
 		*/
-		PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* sendSocket);
+		PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* sendSocket, int clientIdentifier=0);
 
 		/**
 		* constructor for PlayerUpdateEvent for inbound events

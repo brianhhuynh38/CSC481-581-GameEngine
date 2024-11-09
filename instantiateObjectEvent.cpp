@@ -7,7 +7,7 @@ using json = nlohmann::json;
 namespace Events {
 
 	// Constructor used for sending out Event information through a send socket and direct GameObject reference
-	InstantiateObjectEvent::InstantiateObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket) {
+	InstantiateObjectEvent::InstantiateObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int clientIdentifier) {
 		// GameObject reference	
 		m_goRefVector = goRef;
 		// Event priorities
@@ -15,11 +15,12 @@ namespace Events {
 		m_priority = priority;
 		// Socket refrence to send out information
 		m_socketRef = socket;
+		// Define client ID for message sending
+		m_clientIdentifier = clientIdentifier;
 		// Identifier false for onEvent function
 		m_isReceiving = false;
 		// Empty string since it's not relevant in a send until the end
 		m_jsonString = "";
-		// Set go manager reference 
 		m_goManagerRef = nullptr;
 	}
 
@@ -30,14 +31,15 @@ namespace Events {
 		// Event priorities
 		m_timeStampPriority = timeStampPriority;
 		m_priority = priority;
-		// Socket is null because it is not needed for json parsing
+		// Socket is null because it is not needed for json parsing, client identifier is also set to 0 (invalid)
 		m_socketRef = nullptr;
+		m_clientIdentifier = 0;
 		// Identifier for the onEvent function
 		m_isReceiving = true;
 		// The jsonstring to be parsed
 		m_jsonString = jsonString;
 		// Set go manager reference 
-		m_goManagerRef = nullptr;
+		m_goManagerRef = goManager;
 	}
 
 	void InstantiateObjectEvent::onEvent() const {
@@ -45,16 +47,18 @@ namespace Events {
 			m_goManagerRef->deserialize(m_jsonString, 2);
 		}
 		else { // If the Event is currently sending out a message from this client
+			// Convert gameObject and Event data into json format
 			json j;
 			to_json(j);
-			zmq::message_t msg(j.dump());
+			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
+			std::string eventInfo = m_clientIdentifier != 0 ? std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
+			zmq::message_t msg(eventInfo);
 			m_socketRef->send(msg, zmq::send_flags::dontwait);
 		}
 	}
 
 	void InstantiateObjectEvent::to_json(json& j) const {
-		// Add all fields to the json, but records gameObject ID as 0 if there is no GameObject reference
-		std::vector<int> idVector = std::vector<int>();
+		// Add all fields to the json
 		json gosJson;
 
 		for (GameObject* go : m_goRefVector) {
