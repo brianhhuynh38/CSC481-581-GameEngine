@@ -1,5 +1,6 @@
 #include "moveObjectEvent.h"
 
+#include "playerInput.h"
 
 namespace Events {
 
@@ -50,7 +51,7 @@ namespace Events {
 			json j = json::parse(m_jsonString);
 
 			// Loop through objects in JSON array
-			for (const auto& obj : j) {
+			for (const auto& obj : j["moving"]) {
 				// Get the UUID of the object
 				int uuid = obj["uuid"].get<int>();
 
@@ -66,7 +67,7 @@ namespace Events {
 			json j;
 			to_json(j);
 			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
-			std::string eventInfo = m_clientIdentifier != 0 ? std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
+			std::string eventInfo = m_clientIdentifier != 0 ? "Client_" + std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
 			zmq::message_t msg(eventInfo);
 			m_socketRef->send(msg, zmq::send_flags::dontwait);
 		}
@@ -91,7 +92,14 @@ namespace Events {
 				{"y", position.y}
 			};
 			// Push the JSON into the list of GameObjects
-			gosJson.push_back(gameObjectJson);
+			if (go->getComponent<Components::PlayerInputPlatformer>()) {
+				// Push GameObject into the players list
+				gosJson["players"].push_back(gameObjectJson);
+			}
+			else {
+				// Push GameObject in the list of MovingObjects
+				gosJson["moving"].push_back(gameObjectJson);
+			}
 		}
 		j["gos"] = gosJson;
 		j["timeStampPriority"] = m_timeStampPriority;

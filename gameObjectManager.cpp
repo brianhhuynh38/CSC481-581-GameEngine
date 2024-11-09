@@ -175,6 +175,13 @@ std::map<int, GameObject*>* GameObjectManager::getClientObjectMap() {
 }
 
 /**
+* Returns the current Time of the timeline associated with gameObject calculations
+*/
+int64_t GameObjectManager::getCurrentTime() {
+	return m_timeline->getTime();
+}
+
+/**
 * Erases the object from the client map
 */
 void GameObjectManager::terminateClient(int uuidKey) {

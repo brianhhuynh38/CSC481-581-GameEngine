@@ -2,7 +2,12 @@
 
 #include "configIO.h"
 #include "gameObjectManager.h"
+
 #include "structs.h"
+#include "global.h"
+
+#include "playerUpdateEvent.h"
+#include "moveObjectEvent.h"
 
 #include <iostream>
 #include <string>
@@ -60,8 +65,14 @@ namespace PeerToPeer {
                 // Trim the client info string
                 std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
 
-                // Update client from JSON and set to Kinematic to lessen performance impact on current client
-                gameObjectManager->deserializeClient(clientString, 2);
+                // Raise event to handle player updates (might change to use client queues)
+                eventManager->raiseEventInstantly(new Events::PlayerUpdateEvent(gameObjectManager, 0, 0, clientString));
+
+                //// Update client from JSON and set to Kinematic to lessen performance impact on current client
+                //gameObjectManager->deserializeClient(clientString, 2);
+
+                
+
             }
             else { // If not, keep track of time that the thread does not receive messages; after 10 seconds: terminate
 
@@ -117,10 +128,11 @@ namespace PeerToPeer {
 
         // Receive response from server 
         zmq::message_t reply;
+        // TODO: Change to handle receiving and instansiating ALL client information.
         request->recv(reply);
 
         //std::cout << "Received client identifier: " << reply.to_string() << "\n";
-        // TODO: Get the number from the end of the first line identifier (ex. Client_1, get 1 and store in int)
+
         int clientIdentifier = std::stoi(
             reply.to_string().substr(
                 reply.to_string().find('_') + 1
@@ -133,6 +145,9 @@ namespace PeerToPeer {
         std::string playerString = reply.to_string().substr(reply.to_string().find('\n') + 1);
 
         //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
+
+        // TODO: Instansiates objects from the playerString.
+        //eventManager->raiseEvent(new Events::InstantiateObjectEvent(goManager, timeStampPriority, priority, jsonString));
 
         // Parse the json string received from the server into playerGO
         json j = json::parse(playerString);
@@ -151,6 +166,7 @@ namespace PeerToPeer {
         // Convert the player game object into JSON
         json stringPrint;
         playerGO->to_json(stringPrint);
+
         //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
 
         // Use the player ID to establish a unique socket for connections
@@ -204,7 +220,11 @@ namespace PeerToPeer {
 			std::getline(ss, firstLine);
 
 			std::getline(ss, firstLine);
-			idVector = gameObjectManager->deserialize(firstLine, 2);
+
+            // Call moveEvent for when an object moves
+            eventManager->raiseEvent(new Events::MoveObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine));
+
+			//idVector = gameObjectManager->deserialize(firstLine, 2);
 
             if (!idVector.empty()) {
                 //std::cout << "ID Vector Results: ";
@@ -223,8 +243,11 @@ namespace PeerToPeer {
         int portNum = 6558 + player->getUUID();
         p2ppublisher->connect("tcp://localhost:" + std::to_string(portNum));
 
-        // Send playerInfo
-        p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
+        // TODO: Call playerUpdateEvent with the p2ppublisher socket
+        //eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, timeStampPriority, priority, p2ppublisher, clientIdentifier));
+
+        //// Send playerInfo
+        //p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
 
 		//std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
 

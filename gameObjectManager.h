@@ -87,6 +87,11 @@ public:
 	std::map<int, GameObject*>* getClientObjectMap();
 
 	/**
+	* Returns the current Time of the timeline associated with gameObject calculations
+	*/
+	int64_t getCurrentTime();
+
+	/**
 	* Erases the object from the client map
 	*/
 	void terminateClient(int uuidKey);
