@@ -8,6 +8,7 @@
 
 #include "playerUpdateEvent.h"
 #include "moveObjectEvent.h"
+#include "instantiateObjectEvent.h"
 
 #include <iostream>
 #include <string>
@@ -142,7 +143,7 @@ namespace PeerToPeer {
         //std::cout << "Client identifier: " << clientIdentifier << "\n";
 
         // Trim the identifier off the json
-        std::string playerString = reply.to_string().substr(reply.to_string().find('\n') + 1);
+        std::string starterInfoString = reply.to_string().substr(reply.to_string().find('\n') + 1);
 
         //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
 
@@ -150,15 +151,20 @@ namespace PeerToPeer {
         //eventManager->raiseEvent(new Events::InstantiateObjectEvent(goManager, timeStampPriority, priority, jsonString));
 
         // Parse the json string received from the server into playerGO
-        json j = json::parse(playerString);
-        playerGO->from_json(j);
+        json j = json::parse(starterInfoString);
+        //playerGO->from_json(j);
 
-        // Sets a spawn point based off the size of the list of SpawnPoints
-        playerGO->setSpawn(spawnPoints[playerGO->getUUID() % spawnPoints.size()]);
-        // Insert PlayerGO into the gameObject Manager
-        gameObjectManager->insert(playerGO);
-        // Sets the playerID into GameObjectManager so that it does not update incorrectly
-        gameObjectManager->setPlayerID(playerGO->getUUID());
+        //// Sets a spawn point based off the size of the list of SpawnPoints
+        //playerGO->setSpawn(spawnPoints[playerGO->getUUID() % spawnPoints.size()]);
+        //// Insert PlayerGO into the gameObject Manager
+        //gameObjectManager->insert(playerGO);
+        //// Sets the playerID into GameObjectManager so that it does not update incorrectly
+        //gameObjectManager->setPlayerID(playerGO->getUUID());
+
+
+
+        // Raises an event that should be taking information in regarding all existing network objects and defines the player
+        eventManager->raiseEvent(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), j["playerid"].get<int>()));
 
         // Create thread for player publisher
         //threads->push_back(std::thread(runPlayerThread, std::ref(playerGO)));
