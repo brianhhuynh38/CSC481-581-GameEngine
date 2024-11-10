@@ -80,9 +80,9 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 			// Insert new object into the map
 			insert(go);
 			if (go->getComponent<Components::PlayerInputPlatformer>()) {
-				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 				//insertClient(go); // Comment this out if using p2p
 				if (uuid != m_playerID) {
+					go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 					intVector.push_back(go->getUUID());
 				}
 			}
@@ -127,9 +127,9 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 		else { // If it's an existing game object
 			GameObject* go = m_clientObjects->at(uuid);
 			go->from_json(j);
-			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-
-			//std::cout << "Update existing player \n";
+			if (go->getUUID() != m_playerID) {
+				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+			}
 		}
 	}
 	catch (std::exception e) {

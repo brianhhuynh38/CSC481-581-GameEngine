@@ -46,11 +46,14 @@ namespace Events {
 
 	void InstantiateObjectEvent::onEvent() {
 		if (m_isReceiving) { // If the Event is currently receiving a message from another client
-			m_goManagerRef->deserialize(m_jsonString, 2);
 			// If this is a player instantiation from the server, define the player ID for the client
 			if (m_playerID != 0) {
 				m_goManagerRef->setPlayerID(m_playerID);
 			}
+			// Deserialize all GameObjects in the JSON after assigning playerID
+			m_goManagerRef->deserialize(m_jsonString, 2);
+			
+			
 		}
 		else { // If the Event is currently sending out a message from this client
 			// Convert gameObject and Event data into json format
