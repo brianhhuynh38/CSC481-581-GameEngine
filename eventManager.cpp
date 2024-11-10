@@ -42,10 +42,8 @@ void EventManager::registerEvent(GameObject *gameObject) {
 * @param Event to add
 */
 void EventManager::raiseEvent(Events::Event* event) {
-	{
-		std::lock_guard<std::mutex> queueLock(m_mutex);
-		m_eventQueue.push(event);
-	}
+	std::shared_lock<std::shared_mutex> queueLock(m_mutex);
+	m_eventQueue.push(event);
 }
 
 /**
@@ -113,11 +111,14 @@ Events::Event* EventManager::getEventQueueTop() const {
 * meet the time and priority requirements
 */
 void EventManager::dispatchEvents(int64_t timeStamp) {
+	// Lock mutex
+	std::shared_lock<std::shared_mutex> queueLock(m_mutex);
+
 	// Return if the event queue is empty
 	if (m_eventQueue.empty()) {
 		return;
 	}
-	
+		
 	// Keep dispatching events until the priority is higher than the given timeStamp
 	while (!m_eventQueue.empty() && m_eventQueue.top()->getTimeStampPriority() <= timeStamp) {
 		// Get event at the front

@@ -9,7 +9,7 @@
 #include <queue>
 #include <vector>
 #include <typeindex>
-#include <mutex>
+#include <shared_mutex>
 
 class GameObject;
 
@@ -21,8 +21,8 @@ private:
 	// Maintains the history of all GameObjects that are registered to a given Event
 	std::map<std::type_index, std::vector<GameObject*>> m_eventRegistry;
 
-	// Mutex used to lock Event queue so that it doesn't error
-	std::mutex m_mutex;
+	// Mutexes used to lock Event queue so that it doesn't error
+	std::shared_mutex m_mutex;
 
 	/**
 	* Private helper function that returns a copy of the top of the event queue

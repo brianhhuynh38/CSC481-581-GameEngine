@@ -64,8 +64,13 @@ namespace Events {
 
 					// Check if the Object exists
 					if (GameObject* go = m_goManagerRef->find(uuid)) {
+						// Get position values
+						float x = obj["position"]["x"].get<float>();
+						float y = obj["position"]["y"].get<float>();
 						// Set transform position
-						go->getComponent<Components::Transform>()->setPosition(obj["position"]["x"].get<float>(), obj["position"]["y"].get<float>());
+						go->getComponent<Components::Transform>()->setPosition(x, y);
+						go->getComponent <Components::RigidBody>()->setColliderCoordinates(x, y);
+						// Set collider position
 					}
 				}
 			}
