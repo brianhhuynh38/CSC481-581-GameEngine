@@ -16,7 +16,7 @@ namespace Events {
 
 		CollisionEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, HitInfo* hitInfo);
 
-		void onEvent() const override;
+		void onEvent() override;
 	};
 
 }

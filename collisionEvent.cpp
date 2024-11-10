@@ -16,7 +16,7 @@ namespace Events {
 		this->m_hitInfo = hitInfo;
 	}
 
-	void CollisionEvent::onEvent() const {
+	void CollisionEvent::onEvent() {
 		for (GameObject* go : m_goRefVector) {
 			switch (m_hitInfo->colliderType) {
 				case 0: // Standard collision

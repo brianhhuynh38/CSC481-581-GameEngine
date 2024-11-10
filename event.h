@@ -46,7 +46,7 @@ namespace Events {
 		/**
 		* A function that executes when an Event is dispatched
 		*/
-		virtual void onEvent() const = 0;
+		virtual void onEvent() = 0;
 
 		/**
 		* Returns a string in JSON format for the Event, GameObjectUUID is sent as 0 (invalid) if there is no reference

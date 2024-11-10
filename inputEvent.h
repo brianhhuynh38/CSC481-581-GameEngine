@@ -20,7 +20,7 @@ namespace Events {
 
 		InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputHandler, Utils::Vector2D movementVector);
 
-		void onEvent() const override;
+		void onEvent() override;
 	};
 }
 

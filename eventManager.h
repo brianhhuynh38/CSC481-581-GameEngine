@@ -20,6 +20,11 @@ private:
 	// Maintains the history of all GameObjects that are registered to a given Event
 	std::map<std::type_index, std::vector<GameObject*>> m_eventRegistry;
 
+	/**
+	* Private helper function that returns a copy of the top of the event queue
+	*/
+	Events::Event* getEventQueueTop() const;
+
 public:
 	/**
 	* Constructor for EventManager that intializes the event queue

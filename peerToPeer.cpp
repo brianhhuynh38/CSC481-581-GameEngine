@@ -164,7 +164,7 @@ namespace PeerToPeer {
 
 
         // Raises an event that should be taking information in regarding all existing network objects and defines the player
-        eventManager->raiseEvent(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), j["playerid"].get<int>()));
+        eventManager->raiseEventInstantly(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), j["playerid"].get<int>()));
 
         // Create thread for player publisher
         //threads->push_back(std::thread(runPlayerThread, std::ref(playerGO)));

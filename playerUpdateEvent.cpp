@@ -5,14 +5,14 @@
 
 namespace Events {
 
-	PlayerUpdateEvent::PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* sendSocket, int clientIdentifier) {
+	PlayerUpdateEvent::PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
 		// Register GameObjects into the vector
 		this->m_goRefVector = goRef;
 		// Set priorities
 		this->m_timeStampPriority = timeStampPriority;
 		this->m_priority = priority;
 		// Define the socket that sends information out, clientIdentifier is 0 if invalid or unused
-		this->m_socketRef = sendSocket;
+		this->m_socketRef = socketRef;
 		this->m_clientIdentifier = clientIdentifier;
 		this->m_isReceiving = false;
 		// JSON string and gameObject manager not needed for outbound
@@ -27,7 +27,7 @@ namespace Events {
 		this->m_timeStampPriority = timeStampPriority;
 		this->m_priority = priority;
 		// This is for receiving, so not socket is needed
-		this->m_socketRef = nullptr;
+		this->m_socketRef = NULL;
 		this->m_clientIdentifier = 0;
 		this->m_isReceiving = true;
 		// JSON string containing object info
@@ -36,7 +36,7 @@ namespace Events {
 		this->m_goManager = goManager;
 	}
 
-	void PlayerUpdateEvent::onEvent() const {
+	void PlayerUpdateEvent::onEvent() {
 			
 		if (m_isReceiving) { // If this is receiving a JSON
 
@@ -62,7 +62,7 @@ namespace Events {
 			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
 			std::string eventInfo = m_clientIdentifier != 0 ? std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
 			zmq::message_t msg(eventInfo);
-			m_socketRef->send(msg, zmq::send_flags::dontwait);
+			m_socketRef.send(msg, zmq::send_flags::dontwait);
 		}
 	}
 

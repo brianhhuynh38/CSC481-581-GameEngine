@@ -98,6 +98,13 @@ void EventManager::raiseEventAll(int64_t timeStampPriority, int priority) {
 }
 
 /**
+* Private helper function that returns a copy of the top of the event queue
+*/
+Events::Event* EventManager::getEventQueueTop() const {
+	return m_eventQueue.top();
+}
+
+/**
 * Dispatches any events in the priority queue which
 * meet the time and priority requirements
 */
@@ -110,7 +117,7 @@ void EventManager::dispatchEvents(int64_t timeStamp) {
 	// Keep dispatching events until the priority is higher than the given timeStamp
 	while (!m_eventQueue.empty() && m_eventQueue.top()->getTimeStampPriority() <= timeStamp) {
 		// Get event at the front
-		Events::Event* e = m_eventQueue.top();
+		Events::Event* e = getEventQueueTop();
 		// Run the onEvent, then delete
 		e->onEvent();
 		//delete e;

@@ -12,7 +12,7 @@ namespace Events {
 		this->m_priority = priority;
 	}
 
-	void SpawnEvent::onEvent() const {
+	void SpawnEvent::onEvent() {
 		// Spawn each Player game object at its specified spawn point
 		for (GameObject *go : m_goRefVector) {
 			PlayerGO* player = static_cast<PlayerGO*>(go);

@@ -14,7 +14,7 @@ namespace Events {
 		this->m_movementVector = movementVector;
 	}
 
-	void InputEvent::onEvent() const {
+	void InputEvent::onEvent() {
 		for (GameObject* go : m_goRefVector) {
 			
 			float deltaTimeInSecs = go->getDeltaTimeInSecsOfObject();

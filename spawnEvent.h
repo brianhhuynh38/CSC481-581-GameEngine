@@ -14,7 +14,7 @@ namespace Events {
 
 		SpawnEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority);
 
-		void onEvent() const override;
+		void onEvent() override;
 	};
 
 }

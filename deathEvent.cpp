@@ -12,7 +12,7 @@ namespace Events {
 		this->m_priority = priority;
 	}
 
-	void DeathEvent::onEvent() const {
+	void DeathEvent::onEvent() {
 		Events::SpawnEvent* se = new Events::SpawnEvent(m_goRefVector, m_timeStampPriority, m_priority);
 		eventManager->raiseEvent(se);
 	}
