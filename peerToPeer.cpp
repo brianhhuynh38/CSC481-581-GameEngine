@@ -110,8 +110,7 @@ namespace PeerToPeer {
     * @param request Request to setup
     */
     int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
-        PlayerGO*& playerGO, GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints,
-        std::vector<std::thread> *threads) {
+        GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints, std::vector<std::thread> *threads) {
 
         // Set socket options
         int conflate = 1;
@@ -154,13 +153,11 @@ namespace PeerToPeer {
         json j = json::parse(starterInfoString);
         //playerGO->from_json(j);
 
-        //// Sets a spawn point based off the size of the list of SpawnPoints
-        //playerGO->setSpawn(spawnPoints[playerGO->getUUID() % spawnPoints.size()]);
+
         //// Insert PlayerGO into the gameObject Manager
         //gameObjectManager->insert(playerGO);
         //// Sets the playerID into GameObjectManager so that it does not update incorrectly
         //gameObjectManager->setPlayerID(playerGO->getUUID());
-
 
 
         // Raises an event that should be taking information in regarding all existing network objects and defines the player
@@ -171,13 +168,16 @@ namespace PeerToPeer {
       
         // Convert the player game object into JSON
         json stringPrint;
-        playerGO->to_json(stringPrint);
 
-        //std::cout << "String after added to gameObjectManager" << stringPrint.dump() << "\n";
+        PlayerGO* player = gameObjectManager->tryGetPlayer();
+        player->to_json(stringPrint);
+
+        // Sets a spawn point based off the size of the list of SpawnPoints
+        player->setSpawn(spawnPoints[player->getUUID() % spawnPoints.size()]);
 
         // Use the player ID to establish a unique socket for connections
         int portNum = 6658 + clientIdentifier;
-        int p2pPortNum = 6558 + playerGO->getUUID();
+        int p2pPortNum = 6558 + player->getUUID();
 
         std::stringstream ss;
         ss << "tcp://localhost:" << portNum;

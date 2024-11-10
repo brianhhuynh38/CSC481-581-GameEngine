@@ -4,6 +4,7 @@
 #define GAMEOBJECTMANAGER_H
 
 #include "GameObject.h"
+#include "playerGO.h"
 #include "timeline.h"
 #include "eventManager.h"
 
@@ -117,6 +118,12 @@ public:
 	* @returns A reference to the GameObject or a nullptr if nothing is found
 	*/
 	GameObject* find(int uuid);
+
+	/**
+	* Attempts to get a reference to the PlayerGameObject given the playerID currently assigned in the
+	* system. If the player is not instantiated or does not exist, then returns a nullptr
+	*/
+	PlayerGO* tryGetPlayer();
 
 	/**
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally

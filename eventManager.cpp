@@ -8,6 +8,7 @@
 #include "inputEvent.h"
 #include "spawnEvent.h"
 
+
 /**
 * Constructor for EventManager that intializes the event queue
 */
@@ -41,7 +42,10 @@ void EventManager::registerEvent(GameObject *gameObject) {
 * @param Event to add
 */
 void EventManager::raiseEvent(Events::Event* event) {
-	m_eventQueue.push(event);
+	{
+		std::lock_guard<std::mutex> queueLock(m_mutex);
+		m_eventQueue.push(event);
+	}
 }
 
 /**

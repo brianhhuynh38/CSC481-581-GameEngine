@@ -243,6 +243,19 @@ GameObject* GameObjectManager::find(int uuid) {
 }
 
 /**
+* Attempts to get a reference to the PlayerGameObject given the playerID currently assigned in the
+* system. If the player is not instantiated or does not exist, then returns a nullptr
+*/
+PlayerGO* GameObjectManager::tryGetPlayer() {
+	try {
+		return static_cast<PlayerGO*>(m_objects->at(m_playerID));
+	}
+	catch (std::out_of_range) {
+		return nullptr;
+	}
+}
+
+/**
 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 */
 void GameObjectManager::setPlayerID(int uuid) {

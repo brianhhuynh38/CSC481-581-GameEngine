@@ -199,27 +199,7 @@ int main(int argc, char* argv[]) {
 		)
 	};
 
-	// Test PlayerObject
-	PlayerGO* playerObject = new PlayerGO();
-
 	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
-
-	//std::vector<StaticObject*> staticVector = std::vector<StaticObject*>();
-
-	//for (int i = 0; i < 50; i++) {
-	//	for (int j = 0; j < 5; j++) {
-	//		StaticObject* staticObject = new StaticObject(
-	//			1.0f, 1.0f,
-	//			250.0f + (i * 10.0f), 500.0f + (j * 10.0f),
-	//			20.0f, 20.0f,
-	//			10.0f,
-	//			"./Assets/Textures/BallTexture.png",
-	//			true
-	//		);
-	//		staticVector.push_back(staticObject);
-	//		gameObjectManager->insert(staticObject);
-	//	}
-	//}
 
 	// Test StaticObject
 	StaticObject* platformObject = new StaticObject(1.0, 1.0, 350.0, 450.0, 1000.0, 64.0, 10.0, "./Assets/Textures/devLongTexture2.png", true);
@@ -275,7 +255,6 @@ int main(int argc, char* argv[]) {
 			&clientToServerRequest,
 			&peerToPeerPublisher,
 			&peerToPeerSubscriber,
-			playerObject,
 			gameObjectManager,
 			settings,
 			spawnPoints,
@@ -283,16 +262,22 @@ int main(int argc, char* argv[]) {
 		);
 	}
 	else {
-		Client::startup(
-			&serverToClientSubscriber,
-			&clientToServerRequest,
-			&clientToServerPublisher,
-			playerObject,
-			gameObjectManager,
-			settings,
-			spawnPoints
-		);
+		// This is the startup function for the Client-Server implementation, which is now [DEPRECATED]
+
+		//Client::startup(
+		//	&serverToClientSubscriber,
+		//	&clientToServerRequest,
+		//	&clientToServerPublisher,
+		//	playerObject,
+		//	gameObjectManager,
+		//	settings,
+		//	spawnPoints
+		//);
 	}
+
+	// Get player object created during the network startup process
+	PlayerGO* playerObject = gameObjectManager->tryGetPlayer();
+
 	// Set the input handler in main
 	{
 		//std::lock_guard<std::mutex> lock(playerMutex);
