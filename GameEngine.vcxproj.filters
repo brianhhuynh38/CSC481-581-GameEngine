@@ -70,6 +70,12 @@
     <Filter Include="Header Files\Events">
       <UniqueIdentifier>{4ab82137-bd9b-408e-9783-4cf10f27f3b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Events\NetworkEvents">
+      <UniqueIdentifier>{4058fd0f-2949-4201-891c-5bd39c18e21d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events\NetworkEvents">
+      <UniqueIdentifier>{1d9232c8-689e-4954-b3ad-09b0e9e2e156}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -147,14 +153,14 @@
     <ClCompile Include="spawnEvent.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="playerUpdateEvent.cpp">
-      <Filter>Source Files\Events</Filter>
-    </ClCompile>
     <ClCompile Include="instantiateObjectEvent.cpp">
-      <Filter>Source Files\Events</Filter>
+      <Filter>Source Files\Events\NetworkEvents</Filter>
     </ClCompile>
     <ClCompile Include="moveObjectEvent.cpp">
-      <Filter>Source Files\Events</Filter>
+      <Filter>Source Files\Events\NetworkEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="playerUpdateEvent.cpp">
+      <Filter>Source Files\Events\NetworkEvents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,13 +253,13 @@
       <Filter>Header Files\Events</Filter>
     </ClInclude>
     <ClInclude Include="playerUpdateEvent.h">
-      <Filter>Header Files\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="instantiateObjectEvent.h">
-      <Filter>Header Files\Events</Filter>
+      <Filter>Header Files\Events\NetworkEvents</Filter>
     </ClInclude>
     <ClInclude Include="moveObjectEvent.h">
-      <Filter>Header Files\Events</Filter>
+      <Filter>Header Files\Events\NetworkEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="instantiateObjectEvent.h">
+      <Filter>Header Files\Events\NetworkEvents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

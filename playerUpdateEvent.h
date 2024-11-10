@@ -31,17 +31,17 @@ namespace Events {
 	public:
 
 		/**
-		* constructor for PlayerUpdateEvent for outbound events
+		* Constructor for PlayerUpdateEvent for outbound events
 		*/
-		PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier=0);
+		PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier);
 
 		/**
-		* constructor for PlayerUpdateEvent for inbound events
+		* Constructor for PlayerUpdateEvent for inbound events
 		*/
 		PlayerUpdateEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString);
 
 		/**
-		* function called when event is called
+		* onEvent is a unique function for each of the events that specifies the action
 		*/
 		void onEvent() override;
 

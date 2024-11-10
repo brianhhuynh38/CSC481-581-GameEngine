@@ -22,12 +22,14 @@ namespace Events {
 		// Empty string since it's not relevant in a send until the end
 		m_jsonString = "";
 		m_goManagerRef = nullptr;
+		// Assign reference to the clientIDQueue
+		this->m_clientIDQueue = nullptr;
 	}
 
 	/**
 	* Constructor for MoveObjectEvent for inbound Events
 	*/
-	MoveObjectEvent::MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString) {
+	MoveObjectEvent::MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, std::queue<int>* clientIDQueue) {
 		// GameObject reference
 		m_goRefVector = std::vector<GameObject*>();
 		// Event priorities
@@ -42,6 +44,8 @@ namespace Events {
 		m_jsonString = jsonString;
 		// Set go manager reference 
 		m_goManagerRef = goManager;
+		// Assign reference to the clientIDQueue
+		this->m_clientIDQueue = clientIDQueue;
 	}
 
 	void MoveObjectEvent::onEvent() {
@@ -76,8 +80,12 @@ namespace Events {
 					// Check if the Object does not exist
 					GameObject* go = m_goManagerRef->find(uuid);
 					if (!go) {
+						// Create a new GameObject and add it to the GameObjectManager
 						go = new GameObject();
 						go->from_json(obj);
+						m_goManagerRef->insertClient(go);
+						// Push the ID of the new client into the queue
+						m_clientIDQueue->push(go->getUUID());
 					}
 				}
 			}

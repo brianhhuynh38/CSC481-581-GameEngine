@@ -9,6 +9,7 @@
 #include "gameObjectManager.h"
 
 #include <zmq.hpp>
+#include <queue>
 
 namespace Events {
 	class MoveObjectEvent : public virtual Event {
@@ -22,6 +23,8 @@ namespace Events {
 		// JSON string to parse with Object Information in it
 		std::string m_jsonString;
 
+		// Reference to the queue of new clientIDs
+		std::queue<int>* m_clientIDQueue;
 		// Reference to the GameObjectManager
 		GameObjectManager* m_goManagerRef;
 
@@ -35,7 +38,7 @@ namespace Events {
 		/**
 		* Constructor for MoveObjectEvent for inbound Events
 		*/
-		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString);
+		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, std::queue<int>* clientIDQueue);
 
 		/**
 		* The function that parses or sends out information on positional data changes

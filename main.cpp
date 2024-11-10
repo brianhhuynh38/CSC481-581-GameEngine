@@ -4,6 +4,7 @@
 #include <zmq.hpp>
 #include <string>
 #include <mutex>
+#include <queue>
 
 #include "definitions.h"
 #include "draw.h"
@@ -322,13 +323,22 @@ int main(int argc, char* argv[]) {
 		}
 	});
 
-	int iterationCounter = 0;
-	int64_t totalTimeElapsed = 0;
+	// Client ID queue that tracks any new clients that join the game
+	std::queue<int>* clientIDQueue = new std::queue<int>();
 	while (true) {
 		// Update request and subscriber
 		// Safely run the networking code
 		if (settings.networkType == 2) {
-			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager, &clientThreads);
+			PeerToPeer::run(
+				&serverToClientSubscriber,
+				&clientToServerRequest,
+				&peerToPeerPublisher,
+				&peerToPeerSubscriber,
+				playerObject,
+				gameObjectManager,
+				&clientThreads,
+				clientIDQueue
+			);
 		}
 		else {
 			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);

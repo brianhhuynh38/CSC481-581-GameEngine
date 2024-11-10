@@ -32,6 +32,8 @@ namespace PeerToPeer {
         // Create a subscriber using a Sub model
         zmq::socket_t p2psubscriber{ context, zmq::socket_type::sub };
         zmq::socket_t disconnectSocket{ context, zmq::socket_type::req };
+        // Create socket references for use in Events
+
 
         // Set conflate value to only take most recent message
         int conflate = 1;
@@ -128,7 +130,6 @@ namespace PeerToPeer {
 
         // Receive response from server 
         zmq::message_t reply;
-        // TODO: Change to handle receiving and instansiating ALL client information.
         request->recv(reply);
 
         //std::cout << "Received client identifier: " << reply.to_string() << "\n";
@@ -146,19 +147,8 @@ namespace PeerToPeer {
 
         //std::cout << "Printing fresh playerstring off server: \n" << playerString << "\n\n\n";
 
-        // TODO: Instansiates objects from the playerString.
-        //eventManager->raiseEvent(new Events::InstantiateObjectEvent(goManager, timeStampPriority, priority, jsonString));
-
         // Parse the json string received from the server into playerGO
         json j = json::parse(starterInfoString);
-        //playerGO->from_json(j);
-
-
-        //// Insert PlayerGO into the gameObject Manager
-        //gameObjectManager->insert(playerGO);
-        //// Sets the playerID into GameObjectManager so that it does not update incorrectly
-        //gameObjectManager->setPlayerID(playerGO->getUUID());
-
 
         // Raises an event that should be taking information in regarding all existing network objects and defines the player
         eventManager->raiseEventInstantly(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), j["playerid"].get<int>()));
@@ -204,7 +194,7 @@ namespace PeerToPeer {
     * @param subscriber Subscriber to use
     */
     int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, PlayerGO*& player,
-        GameObjectManager*& gameObjectManager, std::vector<std::thread>* threads) {
+        GameObjectManager*& gameObjectManager, std::vector<std::thread>* threads, std::queue<int>* clientIDQueue) {
 
 		// Receive messages from the server as a subscriber for MovingEntities only
 		zmq::message_t serverInfo;
@@ -228,38 +218,24 @@ namespace PeerToPeer {
 			std::getline(ss, firstLine);
 
             // Call moveEvent for when an object moves
-            eventManager->raiseEvent(new Events::MoveObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine));
-
-			//idVector = gameObjectManager->deserialize(firstLine, 2);
-
-            if (!idVector.empty()) {
-                //std::cout << "ID Vector Results: ";
-                for (int id : idVector) {
-                    std::cout << id << ", ";
-                }
-                std::cout << "\n";
-            }
+            eventManager->raiseEvent(new Events::MoveObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine, clientIDQueue));
 		}
 
-		json stringPlayer;
-		player->to_json(stringPlayer);
-		zmq::message_t playerInfo(std::to_string(player->getUUID()) + "\n" + stringPlayer.dump());
-
-
+        // Connect port number for this client and create socket ref for events
         int portNum = 6558 + player->getUUID();
         p2ppublisher->connect("tcp://localhost:" + std::to_string(portNum));
+        zmq::socket_ref p2pPubRef = *p2ppublisher;
 
-        // TODO: Call playerUpdateEvent with the p2ppublisher socket
-        //eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, timeStampPriority, priority, p2ppublisher, clientIdentifier));
+        // Call playerUpdateEvent with the p2ppublisher socket
+        std::vector<GameObject*> goVec = std::vector<GameObject*>();
+        goVec.push_back(player);
+        eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, 0, 0, p2pPubRef, player->getUUID()));
 
-        //// Send playerInfo
-        //p2ppublisher->send(playerInfo, zmq::send_flags::dontwait);
-
-		//std::cout << "Publishing Client Info: " << playerInfo.to_string() << "\n\n\n";
-
-        for (int id : idVector) {
-            threads->push_back(std::thread(runClientThread, id, std::ref(gameObjectManager)));
+        while (!clientIDQueue->empty()) {
+            threads->push_back(std::thread(runClientThread, clientIDQueue->front(), std::ref(gameObjectManager)));
+            clientIDQueue->pop();
         }
+
 		return 0;
 	}
 }

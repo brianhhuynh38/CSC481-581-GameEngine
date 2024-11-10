@@ -165,7 +165,7 @@ namespace Components {
 	void RigidBody::updateVelocity(Utils::Vector2D other) {
 		Utils::Vector2D vel = (m_velocity->add(other));
 		vel.x = std::max(std::min(vel.x, 100.0f), -100.0f);
-		vel.y = std::max(std::min(vel.y, 100.0f), -100.0f);
+		vel.y = std::max(std::min(vel.y, 100.0f), -300.0f);
 		*m_velocity = vel;
 	}
 
@@ -190,7 +190,7 @@ namespace Components {
 		Utils::Vector2D acc = (m_velocity->add(other));
 		
 		acc.x = std::max(std::min(acc.x, 15.0f), -15.0f);
-		acc.y = std::max(std::min(acc.y, 15.0f), -15.0f);
+		acc.y = std::max(std::min(acc.y, 15.0f), -65.0f);
 		*m_acceleration = m_acceleration->add(other);
 	}
 

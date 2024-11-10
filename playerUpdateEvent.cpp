@@ -3,6 +3,8 @@
 #include "vector2D.h"
 #include "rigidBody.h"
 
+#include "playerGO.h"
+
 namespace Events {
 
 	PlayerUpdateEvent::PlayerUpdateEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
@@ -56,13 +58,17 @@ namespace Events {
 			}
 		}
 		else { // If this is sending out a JSON
-			// Convert gameObject and Event data into json format
-			json j;
-			to_json(j);
-			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
-			std::string eventInfo = m_clientIdentifier != 0 ? std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
-			zmq::message_t msg(eventInfo);
-			m_socketRef.send(msg, zmq::send_flags::dontwait);
+
+			json playerJSON;
+			// Collect all GameObject info into a json
+			for (GameObject* go : m_goRefVector) {
+				json goInfo;
+				to_json(goInfo);
+				playerJSON.push_back(goInfo);
+			}
+			// Send out player information
+			zmq::message_t eventInfo(std::to_string(m_clientIdentifier) + "\n" + playerJSON.dump());
+			m_socketRef.send(eventInfo, zmq::send_flags::dontwait);
 		}
 	}
 
