@@ -49,11 +49,12 @@ namespace Events {
 
 			// Parse json
 			json j = json::parse(m_jsonString);
+			json gos = j["gos"];
 
 			// Loops through all moving Objects
-			if (j.contains("moving")) {
+			if (gos.contains("moving")) {
 				// Loop through objects in JSON array
-				for (const auto& obj : j["moving"]) {
+				for (const auto& obj : gos["moving"]) {
 					// Get the UUID of the object
 					int uuid = obj["uuid"].get<int>();
 
@@ -66,9 +67,9 @@ namespace Events {
 			}
 
 			// Loops through player objects to check if they exist
-			if (j.contains("players")) {
+			if (gos.contains("players")) {
 				// Loop through objects in JSON array
-				for (const auto& obj : j["players"]) {
+				for (const auto& obj : gos["players"]) {
 					// Get the UUID of the object
 					int uuid = obj["uuid"].get<int>();
 

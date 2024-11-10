@@ -340,9 +340,6 @@ int main(int argc, char* argv[]) {
 	int iterationCounter = 0;
 	int64_t totalTimeElapsed = 0;
 	while (true) {
-		auto timeCheckEpoch = std::chrono::high_resolution_clock::now().time_since_epoch();
-		int64_t beforeTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch).count();
-		// TODO: Send client information update to the server
 		// Update request and subscriber
 		// Safely run the networking code
 		if (settings.networkType == 2) {
@@ -385,25 +382,6 @@ int main(int argc, char* argv[]) {
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
-
-
-		///////////////////////////////////////////////////////////////
-		///  Iteration Testing for Homework 3-3: Iteration Testing  ///
-		///////////////////////////////////////////////////////////////
-
-		auto timeCheckEpoch2 = std::chrono::high_resolution_clock::now().time_since_epoch();
-		int64_t afterTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch2).count();
-
-
-		if (gameObjectManager->getClientObjectMap()->size() == 1) {
-			totalTimeElapsed += afterTime - beforeTime;
-			iterationCounter++;
-		}
-
-		if (iterationCounter == 1000) {
-			std::cout << "Time it took for 1,000 iterations with " + std::to_string(gameObjectManager->getClientObjectMap()->size() + 1) + " clients: " + std::to_string(totalTimeElapsed) + "\n";
-		}
-
 
 		//SDL_Delay(16);
 		capFrameRate(timeline, &then, &remainder);
