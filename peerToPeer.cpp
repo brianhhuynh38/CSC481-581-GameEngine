@@ -222,8 +222,8 @@ namespace PeerToPeer {
 		}
 
         // Connect port number for this client and create socket ref for events
-        int portNum = 6558 + player->getUUID();
-        p2ppublisher->connect("tcp://localhost:" + std::to_string(portNum));
+        //int portNum = 6558 + player->getUUID();
+        //p2ppublisher->connect("tcp://localhost:" + std::to_string(portNum));
         zmq::socket_ref p2pPubRef = *p2ppublisher;
 
         // Call playerUpdateEvent with the p2ppublisher socket
