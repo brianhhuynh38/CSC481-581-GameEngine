@@ -6,17 +6,22 @@
 
 namespace Events {
 
-	InputEvent::InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputHandler, Utils::Vector2D movementVector) {
+	InputEvent::InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputHandler, Utils::Vector2D movementVector, IFlag inputFlag) {
 		this->m_goRefVector = goRef;
 		this->m_timeStampPriority = timeStampPriority;
 		this->m_priority = priority;
 		this->m_inputHandler = inputHandler;
 		this->m_movementVector = movementVector;
+		this->m_flag = inputFlag;
 	}
 
 	void InputEvent::onEvent() {
 		for (GameObject* go : m_goRefVector) {
 			std::lock_guard<std::mutex> lock(go->mutex);
+
+			// Applies any special inputs that are defined below
+			applySpecialInput(go, m_flag);
+
 			float deltaTimeInSecs = go->getDeltaTimeInSecsOfObject();
 			Utils::Vector2D posMover = Utils::Vector2D(0, 0); // amount to change positon by
 			Utils::Vector2D velMover = Utils::Vector2D(0, 0); // amount to change velocity by
@@ -96,6 +101,22 @@ namespace Events {
 			// if there is no collision on the y-axis, set isGrounded to false
 			else if (m_movementVector.y != 0) {
 				pi->setIsGrounded(false);
+			}
+		}
+	}
+
+	void InputEvent::applySpecialInput(GameObject* go, IFlag flag) {
+		switch (flag) {
+			case IFLAG_TELEPORT: // Teleports the player vertically upwards by 100 units
+			{
+				Components::Transform* transform = go->getComponent<Components::Transform>();
+				Utils::Vector2D pos = *transform->getPosition();
+				transform->setPosition(pos.x, pos.y - 100.0f);
+				break;
+			}
+			default:
+			{
+				break;
 			}
 		}
 	}

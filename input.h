@@ -5,13 +5,24 @@
 
 #include "definitions.h"
 
+#include <map>
+
+
 // Bytes that represent the different directions that are possible to be inputted
+constexpr uint8_t INPUT_NONE = 0b00000000;
 constexpr uint8_t INPUT_UP = 0b00001000;
 constexpr uint8_t INPUT_DOWN = 0b00000100;
 constexpr uint8_t INPUT_RIGHT = 0b00000010;
 constexpr uint8_t INPUT_LEFT = 0b00000001;
 
-//constexpr uint8_t INPUT_TELEPORT[3] = { INPUT_DOWN, INPUT_UP, INPUT_DOWN };
+// Arrays that contain all special inputs
+const uint8_t INPUT_TELEPORT[3] = { INPUT_DOWN, INPUT_UP, INPUT_DOWN };
+
+// All types of special inputs that can be performed
+enum IFlag {
+	IFLAG_NONE = 0,
+	IFLAG_TELEPORT = 1
+};
 
 /**
  * InputHandler holds the current input values for keypresses.

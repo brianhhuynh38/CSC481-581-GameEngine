@@ -24,10 +24,13 @@ namespace Components {
 		Utils::Vector2D m_jumpVector;
 		// Struct that takes in player inputs
 		InputHandler* m_inputHandler;
+
 		// A vector containing a series of input bytes that the player has inputted
 		std::vector<uint8_t> m_inputMemory;
 		// A counter used to determine how much time is left before the player's inputMemory is reset
 		int m_inputTimer;
+		// A bool that determines whether a single input has been fully entered
+		bool m_nextInputOpen;
 
 		// A reference to the GameObject parent that allows for inter-Object communication between components
 		GameObject* m_parent;
