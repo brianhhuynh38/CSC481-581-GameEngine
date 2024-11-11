@@ -235,7 +235,11 @@ namespace PeerToPeer {
             std::lock_guard<std::mutex> lock(clientIDSet->mutex);
             while (!clientIDSet->idSet.empty()) {
                 int currentID = *clientIDSet->idSet.begin();
-                threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
+                // Check if the ID is contained in the set of instantiatedIDs, if not, then create a thread
+                if (clientIDSet->instantiatedIDs.find(currentID) != clientIDSet->instantiatedIDs.end()) {
+                    threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
+                    clientIDSet->instantiatedIDs.insert(currentID);
+                }
                 clientIDSet->idSet.erase(currentID);
             }
         }

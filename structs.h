@@ -51,6 +51,8 @@ typedef struct {
 typedef struct {
 	// A set containing all the IDs
 	std::set<int> idSet;
+	// A set containing IDs that have already had their threads started
+	std::set<int> instantiatedIDs;
 	// The mutex to use in the event that the queue is accessed in multiple threads
 	std::mutex mutex;
 } ClientIDSet;
