@@ -194,7 +194,7 @@ namespace PeerToPeer {
     * @param subscriber Subscriber to use
     */
     int run(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber, PlayerGO*& player,
-        GameObjectManager*& gameObjectManager, std::vector<std::thread>* threads, ClientIDQueue* clientIDQueue) {
+        GameObjectManager*& gameObjectManager, std::vector<std::thread>* threads, ClientIDSet* clientIDSet) {
 
 		// Receive messages from the server as a subscriber for MovingEntities only
 		zmq::message_t serverInfo;
@@ -218,7 +218,7 @@ namespace PeerToPeer {
 			std::getline(ss, firstLine);
 
             // Call moveEvent for when an object moves
-            eventManager->raiseEvent(new Events::MoveObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine, clientIDQueue));
+            eventManager->raiseEvent(new Events::MoveObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine, clientIDSet));
 		}
 
         // Connect port number for this client and create socket ref for events
@@ -232,10 +232,11 @@ namespace PeerToPeer {
         eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, 0, 0, p2pPubRef, player->getUUID()));
 
         {
-            std::lock_guard<std::mutex> lock(clientIDQueue->mutex);
-            while (!clientIDQueue->idQueue.empty()) {
-                threads->push_back(std::thread(runClientThread, clientIDQueue->idQueue.front(), std::ref(gameObjectManager)));
-                clientIDQueue->idQueue.pop();
+            std::lock_guard<std::mutex> lock(clientIDSet->mutex);
+            while (!clientIDSet->idSet.empty()) {
+                int currentID = *clientIDSet->idSet.begin();
+                threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
+                clientIDSet->idSet.erase(currentID);
             }
         }
 		return 0;

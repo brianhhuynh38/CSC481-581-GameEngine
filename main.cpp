@@ -4,7 +4,7 @@
 #include <zmq.hpp>
 #include <string>
 #include <mutex>
-#include <queue>
+#include <set>
 
 #include "definitions.h"
 #include "draw.h"
@@ -324,8 +324,8 @@ int main(int argc, char* argv[]) {
 	});
 
 	// Client ID queue that tracks any new clients that join the game
-	ClientIDQueue* clientIDQueue = new ClientIDQueue();
-	clientIDQueue->idQueue = std::queue<int>();
+	ClientIDSet* clientIDSet = new ClientIDSet();
+	clientIDSet->idSet = std::set<int>();
 	while (true) {
 		// Update request and subscriber
 		// Safely run the networking code
@@ -338,7 +338,7 @@ int main(int argc, char* argv[]) {
 				playerObject,
 				gameObjectManager,
 				&clientThreads,
-				clientIDQueue
+				clientIDSet
 			);
 		}
 		else {

@@ -26,7 +26,7 @@ namespace Events {
 		std::string m_jsonString;
 
 		// Reference to the queue of new clientIDs
-		ClientIDQueue* m_clientIDQueue;
+		ClientIDSet* m_clientIDSet;
 		// Reference to the GameObjectManager
 		GameObjectManager* m_goManagerRef;
 
@@ -40,7 +40,7 @@ namespace Events {
 		/**
 		* Constructor for MoveObjectEvent for inbound Events
 		*/
-		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDQueue* clientIDQueue);
+		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet);
 
 		/**
 		* The function that parses or sends out information on positional data changes

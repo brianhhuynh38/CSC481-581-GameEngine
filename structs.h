@@ -4,7 +4,7 @@
 #define STRUCTS_H
 
 #include <SDL.h>
-#include <queue>
+#include <set>
 #include <mutex>
 
 #include "definitions.h"
@@ -46,13 +46,13 @@ typedef struct {
 } HitInfo;
 
 /**
-* A queue meant to contain the IDs of newly-joined clients. Includes a mutex for thread safety.
+* A set meant to contain the IDs of newly-joined clients. Includes a mutex for thread safety.
 */
 typedef struct {
-	// A queue containing all the IDs
-	std::queue<int> idQueue;
+	// A set containing all the IDs
+	std::set<int> idSet;
 	// The mutex to use in the event that the queue is accessed in multiple threads
 	std::mutex mutex;
-} ClientIDQueue;
+} ClientIDSet;
 
 #endif
