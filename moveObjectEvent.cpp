@@ -85,11 +85,12 @@ namespace Events {
 
 					// Check if the Object does not exist
 					GameObject* go = m_goManagerRef->find(uuid);
-					if (!go) {
+					if (!go && uuid != m_goManagerRef->getPlayerID()) {
 						// Create a new GameObject and add it to the GameObjectManager
+						std::cout << "Obj: \n" << obj.dump() << "\n";
 						go = new GameObject();
 						go->from_json(obj);
-						m_goManagerRef->insertClient(go);
+						//m_goManagerRef->insertClient(go);
 						m_goManagerRef->insert(go);
 						{
 							std::lock_guard<std::mutex> lock(m_clientIDSet->mutex);

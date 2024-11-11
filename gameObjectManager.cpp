@@ -259,6 +259,13 @@ PlayerGO* GameObjectManager::tryGetPlayer() {
 }
 
 /**
+* Gets the player ID
+*/
+int GameObjectManager::getPlayerID() {
+	return m_playerID;
+}
+
+/**
 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 */
 void GameObjectManager::setPlayerID(int uuid) {

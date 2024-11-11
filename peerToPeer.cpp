@@ -112,7 +112,7 @@ namespace PeerToPeer {
     * @param request Request to setup
     */
     int startup(zmq::socket_t* subscriber, zmq::socket_t* request, zmq::socket_t* p2ppublisher, zmq::socket_t* p2psubscriber,
-        GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints, std::vector<std::thread> *threads) {
+        GameObjectManager*& gameObjectManager, ConfigSettings config, std::vector<GameObject*> spawnPoints, std::vector<std::thread> *threads, ClientIDSet* clientIDSet) {
 
         // Set socket options
         int conflate = 1;
@@ -229,20 +229,20 @@ namespace PeerToPeer {
         // Call playerUpdateEvent with the p2ppublisher socket
         std::vector<GameObject*> goVec = std::vector<GameObject*>();
         goVec.push_back(player);
-        eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, 0, 0, p2pPubRef, player->getUUID()));
+        //eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, 0, 0, p2pPubRef, player->getUUID()));
 
-        {
-            std::lock_guard<std::mutex> lock(clientIDSet->mutex);
-            while (!clientIDSet->idSet.empty()) {
-                int currentID = *clientIDSet->idSet.begin();
-                // Check if the ID is contained in the set of instantiatedIDs, if not, then create a thread
-                if (clientIDSet->instantiatedIDs.find(currentID) != clientIDSet->instantiatedIDs.end()) {
-                    threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
-                    clientIDSet->instantiatedIDs.insert(currentID);
-                }
-                clientIDSet->idSet.erase(currentID);
-            }
-        }
+        //{
+        //    std::lock_guard<std::mutex> lock(clientIDSet->mutex);
+        //    while (!clientIDSet->idSet.empty()) {
+        //        int currentID = *clientIDSet->idSet.begin();
+        //        // Check if the ID is contained in the set of instantiatedIDs, if not, then create a thread
+        //        if (clientIDSet->instantiatedIDs.find(currentID) != clientIDSet->instantiatedIDs.end()) {
+        //            threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
+        //            clientIDSet->instantiatedIDs.insert(currentID);
+        //        }
+        //        clientIDSet->idSet.erase(currentID);
+        //    }
+        //}
 		return 0;
 	}
 }

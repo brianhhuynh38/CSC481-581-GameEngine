@@ -125,6 +125,11 @@ public:
 	*/
 	PlayerGO* tryGetPlayer();
 
+    /**
+     * Gets the player ID
+     */
+    int getPlayerID();
+
 	/**
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally
 	 */
