@@ -42,7 +42,7 @@ void EventManager::registerEvent(GameObject *gameObject) {
 * @param Event to add
 */
 void EventManager::raiseEvent(Events::Event* event) {
-	std::shared_lock<std::shared_mutex> queueLock(m_mutex);
+	std::lock_guard<std::recursive_mutex> queueLock(m_mutex);
 	m_eventQueue.push(event);
 }
 
@@ -112,7 +112,7 @@ Events::Event* EventManager::getEventQueueTop() const {
 */
 void EventManager::dispatchEvents(int64_t timeStamp) {
 	// Lock mutex
-	std::shared_lock<std::shared_mutex> queueLock(m_mutex);
+	std::lock_guard<std::recursive_mutex> queueLock(m_mutex);
 
 	// Return if the event queue is empty
 	if (m_eventQueue.empty()) {

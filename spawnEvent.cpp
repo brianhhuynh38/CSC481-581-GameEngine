@@ -15,6 +15,7 @@ namespace Events {
 	void SpawnEvent::onEvent() {
 		// Spawn each Player game object at its specified spawn point
 		for (GameObject *go : m_goRefVector) {
+			std::lock_guard<std::mutex> lock(go->mutex);
 			PlayerGO* player = static_cast<PlayerGO*>(go);
 			Utils::Vector2D spawnPos = *player->getSpawn()->getComponent<Components::Transform>()->getPosition();
 			player->getComponent<Components::Transform>()->setPosition(spawnPos.x, spawnPos.y);

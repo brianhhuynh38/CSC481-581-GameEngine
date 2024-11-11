@@ -18,6 +18,7 @@ namespace Events {
 
 	void CollisionEvent::onEvent() {
 		for (GameObject* go : m_goRefVector) {
+			std::lock_guard<std::mutex> lock(go->mutex);
 			switch (m_hitInfo->colliderType) {
 				case 0: // Standard collision
 				{

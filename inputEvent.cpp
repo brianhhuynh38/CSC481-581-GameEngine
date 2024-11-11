@@ -16,7 +16,7 @@ namespace Events {
 
 	void InputEvent::onEvent() {
 		for (GameObject* go : m_goRefVector) {
-			
+			std::lock_guard<std::mutex> lock(go->mutex);
 			float deltaTimeInSecs = go->getDeltaTimeInSecsOfObject();
 			Utils::Vector2D posMover = Utils::Vector2D(0, 0); // amount to change positon by
 			Utils::Vector2D velMover = Utils::Vector2D(0, 0); // amount to change velocity by

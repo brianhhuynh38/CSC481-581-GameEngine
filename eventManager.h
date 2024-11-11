@@ -9,7 +9,7 @@
 #include <queue>
 #include <vector>
 #include <typeindex>
-#include <shared_mutex>
+#include <mutex>
 
 class GameObject;
 
@@ -22,7 +22,7 @@ private:
 	std::map<std::type_index, std::vector<GameObject*>> m_eventRegistry;
 
 	// Mutexes used to lock Event queue so that it doesn't error
-	std::shared_mutex m_mutex;
+	std::recursive_mutex m_mutex;
 
 	/**
 	* Private helper function that returns a copy of the top of the event queue

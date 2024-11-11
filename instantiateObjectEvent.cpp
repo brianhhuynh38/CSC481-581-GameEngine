@@ -72,7 +72,10 @@ namespace Events {
 
 		for (GameObject* go : m_goRefVector) {
 			json gameObjectJson;
-			go->to_json(gameObjectJson);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				go->to_json(gameObjectJson);
+			}
 			gosJson.push_back(gameObjectJson);
 		}
 		j["gos"] = gosJson;

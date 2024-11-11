@@ -44,12 +44,15 @@ void GameObjectManager::update() {
 	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
 		// Get GameObject and set current ID being updated for mutex
 		GameObject* go = iter->second;
-		// Update each GameObject component
-		go->update(deltaTimeInSecs, currentTime);
-		// If GameObject has a RigidBody, update collisions
-		if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
-			if (go->getUUID() == m_playerID) {
-				rb->updateCollisions(*m_objects);
+		{
+			std::lock_guard<std::mutex> lock(go->mutex);
+			// Update each GameObject component
+			go->update(deltaTimeInSecs, currentTime);
+			// If GameObject has a RigidBody, update collisions
+			if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
+				if (go->getUUID() == m_playerID) {
+					rb->updateCollisions(*m_objects);
+				}
 			}
 		}
 		

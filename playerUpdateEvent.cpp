@@ -52,6 +52,7 @@ namespace Events {
 
 				// Check if the Object exists
 				if (GameObject* go = m_goManager->find(uuid)) {
+					std::lock_guard<std::mutex> lock(go->mutex);
 					// Set transform position
 					go->getComponent<Components::Transform>()->setPosition(obj["position"]["x"].get<float>(), obj["position"]["y"].get<float>());
 				}

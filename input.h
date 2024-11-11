@@ -3,8 +3,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "structs.h"
-
+#include "definitions.h"
 
 // Bytes that represent the different directions that are possible to be inputted
 constexpr uint8_t INPUT_UP = 0b00001000;
@@ -12,6 +11,7 @@ constexpr uint8_t INPUT_DOWN = 0b00000100;
 constexpr uint8_t INPUT_RIGHT = 0b00000010;
 constexpr uint8_t INPUT_LEFT = 0b00000001;
 
+//constexpr uint8_t INPUT_TELEPORT[3] = { INPUT_DOWN, INPUT_UP, INPUT_DOWN };
 
 /**
  * InputHandler holds the current input values for keypresses.
@@ -37,17 +37,18 @@ public:
 	*/
 	void takeInput();
 
-	/**
-		* Checks the state of the given keyboard key by referencing
-		* the keyboardState array and the inputHandler.
-		* inputHander is then updated with the keys current state:
-		* 0 = key is not pressed
-		* 1 = key is currently pressed
-		* 2 = key was just unpressed
-		* @param scanCode key scanCode to check for
-		* @param keyboardState array of keyboard key states
-		*/
-	void checkKeyState(int scanCode, const Uint8* keyboardState);
+//	/**
+//		* Checks the state of the given keyboard key by referencing
+//		* the keyboardState array and the inputHandler.
+//		* inputHander is then updated with the keys current state:
+//		* 0 = key is not pressed
+//		* 1 = key is currently pressed
+//		* 2 = key was just unpressed
+//		* @param scanCode key scanCode to check for
+//		* @param keyboardState array of keyboard key states
+//		*/
+//	void checkKeyState(int scanCode, const Uint8* keyboardState);
 };
+
 
 #endif

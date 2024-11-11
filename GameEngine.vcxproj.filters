@@ -162,6 +162,9 @@
     <ClCompile Include="playerUpdateEvent.cpp">
       <Filter>Source Files\Events\NetworkEvents</Filter>
     </ClCompile>
+    <ClCompile Include="tree.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -260,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="instantiateObjectEvent.h">
       <Filter>Header Files\Events\NetworkEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="tree.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

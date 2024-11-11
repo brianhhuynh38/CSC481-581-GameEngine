@@ -39,6 +39,10 @@ protected:
     int64_t m_currentTime;
     
 public:
+
+    // Mutex used to protect GameObject modifications
+    std::mutex mutex;
+
     // Default constructor for GameObject. Adds a Transform component (required)
     GameObject();
 

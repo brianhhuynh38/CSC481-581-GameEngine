@@ -166,6 +166,7 @@
     <ClCompile Include="textureMesh.cpp" />
     <ClCompile Include="timeline.cpp" />
     <ClCompile Include="transform.cpp" />
+    <ClCompile Include="tree.cpp" />
     <ClCompile Include="vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +204,7 @@
     <ClInclude Include="textureMesh.h" />
     <ClInclude Include="timeline.h" />
     <ClInclude Include="transform.h" />
+    <ClInclude Include="tree.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>
   <ItemGroup>

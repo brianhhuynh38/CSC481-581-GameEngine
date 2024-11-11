@@ -64,13 +64,14 @@ namespace Events {
 
 					// Check if the Object exists
 					if (GameObject* go = m_goManagerRef->find(uuid)) {
+						std::lock_guard<std::mutex> lock(go->mutex);
 						// Get position values
 						float x = obj["position"]["x"].get<float>();
 						float y = obj["position"]["y"].get<float>();
 						// Set transform position
 						go->getComponent<Components::Transform>()->setPosition(x, y);
-						go->getComponent <Components::RigidBody>()->setColliderCoordinates(x, y);
 						// Set collider position
+						go->getComponent <Components::RigidBody>()->setColliderCoordinates(x, y);
 					}
 				}
 			}
@@ -85,6 +86,7 @@ namespace Events {
 					// Check if the Object does not exist
 					GameObject* go = m_goManagerRef->find(uuid);
 					if (!go) {
+						std::lock_guard<std::mutex> lock(go->mutex);
 						// Create a new GameObject and add it to the GameObjectManager
 						go = new GameObject();
 						go->from_json(obj);
@@ -117,24 +119,27 @@ namespace Events {
 			// JSON object to store positional information
 			json gameObjectJson;
 			
-			// Push the JSON into the list of GameObjects
-			// If player, send all info
-			if (go->getComponent<Components::PlayerInputPlatformer>()) {
-				go->to_json(gameObjectJson);
-				// Push GameObject into the players list
-				gosJson["players"].push_back(gameObjectJson);
-			}
-			else { // If movingObject, send positional info only
-				// Set UUID
-				gameObjectJson["uuid"] = go->getUUID();
-				// Set Position
-				Utils::Vector2D position = *go->getComponent<Components::Transform>()->getPosition();
-				gameObjectJson["position"] = {
-					{"x", position.x},
-					{"y", position.y}
-				};
-				// Push GameObject in the list of MovingObjects
-				gosJson["moving"].push_back(gameObjectJson);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				// Push the JSON into the list of GameObjects
+				// If player, send all info
+				if (go->getComponent<Components::PlayerInputPlatformer>()) {
+					go->to_json(gameObjectJson);
+					// Push GameObject into the players list
+					gosJson["players"].push_back(gameObjectJson);
+				}
+				else { // If movingObject, send positional info only
+					// Set UUID
+					gameObjectJson["uuid"] = go->getUUID();
+					// Set Position
+					Utils::Vector2D position = *go->getComponent<Components::Transform>()->getPosition();
+					gameObjectJson["position"] = {
+						{"x", position.x},
+						{"y", position.y}
+					};
+					// Push GameObject in the list of MovingObjects
+					gosJson["moving"].push_back(gameObjectJson);
+				}
 			}
 		}
 		j["gos"] = gosJson;
