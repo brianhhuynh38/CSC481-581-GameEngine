@@ -86,7 +86,6 @@ namespace Events {
 					// Check if the Object does not exist
 					GameObject* go = m_goManagerRef->find(uuid);
 					if (!go) {
-						std::lock_guard<std::mutex> lock(go->mutex);
 						// Create a new GameObject and add it to the GameObjectManager
 						go = new GameObject();
 						go->from_json(obj);
