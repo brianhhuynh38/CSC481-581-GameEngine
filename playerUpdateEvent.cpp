@@ -44,9 +44,10 @@ namespace Events {
 
 			// Parse json
 			json j = json::parse(m_jsonString);
+			json gos = j[0]["gos"];
 
 			// Loop through objects in JSON array
-			for (const auto& obj : j) {
+			for (const auto& obj : gos) {
 				// Get the UUID of the object
 				int uuid = obj["uuid"].get<int>();
 

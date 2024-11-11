@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef MOVEOBJECTEVENT_H
-#define MOVEOBJECTEVENT_H
+#ifndef UPDATEOBJECTEVENT_H
+#define UPDATEOBJECTEVENT_H
 
 
 #include "event.h"
@@ -14,7 +14,7 @@
 #include <mutex>
 
 namespace Events {
-	class MoveObjectEvent : public virtual Event {
+	class UpdateObjectEvent : public virtual Event {
 	private:
 		// Whether or not the Event is receiving or sending out data
 		bool m_isReceiving;
@@ -33,14 +33,14 @@ namespace Events {
 	public:
 		
 		/**
-		* Constructor for MoveObjectEvent for outbound events
+		* Constructor for UpdateObjectEvent for outbound events
 		*/
-		MoveObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier = 0);
+		UpdateObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier = 0);
 
 		/**
-		* Constructor for MoveObjectEvent for inbound Events
+		* Constructor for UpdateObjectEvent for inbound Events
 		*/
-		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet);
+		UpdateObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet);
 
 		/**
 		* The function that parses or sends out information on positional data changes

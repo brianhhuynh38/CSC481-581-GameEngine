@@ -1,13 +1,13 @@
-#include "moveObjectEvent.h"
+#include "updateObjectEvent.h"
 
 #include "playerInput.h"
 
 namespace Events {
 
 	/**
-	* Constructor for MoveObjectEvent for outbound events
+	* Constructor for UpdateObjectEvent for outbound events
 	*/
-	MoveObjectEvent::MoveObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
+	UpdateObjectEvent::UpdateObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
 		// GameObject reference	
 		m_goRefVector = goRef;
 		// Event priorities
@@ -27,9 +27,9 @@ namespace Events {
 	}
 
 	/**
-	* Constructor for MoveObjectEvent for inbound Events
+	* Constructor for UpdateObjectEvent for inbound Events
 	*/
-	MoveObjectEvent::MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet) {
+	UpdateObjectEvent::UpdateObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet) {
 		// GameObject reference
 		m_goRefVector = std::vector<GameObject*>();
 		// Event priorities
@@ -48,7 +48,7 @@ namespace Events {
 		m_clientIDSet = clientIDSet;
 	}
 
-	void MoveObjectEvent::onEvent() {
+	void UpdateObjectEvent::onEvent() {
 		if (m_isReceiving) { // If this is receiving a JSON
 
 			// Parse json
@@ -116,7 +116,7 @@ namespace Events {
 	/*
 	* Converts the Event to json for serialization across clients and server
 	*/
-	void MoveObjectEvent::to_json(json& j) const {
+	void UpdateObjectEvent::to_json(json& j) const {
 		// Add all fields to the json
 		json gosJson;
 		// Iterate through all of the GameObjects

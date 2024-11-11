@@ -156,7 +156,7 @@
     <ClCompile Include="instantiateObjectEvent.cpp">
       <Filter>Source Files\Events\NetworkEvents</Filter>
     </ClCompile>
-    <ClCompile Include="moveObjectEvent.cpp">
+    <ClCompile Include="updateObjectEvent.cpp">
       <Filter>Source Files\Events\NetworkEvents</Filter>
     </ClCompile>
     <ClCompile Include="playerUpdateEvent.cpp">
@@ -258,7 +258,7 @@
     <ClInclude Include="playerUpdateEvent.h">
       <Filter>Header Files\Events\NetworkEvents</Filter>
     </ClInclude>
-    <ClInclude Include="moveObjectEvent.h">
+    <ClInclude Include="updateObjectEvent.h">
       <Filter>Header Files\Events\NetworkEvents</Filter>
     </ClInclude>
     <ClInclude Include="instantiateObjectEvent.h">

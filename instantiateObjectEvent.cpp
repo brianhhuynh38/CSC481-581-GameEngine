@@ -17,6 +17,7 @@ namespace Events {
 		m_socketRef = socket;
 		// Define client ID for message sending
 		m_clientIdentifier = clientIdentifier;
+		m_clientIDSet = nullptr;
 		m_playerID = playerID;
 		// Identifier false for onEvent function
 		m_isReceiving = false;
@@ -26,7 +27,7 @@ namespace Events {
 	}
 
 		// Constructor used for receiving Event information through an already-obtained message and direct GameObject reference
-	InstantiateObjectEvent::InstantiateObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, int playerID) {
+	InstantiateObjectEvent::InstantiateObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet, int playerID) {
 		// GameObject reference
 		m_goRefVector = std::vector<GameObject*>();
 		// Event priorities
@@ -35,6 +36,7 @@ namespace Events {
 		// Socket is null because it is not needed for json parsing, client identifier is also set to 0 (invalid)
 		m_socketRef = NULL;
 		m_clientIdentifier = 0;
+		m_clientIDSet = clientIDSet;
 		m_playerID = playerID;
 		// Identifier for the onEvent function
 		m_isReceiving = true;
@@ -52,7 +54,7 @@ namespace Events {
 			}
 			// Deserialize all GameObjects in the JSON after assigning playerID
 			
-			m_goManagerRef->deserialize(m_jsonString, 2);
+			m_clientIDSet->idSet = m_goManagerRef->deserialize(m_jsonString, 2);
 			std::cout << "INSTANTIATE JSON: \n" << m_jsonString << "\n";
 			
 		}

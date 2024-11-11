@@ -4,6 +4,7 @@
 #define INSTANTIATEOBJECTEVENT_H
 
 #include "event.h"
+#include "structs.h"
 #include "gameObjectManager.h"
 
 #include <zmq.hpp>
@@ -20,6 +21,8 @@ namespace Events {
 		int m_playerID;
 		// The client ID used to filter messages, this will not be used if it is passed in as 0
 		int m_clientIdentifier;
+		// A set of integers representative of any new clients being added
+		ClientIDSet* m_clientIDSet;
 		// A reference to the socket being used for a particular data transfer
 		zmq::socket_ref m_socketRef;
 		// JSON string to parse with Object Information in it
@@ -34,7 +37,7 @@ namespace Events {
 		InstantiateObjectEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int playerID = 0, int clientIdentifier = 0);
 
 		// Constructor used for receiving Event information through an already-obtained message and direct GameObject reference
-		InstantiateObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, int playerID = 0);
+		InstantiateObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDSet* clientIDSet, int playerID = 0);
 		
 		// Overridden onEvent function that parses or sends out a message
 		void onEvent() override;

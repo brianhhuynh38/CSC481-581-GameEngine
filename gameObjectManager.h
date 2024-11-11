@@ -9,6 +9,7 @@
 #include "eventManager.h"
 
 #include <map>
+#include <set>
 #include <mutex>
 #include <condition_variable>
 
@@ -58,7 +59,7 @@ public:
 	* @param movingEntityString: string containing movingObject information from the server
 	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 	*/
-	std::vector<int> deserialize(std::string gameObjectString, int networkType);
+	std::set<int> deserialize(std::string gameObjectString, int networkType);
 
 	/**
 	* Deserializes a string of playerGO and inserts those GameObjects into the client object map.

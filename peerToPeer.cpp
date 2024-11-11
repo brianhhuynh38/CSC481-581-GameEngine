@@ -7,7 +7,7 @@
 #include "global.h"
 
 #include "playerUpdateEvent.h"
-#include "moveObjectEvent.h"
+#include "updateObjectEvent.h"
 #include "instantiateObjectEvent.h"
 
 #include <iostream>
@@ -151,11 +151,11 @@ namespace PeerToPeer {
         json j = json::parse(starterInfoString);
 
         // Raises an event that should be taking information in regarding all existing network objects and defines the player
-        eventManager->raiseEventInstantly(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), j["playerid"].get<int>()));
+        eventManager->raiseEventInstantly(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), clientIDSet, j["playerid"].get<int>()));
 
         // Create thread for player publisher
         //threads->push_back(std::thread(runPlayerThread, std::ref(playerGO)));
-      
+
         // Convert the player game object into JSON
         json stringPrint;
 
@@ -218,7 +218,7 @@ namespace PeerToPeer {
 			std::getline(ss, firstLine);
 
             // Call moveEvent for when an object moves
-            eventManager->raiseEvent(new Events::MoveObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine, clientIDSet));
+            eventManager->raiseEvent(new Events::UpdateObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 1, firstLine, clientIDSet));
 		}
 
         // Connect port number for this client and create socket ref for events
@@ -229,20 +229,30 @@ namespace PeerToPeer {
         // Call playerUpdateEvent with the p2ppublisher socket
         std::vector<GameObject*> goVec = std::vector<GameObject*>();
         goVec.push_back(player);
-        //eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, 0, 0, p2pPubRef, player->getUUID()));
+        eventManager->raiseEvent(new Events::PlayerUpdateEvent(goVec, 0, 0, p2pPubRef, player->getUUID()));
 
-        //{
-        //    std::lock_guard<std::mutex> lock(clientIDSet->mutex);
-        //    while (!clientIDSet->idSet.empty()) {
-        //        int currentID = *clientIDSet->idSet.begin();
-        //        // Check if the ID is contained in the set of instantiatedIDs, if not, then create a thread
-        //        if (clientIDSet->instantiatedIDs.find(currentID) != clientIDSet->instantiatedIDs.end()) {
-        //            threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
-        //            clientIDSet->instantiatedIDs.insert(currentID);
-        //        }
-        //        clientIDSet->idSet.erase(currentID);
-        //    }
-        //}
+        {
+            std::lock_guard<std::mutex> lock(clientIDSet->mutex);
+            while (!clientIDSet->idSet.empty()) {
+                int currentID = *clientIDSet->idSet.begin();
+                // Check if the ID is contained in the set of instantiatedIDs, if not, then create a thread
+
+                bool existingClient = false;
+                for (int id : clientIDSet->instantiatedIDs) {
+                    if (id == currentID) {
+                        existingClient = true;
+                        break;
+                    }
+                }
+
+                if (!existingClient) {
+                    threads->push_back(std::thread(runClientThread, currentID, std::ref(gameObjectManager)));
+                    clientIDSet->instantiatedIDs.insert(currentID);
+                }
+                
+                clientIDSet->idSet.erase(currentID);
+            }
+        }
 		return 0;
 	}
 }

@@ -66,12 +66,12 @@ void GameObjectManager::update() {
 * @param movingEntityString: string containing movingObject information from the server
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
-std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
+std::set<int> GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
 	// Parse json
 	json j = json::parse(gameObjectString);
 
 	// Create vector of integers: the IDs of any new player clients added
-	std::vector<int> intVector = std::vector<int>();
+	std::set<int> intSet = std::set<int>();
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
@@ -86,7 +86,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 				//insertClient(go); // Comment this out if using p2p
 				if (uuid != m_playerID) {
 					go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-					intVector.push_back(go->getUUID());
+					intSet.insert(go->getUUID());
 				}
 			}
 		}
@@ -98,7 +98,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 		}
 	}
 	// Return the vector of new playerIDs
-	return intVector;
+	return intSet;
 }
 
 /**
