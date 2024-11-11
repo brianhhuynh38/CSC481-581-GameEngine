@@ -7,9 +7,11 @@
 #include "event.h"
 #include "GameObject.h"
 #include "gameObjectManager.h"
+#include "structs.h"
 
 #include <zmq.hpp>
 #include <queue>
+#include <mutex>
 
 namespace Events {
 	class MoveObjectEvent : public virtual Event {
@@ -24,7 +26,7 @@ namespace Events {
 		std::string m_jsonString;
 
 		// Reference to the queue of new clientIDs
-		std::queue<int>* m_clientIDQueue;
+		ClientIDQueue* m_clientIDQueue;
 		// Reference to the GameObjectManager
 		GameObjectManager* m_goManagerRef;
 
@@ -38,7 +40,7 @@ namespace Events {
 		/**
 		* Constructor for MoveObjectEvent for inbound Events
 		*/
-		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, std::queue<int>* clientIDQueue);
+		MoveObjectEvent(GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, ClientIDQueue* clientIDQueue);
 
 		/**
 		* The function that parses or sends out information on positional data changes

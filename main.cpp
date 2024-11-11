@@ -324,7 +324,8 @@ int main(int argc, char* argv[]) {
 	});
 
 	// Client ID queue that tracks any new clients that join the game
-	std::queue<int>* clientIDQueue = new std::queue<int>();
+	ClientIDQueue* clientIDQueue = new ClientIDQueue();
+	clientIDQueue->idQueue = std::queue<int>();
 	while (true) {
 		// Update request and subscriber
 		// Safely run the networking code

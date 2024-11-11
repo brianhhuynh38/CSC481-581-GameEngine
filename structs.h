@@ -4,7 +4,9 @@
 #define STRUCTS_H
 
 #include <SDL.h>
-#include <list>
+#include <queue>
+#include <mutex>
+
 #include "definitions.h"
 #include "vector2D.h"
 #include "GameObject.h"
@@ -42,5 +44,15 @@ typedef struct {
 	// The amount that the object's velocity was manipulated
 	Utils::Vector2D velMover;
 } HitInfo;
+
+/**
+* A queue meant to contain the IDs of newly-joined clients. Includes a mutex for thread safety.
+*/
+typedef struct {
+	// A queue containing all the IDs
+	std::queue<int> idQueue;
+	// The mutex to use in the event that the queue is accessed in multiple threads
+	std::mutex mutex;
+} ClientIDQueue;
 
 #endif
