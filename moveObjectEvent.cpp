@@ -91,6 +91,7 @@ namespace Events {
 						go = new GameObject();
 						go->from_json(obj);
 						//m_goManagerRef->insertClient(go);
+						go->getComponent<Components::RigidBody>()->setIsKinematic(true);
 						m_goManagerRef->insert(go);
 						{
 							std::lock_guard<std::mutex> lock(m_clientIDSet->mutex);

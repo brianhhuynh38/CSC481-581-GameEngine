@@ -51,8 +51,9 @@ namespace Events {
 				m_goManagerRef->setPlayerID(m_playerID);
 			}
 			// Deserialize all GameObjects in the JSON after assigning playerID
-			m_goManagerRef->deserialize(m_jsonString, 2);
 			
+			m_goManagerRef->deserialize(m_jsonString, 2);
+			std::cout << "INSTANTIATE JSON: \n" << m_jsonString << "\n";
 			
 		}
 		else { // If the Event is currently sending out a message from this client

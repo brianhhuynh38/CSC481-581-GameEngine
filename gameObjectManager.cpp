@@ -90,7 +90,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 				}
 			}
 		}
-		else if (uuid != m_playerID) { // If it's an existing game object
+		else if (m_playerID != uuid) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
 			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) {
 				go->from_json(obj);
