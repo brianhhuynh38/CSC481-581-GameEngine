@@ -210,7 +210,7 @@ well, both with their naming schemes and their contents ([`Transform`](transform
 
 ### [Nlohmann's JSON Library Documentation](https://github.com/nlohmann/json)
 
-This JSON library was provided on Moodle and is usable for Homework 3. This library is used primarily 
+This `JSON` library was provided on Moodle and is usable for Homework 3. This library is used primarily 
 for serialization and deserialization of the GameObjects when being sent through the network, from both 
 the server and the peer clients. The documentation provided on the GitHub repository was used to figure 
 out the necessary functions and techniques to properly read in and write out json statements.
@@ -220,3 +220,18 @@ out the necessary functions and techniques to properly read in and write out jso
 | [`GameObject.cpp`](GameObject.cpp) | [`GameObject.h`](GameObject.h) |
 | [`peerToPeer.cpp`](peerToPeer.cpp) | [`peerToPeer.h`](peerToPeer.h) |
 
+
+## Homework 4
+
+### [*Game Engine Architecture* by Jason Gregory](https://www.gameenginebook.com/)
+
+The textbook was used as a reference to discern a general design for our `Event` system implementation. However, 
+our implementation actually works quite differently from the textbook's implementation, since we ended up
+implementing `Event`s as a class with defined functionalities rather than a struct that has its functionality
+defined through `EventHandler` or `EventManager`. Despite that though, it was an extremely useful resource that 
+helped us to understand the basics of how an event system should operate.
+
+|        `.cpp` Files        |            Header Files            |
+| -------------------------- | ---------------------------------- |
+|                            | [`event.h`](event.h) |
+| [`eventManager.cpp`](eventManager.cpp) | [`eventManager.h`](eventManager.h) |
