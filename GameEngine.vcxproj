@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="boundaryZone.cpp" />
+    <ClCompile Include="cameraChangeEvent.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="collisionEvent.cpp" />
     <ClCompile Include="configIO.cpp" />
@@ -175,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boundaryZone.h" />
+    <ClInclude Include="cameraChangeEvent.h" />
     <ClInclude Include="client.h" />
     <ClInclude Include="collisionEvent.h" />
     <ClInclude Include="component.h" />
