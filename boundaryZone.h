@@ -29,7 +29,7 @@ public:
 
 	Utils::Vector2D getPos2();
 
-	void update(double deltaTimeInSecs) override;
+	void update(double deltaTimeInSecs, int64_t currentTime) override;
 
 	void initiateTimer(int timeToSet);
 

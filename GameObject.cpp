@@ -5,6 +5,7 @@
 using json = nlohmann::json;
 
 #include "transform.h"
+//#include "eventManager.h"
 #include "textureMesh.h"
 #include "playerInput.h"
 #include "rigidBody.h"
@@ -44,8 +45,9 @@ GameObject::GameObject(float scaleX, float scaleY, float positionX, float positi
 }
 
 // Update all components attached to game object and the time step the object should be using for calculations
-void GameObject::update(double deltaTimeInSecs) {
+void GameObject::update(double deltaTimeInSecs, int64_t currentTime) {
 	m_currTimeStep = deltaTimeInSecs;
+	m_currentTime = currentTime;
 	for (auto& [type, component] : m_components) {
 		component->update();  // Update each component
 	}
@@ -62,6 +64,10 @@ int GameObject::getUUID() {
 
 double GameObject::getDeltaTimeInSecsOfObject() {
 	return m_currTimeStep;
+}
+
+int64_t GameObject::getCurrentTimeStamp() {
+	return m_currentTime;
 }
 
 void GameObject::from_json(const json& j) {
@@ -107,7 +113,6 @@ void GameObject::from_json(const json& j) {
 				textureMeshData["texturefilepath"]
 			);
 		}
-		
 	}
 
 	if (j.contains("playerinput")) {
@@ -162,6 +167,7 @@ void GameObject::to_json(json& j) {
 	}
 	
 }
+
 
 // Example for main:
 // Player player(1, 1, 0, 0, 50, 50, 10, "player_texture.png", false, true, 0, 10, 5.0f);

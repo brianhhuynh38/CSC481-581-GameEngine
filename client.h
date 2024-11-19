@@ -6,10 +6,7 @@
 #include <zmq.hpp>
 #include <iostream>
 #include <string>
-#include "entity.h"
-#include "player.h"
 #include "structs.h"
-#include "playerController.h"
 
 #include "playerGO.h"
 #include "gameObjectManager.h"

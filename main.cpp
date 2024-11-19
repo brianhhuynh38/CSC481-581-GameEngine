@@ -4,6 +4,7 @@
 #include <zmq.hpp>
 #include <string>
 #include <mutex>
+#include <set>
 
 #include "definitions.h"
 #include "draw.h"
@@ -13,12 +14,7 @@
 #include "configIO.h"
 #include "physicsCalculator.h"
 
-#include "entity.h"
-#include "player.h"
-#include "movingEntity.h"
-
-#include "playerController.h"
-#include "entityController.h"
+#include "eventManager.h"
 #include "gameObjectManager.h"
 
 #include "client.h"
@@ -32,13 +28,15 @@
 #include "boundaryZone.h"
 
 // Global variables
-/// The Display struct used to initialize renderer and window
+
+// The Display struct used to initialize renderer and window
 Display *display;
-/// Controller for all entities and their physics
-/// Global scale factor
+// Global scale factor
 Utils::Vector2D globalScaling;
-/// Determines if proportional scaling is active
+// Determines if proportional scaling is active
 bool proportionalScalingActive;
+// Manager in charge of all queueing and execution of events
+EventManager* eventManager;
 
 /**
  * Frees any allocated memory on application exit
@@ -130,8 +128,6 @@ int main(int argc, char* argv[]) {
 
 	/// The timeline used to keep track of time intervals
 	Timeline *timeline = new Timeline();
-	// Create physics
-	Physics *physics = new Physics();
 	
 	// TODO: Initialize networking
 	// initialize the zmq context with a single IO thread
@@ -159,7 +155,6 @@ int main(int argc, char* argv[]) {
 	loadConfigFile(&settings);
 
 	// Set physics configured gravity
-	physics->setGravity(settings.gravity);
 	PhysCalc::setGravity(settings.gravity);
 
 	// Initialize SDL components
@@ -171,21 +166,16 @@ int main(int argc, char* argv[]) {
 	then = timeline->getTime();
 	remainder = 0;
 
-	// Create the entityController
-	EntityController* entityController = new EntityController(physics);
 	
 	// Global mutex and condition variable to be used across threads
 	std::mutex renderMtx;
 	std::condition_variable renderCV;
 
+	// Create EventManager
+    eventManager = new EventManager();
+
 	// Create gameObjectManager
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
-
-	// The entity that the player is able to control
-	Entities::Player* player;
-	
-	// The default player controller
-	Controllers::PlayerController* playerController;
 
 	InputHandler* inputHandler = new InputHandler();
 
@@ -209,9 +199,6 @@ int main(int argc, char* argv[]) {
 			32.0f, 32.0f
 		)
 	};
-
-	// Test PlayerObject
-	PlayerGO* playerObject = new PlayerGO();
 
 	Utils::Vector2D *cameraPosition = new Utils::Vector2D();
 
@@ -260,7 +247,12 @@ int main(int argc, char* argv[]) {
 
 	int currentRenderingID = 0;
 
-	std::mutex playerMutex;
+	//std::mutex playerMutex;
+
+    // Client ID queue that tracks any new clients that join the game
+    ClientIDSet* clientIDSet = new ClientIDSet();
+    clientIDSet->idSet = std::set<int>();
+    clientIDSet->instantiatedIDs = std::set<int>();
 
 	// Update request and subscriber. Put on a new thread
 	if (settings.networkType == 2) {
@@ -269,31 +261,35 @@ int main(int argc, char* argv[]) {
 			&clientToServerRequest,
 			&peerToPeerPublisher,
 			&peerToPeerSubscriber,
-			playerObject,
 			gameObjectManager,
 			settings,
 			spawnPoints,
-			&clientThreads
+			&clientThreads,
+			clientIDSet
 		);
 	}
 	else {
-		Client::startup(
-			&serverToClientSubscriber,
-			&clientToServerRequest,
-			&clientToServerPublisher,
-			playerObject,
-			gameObjectManager,
-			settings,
-			spawnPoints
-		);
+		// This is the startup function for the Client-Server implementation, which is now [DEPRECATED]
+
+		//Client::startup(
+		//	&serverToClientSubscriber,
+		//	&clientToServerRequest,
+		//	&clientToServerPublisher,
+		//	playerObject,
+		//	gameObjectManager,
+		//	settings,
+		//	spawnPoints
+		//);
 	}
+
+	// Get player object created during the network startup process
+	PlayerGO* playerObject = gameObjectManager->tryGetPlayer();
+
 	// Set the input handler in main
 	{
 		//std::lock_guard<std::mutex> lock(playerMutex);
 		playerObject->getComponent<Components::PlayerInputPlatformer>()->setInputHandler(inputHandler);
 	}
-	
-
 
 	std::thread gameObjectThread([&]() {
 		while (true) {
@@ -309,6 +305,8 @@ int main(int argc, char* argv[]) {
 				//std::lock_guard<std::mutex> lock(playerMutex);
 				gameObjectManager->update();
 			}
+
+			eventManager->dispatchEvents(timeline->getTime());
 			
 			//renderMtx.unlock();
 			//renderCV.notify_all();
@@ -331,29 +329,20 @@ int main(int argc, char* argv[]) {
 		}
 	});
 
-	//std::thread networkThread([&]() {
-	//	while (true) {
-	//		
-	//		//std::unique_lock<std::mutex> lock(renderMtx); // Lock the mutex
-	//		std::cout << "Network thread loop.\n";
-
-	//		
-	//		//renderMtx.unlock();
-	//		//renderCV.notify_all();
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
-	//	}
-	//});
-
-	int iterationCounter = 0;
-	int64_t totalTimeElapsed = 0;
 	while (true) {
-		auto timeCheckEpoch = std::chrono::high_resolution_clock::now().time_since_epoch();
-		int64_t beforeTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch).count();
-		// TODO: Send client information update to the server
 		// Update request and subscriber
 		// Safely run the networking code
 		if (settings.networkType == 2) {
-			PeerToPeer::run(&serverToClientSubscriber, &clientToServerRequest, &peerToPeerPublisher, &peerToPeerSubscriber, playerObject, gameObjectManager, &clientThreads);
+			PeerToPeer::run(
+				&serverToClientSubscriber,
+				&clientToServerRequest,
+				&peerToPeerPublisher,
+				&peerToPeerSubscriber,
+				playerObject,
+				gameObjectManager,
+				&clientThreads,
+				clientIDSet
+			);
 		}
 		else {
 			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
@@ -370,46 +359,28 @@ int main(int argc, char* argv[]) {
 
 		// Display all GameObjects
 		std::map<int, GameObject*>::iterator iterGO;
-		// Get entity map
+		// Get object map
 		std::map<int, GameObject*> objectMap = *gameObjectManager->getObjectMap();
 
 		//std::cout << "\n\n\nStart Rendering...\n\n\n";
 
-		// Loop through entities and display them all
+		// Loop through objects and display them all
 		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
 			Render::displayGameObject(*iterGO->second, *cameraPosition);
 		}
 
 		// Display all GameObjects sent by clients
 		std::map<int, GameObject*>::iterator iterClientGO;
-		// Get entity map
+		// Get client map
 		std::map<int, GameObject*> clientMap = *gameObjectManager->getClientObjectMap();
 
-		// Loop through entities and display them all
+		// Loop through clients and display them all
 		for (iterClientGO = clientMap.begin(); iterClientGO != clientMap.end(); ++iterClientGO) {
 			Render::displayGameObject(*iterClientGO->second, *cameraPosition);
 		}
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();
-
-
-		///////////////////////////////////////////////////////////////
-		///  Iteration Testing for Homework 3-3: Iteration Testing  ///
-		///////////////////////////////////////////////////////////////
-
-		//auto timeCheckEpoch2 = std::chrono::high_resolution_clock::now().time_since_epoch();
-		//int64_t afterTime = std::chrono::duration_cast<std::chrono::milliseconds>(timeCheckEpoch2).count();
-
-		//if (gameObjectManager->getClientObjectMap()->size() == 0) {
-		//	totalTimeElapsed += afterTime - beforeTime;
-		//	iterationCounter++;
-		//}
-
-		//if (iterationCounter == 1000) {
-		//	std::cout << "Time it took for 1,000 iterations with " + std::to_string(gameObjectManager->getClientObjectMap()->size() + 1) + " clients: " + std::to_string(totalTimeElapsed) + "\n";
-		//}
-
 
 		//SDL_Delay(16);
 		capFrameRate(timeline, &then, &remainder);

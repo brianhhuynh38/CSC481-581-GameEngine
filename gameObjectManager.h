@@ -4,9 +4,12 @@
 #define GAMEOBJECTMANAGER_H
 
 #include "GameObject.h"
+#include "playerGO.h"
 #include "timeline.h"
+#include "eventManager.h"
 
 #include <map>
+#include <set>
 #include <mutex>
 #include <condition_variable>
 
@@ -21,6 +24,7 @@ private:
 	std::map<int, GameObject*> *m_clientObjects;
 	// The ID of the player under control of this client, maintained so that it is not updated externally
 	int m_playerID;
+
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 
@@ -55,7 +59,7 @@ public:
 	* @param movingEntityString: string containing movingObject information from the server
 	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 	*/
-	std::vector<int> deserialize(std::string gameObjectString, int networkType);
+	std::set<int> deserialize(std::string gameObjectString, int networkType);
 
 	/**
 	* Deserializes a string of playerGO and inserts those GameObjects into the client object map.
@@ -85,6 +89,11 @@ public:
 	std::map<int, GameObject*>* getClientObjectMap();
 
 	/**
+	* Returns the current Time of the timeline associated with gameObject calculations
+	*/
+	int64_t getCurrentTime();
+
+	/**
 	* Erases the object from the client map
 	*/
 	void terminateClient(int uuidKey);
@@ -102,6 +111,25 @@ public:
 	* @param go GameObject to be added to end of the object map
 	*/
 	void insertClient(GameObject* go);
+
+	/**
+	* Finds a GameObject with the given idea, otherwise, returns null
+	* 
+	* @param uuid: The Id of the object being serached for
+	* @returns A reference to the GameObject or a nullptr if nothing is found
+	*/
+	GameObject* find(int uuid);
+
+	/**
+	* Attempts to get a reference to the PlayerGameObject given the playerID currently assigned in the
+	* system. If the player is not instantiated or does not exist, then returns a nullptr
+	*/
+	PlayerGO* tryGetPlayer();
+
+    /**
+     * Gets the player ID
+     */
+    int getPlayerID();
 
 	/**
 	 * Sets the player ID so that the object with this ID will not be updated via JSON, only locally

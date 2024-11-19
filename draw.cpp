@@ -1,6 +1,5 @@
 #include "draw.h"
 
-#include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
 #include <cassert>
@@ -100,15 +99,6 @@ namespace Render {
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 		// Renders copies of the texture to the current target
 		SDL_RenderCopy(display->renderer, texture, NULL, &dest);
-	}
-
-	/**
-	 * Displays the given entities texture
-	 * (just a short version of the displayTexture function)
-	 * @param entity to display
-	 */
-	void displayEntity(Entities::Entity entity) {
-		displayTexture(entity.getTexture(), entity.getPosition()->x, entity.getPosition()->y, entity.getSize()->x, entity.getSize()->y, entity.getScale()->x, entity.getScale()->y);
 	}
 
 	/**

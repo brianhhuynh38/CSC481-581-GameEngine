@@ -3,9 +3,10 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-#include "entity.h"
 #include "GameObject.h"
 #include "vector2D.h"
+
+#include <SDL.h>
 
 namespace Render {
 
@@ -46,12 +47,6 @@ namespace Render {
 	 */
 	void displayTexture(SDL_Texture* texture, float x, float y, float w, float h, float sh, float sw);
 
-	/**
-	 * Displays the given entities texture
-	 * (just a short version of the displayTexture function)
-	 * @param entity to display
-	 */
-	void displayEntity(Entities::Entity entity);
 
 	/**
 	 * Displays the given GO texture

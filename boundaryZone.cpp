@@ -31,9 +31,10 @@ BoundaryZone::BoundaryZone(float scaleX, float scaleY, float positionX, float po
 	addComponent<Components::TextureMesh>(textureFilepath);
 }
 
-void BoundaryZone::update(double deltaTimeInSecs) {
+void BoundaryZone::update(double deltaTimeInSecs, int64_t currentTime) {
 	//std::cout << "Update all game object components\n";
 	m_currTimeStep = deltaTimeInSecs;
+	m_currentTime = currentTime;
 	for (auto& [type, component] : m_components) {
 		component->update();  // Update each component
 	}

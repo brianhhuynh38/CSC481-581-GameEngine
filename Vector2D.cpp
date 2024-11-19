@@ -96,7 +96,8 @@ namespace Utils {
 	* @returns The normalized vector
 	*/
 	Vector2D Vector2D::normalizeVector(void) {
-		return this->divideConst(getMagnitude());
+		float magnitude = getMagnitude();
+		return magnitude != 0 ? this->divideConst(magnitude) : Vector2D(0, 0);
 	}
 
 	std::string Vector2D::toString() {

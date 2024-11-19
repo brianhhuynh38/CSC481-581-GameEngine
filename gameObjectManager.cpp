@@ -1,9 +1,11 @@
 #include "gameObjectManager.h"
 
 #include "component.h"
-#include "rigidBody.h"
-#include "definitions.h"
 #include "playerInput.h"
+#include "rigidBody.h"
+
+#include "eventManager.h"
+#include "definitions.h"
 
 /**
 * Constructor for the GameObjectManager that takes in a reference to the Timeline
@@ -20,7 +22,6 @@ GameObjectManager::GameObjectManager(Timeline* timelineRef) {
 	m_objects = new std::map<int, GameObject*>();
 	// Instantiate empty map of gameObject meant to store client object references
 	m_clientObjects = new std::map<int, GameObject*>();
-
 }
 
 /**
@@ -36,18 +37,22 @@ GameObjectManager::~GameObjectManager() {
 void GameObjectManager::update() {
 	// Calculate current delta time in seconds
 	double deltaTimeInSecs = m_timeline->getDeltaTime() / MICROSEC_PER_SEC;
+	int64_t currentTime = m_timeline->getTime();
 	// Create iterator to iterate through the Map
 	std::map<int, GameObject*>::iterator iter;
 	// Updates each GameObject in the map
 	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
 		// Get GameObject and set current ID being updated for mutex
 		GameObject* go = iter->second;
-		// Update each GameObject component
-		go->update(deltaTimeInSecs);
-		// If GameObject has a RigidBody, update collisions
-		if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
-			if (go->getUUID() == m_playerID) {
-				rb->updateCollisions(*m_objects);
+		{
+			std::lock_guard<std::mutex> lock(go->mutex);
+			// Update each GameObject component
+			go->update(deltaTimeInSecs, currentTime);
+			// If GameObject has a RigidBody, update collisions
+			if (Components::RigidBody* rb = go->getComponent<Components::RigidBody>()) {
+				if (go->getUUID() == m_playerID) {
+					rb->updateCollisions(*m_objects);
+				}
 			}
 		}
 		
@@ -61,12 +66,12 @@ void GameObjectManager::update() {
 * @param movingEntityString: string containing movingObject information from the server
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
-std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
+std::set<int> GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
 	// Parse json
 	json j = json::parse(gameObjectString);
 
 	// Create vector of integers: the IDs of any new player clients added
-	std::vector<int> intVector = std::vector<int>();
+	std::set<int> intSet = std::set<int>();
 
 	// Loop through objects in JSON array
 	for (const auto& obj : j) {
@@ -78,14 +83,14 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 			// Insert new object into the map
 			insert(go);
 			if (go->getComponent<Components::PlayerInputPlatformer>()) {
-				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-				//insertClient(go);
+				//insertClient(go); // Comment this out if using p2p
 				if (uuid != m_playerID) {
-					intVector.push_back(go->getUUID());
+					go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+					intSet.insert(go->getUUID());
 				}
 			}
 		}
-		else if (uuid != m_playerID) { // If it's an existing game object
+		else if (m_playerID != uuid) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
 			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) {
 				go->from_json(obj);
@@ -93,7 +98,7 @@ std::vector<int> GameObjectManager::deserialize(std::string gameObjectString, in
 		}
 	}
 	// Return the vector of new playerIDs
-	return intVector;
+	return intSet;
 }
 
 /**
@@ -125,9 +130,9 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 		else { // If it's an existing game object
 			GameObject* go = m_clientObjects->at(uuid);
 			go->from_json(j);
-			go->getComponent<Components::RigidBody>()->setIsKinematic(true);
-
-			//std::cout << "Update existing player \n";
+			if (go->getUUID() != m_playerID) {
+				go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+			}
 		}
 	}
 	catch (std::exception e) {
@@ -173,6 +178,13 @@ std::map<int, GameObject*>* GameObjectManager::getClientObjectMap() {
 }
 
 /**
+* Returns the current Time of the timeline associated with gameObject calculations
+*/
+int64_t GameObjectManager::getCurrentTime() {
+	return m_timeline->getTime();
+}
+
+/**
 * Erases the object from the client map
 */
 void GameObjectManager::terminateClient(int uuidKey) {
@@ -203,7 +215,7 @@ void GameObjectManager::insert(GameObject* go) {
 	// TODO: It may be better to change so that it updates each of the components individually
 	// Might also want to make it so that it doesn't try to load texture in the constructor so that
 	// it doesn't call it every single time this function is called like last time
-	
+
 	// Adds or inserts existing information into the Manager
 	m_objects->insert_or_assign(go->getUUID(), go);
 }
@@ -216,6 +228,41 @@ void GameObjectManager::insert(GameObject* go) {
 void GameObjectManager::insertClient(GameObject* go) {
 	// Adds or inserts existing information into the Manager
 	m_clientObjects->insert_or_assign(go->getUUID(), go);
+}
+
+/**
+* Finds a GameObject with the given idea, otherwise, returns null
+*
+* @param uuid: The ID of the object being serached for
+* @returns A reference to the GameObject or a nullptr if nothing is found
+*/
+GameObject* GameObjectManager::find(int uuid) {
+	try { // Try finding a GameObject in the objectMap
+		return m_objects->at(uuid);
+	}
+	catch (std::out_of_range &e) { // If there is no GameObject at the given ID, return nullptr
+		return nullptr;
+	}
+}
+
+/**
+* Attempts to get a reference to the PlayerGameObject given the playerID currently assigned in the
+* system. If the player is not instantiated or does not exist, then returns a nullptr
+*/
+PlayerGO* GameObjectManager::tryGetPlayer() {
+	try {
+		return static_cast<PlayerGO*>(m_objects->at(m_playerID));
+	}
+	catch (std::out_of_range) {
+		return nullptr;
+	}
+}
+
+/**
+* Gets the player ID
+*/
+int GameObjectManager::getPlayerID() {
+	return m_playerID;
 }
 
 /**
