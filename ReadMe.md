@@ -12,6 +12,7 @@ with the server in order to run the program. The code for the network server can
 	- [Homework 1 References](#homework-1)
 	- [Homework 2 References](#homework-2)
 	- [Homework 3 References](#homework-3)
+	- [Homework 4 References](#homework-4)
 
 # Starting Instructions
 
