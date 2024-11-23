@@ -4,6 +4,7 @@
 #define EVENTMANAGER_H
 
 #include "event.h"
+#include "recorder.h"
 //#include "gameObject.h"
 
 #include <queue>
@@ -24,6 +25,9 @@ private:
 	// Mutexes used to lock Event queue so that it doesn't error
 	std::recursive_mutex m_mutex;
 
+	// Recorder reference for playback
+    Recorder* m_recorder;
+
 	/**
 	* Private helper function that returns a copy of the top of the event queue
 	*/
@@ -33,7 +37,7 @@ public:
 	/**
 	* Constructor for EventManager that intializes the event queue
 	*/
-	EventManager();
+	EventManager(Recorder *&recorder);
 
 	/**
 	* Destructor for EventManager that deletes each Event stored in the manager

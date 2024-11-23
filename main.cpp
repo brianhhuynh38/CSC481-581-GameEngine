@@ -20,6 +20,8 @@
 #include "client.h"
 #include "peerToPeer.h"
 
+#include "recorder.h"
+
 #include "GameObject.h"
 #include "staticObject.h"
 #include "transform.h"
@@ -37,6 +39,7 @@ Utils::Vector2D globalScaling;
 bool proportionalScalingActive;
 // Manager in charge of all queueing and execution of events
 EventManager* eventManager;
+Recorder* recorder;
 
 /**
  * Frees any allocated memory on application exit
@@ -171,8 +174,11 @@ int main(int argc, char* argv[]) {
 	std::mutex renderMtx;
 	std::condition_variable renderCV;
 
+	// Create Recorder
+	Recorder* recorder = new Recorder();
+
 	// Create EventManager
-    eventManager = new EventManager();
+    eventManager = new EventManager(recorder);
 
 	// Create gameObjectManager
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);

@@ -15,6 +15,11 @@ extern Utils::Vector2D globalScaling;
 /** Dictates whether proportional scaling is active */
 extern bool proportionalScalingActive;
 
+/** Whether or not this client is recording their events */
+extern bool isRecording = false;
+/** Whether or not a playback is in process */
+extern bool startPlayback = false;
+
 // The global instance of eventManager that everything has access to
 extern EventManager* eventManager;
 

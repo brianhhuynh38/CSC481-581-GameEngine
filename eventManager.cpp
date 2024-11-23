@@ -12,9 +12,10 @@
 /**
 * Constructor for EventManager that intializes the event queue
 */
-EventManager::EventManager() {
+EventManager::EventManager(Recorder *&recorder) {
 	m_eventQueue = std::priority_queue<Events::Event*, std::vector<Events::Event*>, std::greater<Events::Event*>>();
 	m_eventRegistry = std::map<std::type_index, std::vector<GameObject*>>();
+	m_recorder = recorder; // set pointer to recorder
 }
 
 /**
@@ -125,6 +126,10 @@ void EventManager::dispatchEvents(int64_t timeStamp) {
 		Events::Event* e = getEventQueueTop();
 		// Run the onEvent, then delete
 		e->onEvent();
+
+		// try to record dispacted event into the recorder
+		m_recorder->tryRecordEvent(e);
+
 		//delete e;
 		// Remove the Event from the queue
 		m_eventQueue.pop();
