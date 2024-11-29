@@ -5,7 +5,6 @@
 
 #include "event.h"
 #include "recorder.h"
-//#include "gameObject.h"
 
 #include <queue>
 #include <vector>
@@ -13,6 +12,8 @@
 #include <mutex>
 
 class GameObject;
+
+class Recorder;
 
 class EventManager {
 private:

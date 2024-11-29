@@ -39,7 +39,10 @@ Utils::Vector2D globalScaling;
 bool proportionalScalingActive;
 // Manager in charge of all queueing and execution of events
 EventManager* eventManager;
-Recorder* recorder;
+/** Whether or not this client is recording their events */
+bool isRecording = false;
+/** Whether or not a playback is in process */
+bool startPlayback = false;
 
 /**
  * Frees any allocated memory on application exit

@@ -1,8 +1,5 @@
 #include "eventManager.h"
 
-#include "gameObject.h"
-
-#include "event.h"
 #include "collisionEvent.h"
 #include "deathEvent.h"
 #include "inputEvent.h"
