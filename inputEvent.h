@@ -22,6 +22,12 @@ namespace Events {
 		// A helper function that applies any special inputs to the gameobject
 		void applySpecialInput(GameObject* go, IFlag flag);
 
+		// A helper function for recorder inputs
+		void applyRecorderInput();
+
+		// A helper function for action input
+		void applyActionInput();
+
 	public:
 
 		InputEvent(std::vector<GameObject*> goRef, int64_t timeStampPriority, int priority, InputHandler inputHandler, Utils::Vector2D movementVector, IFlag inputFlag = IFLAG_NONE);

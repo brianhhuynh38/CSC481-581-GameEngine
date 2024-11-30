@@ -177,17 +177,18 @@ int main(int argc, char* argv[]) {
 	std::mutex renderMtx;
 	std::condition_variable renderCV;
 
-	// Create Recorder
-	Recorder* recorder = new Recorder();
-
-	// Create EventManager
-    eventManager = new EventManager(recorder);
+	
 
 	// Create gameObjectManager
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
 
-	InputHandler* inputHandler = new InputHandler();
+	// Create Recorder
+	Recorder* recorder = new Recorder(gameObjectManager);
 
+	// Create EventManager
+	eventManager = new EventManager(recorder);
+
+	InputHandler* inputHandler = new InputHandler();
 	Input* input = new Input(inputHandler);
 
 	// Test SpawnPoints
@@ -303,23 +304,20 @@ int main(int argc, char* argv[]) {
 	std::thread gameObjectThread([&]() {
 		while (true) {
 			
-			//std::unique_lock<std::mutex> lock(renderMtx); // Lock the mutex
+			//std::unique_lock<std::mutex> lock(recordingMutex); // Lock the mutex
 			//renderCV.wait(lock, [&] { return currentRenderingID == false; });
 			//std::cout << "GameObject thread loop.\n";
 		
 			// Safely update the player object with the new deltaTime
 			timeline->updateTime(); // Update the timeline for deltaTime
-			// Safely update the physics of all entities
-			{
-				//std::lock_guard<std::mutex> lock(playerMutex);
-				gameObjectManager->update();
-			}
 
-			eventManager->dispatchEvents(timeline->getTime());
-			
-			//renderMtx.unlock();
-			//renderCV.notify_all();
-			
+			// Safely update all GameObjects and Events
+			if (!startPlayback) {
+				// Update GameObject components
+				gameObjectManager->update();
+				// Dispatch events
+				eventManager->dispatchEvents(timeline->getTime());
+			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
@@ -327,12 +325,10 @@ int main(int argc, char* argv[]) {
 	std::thread inputThread([&]() {
 		while (true) {
 
-			//std::cout << "Player thread loop.\n";
-
-			// Handles player input, including exit
-			input->takeInput();
-
-			//playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
+			if (!startPlayback) {
+				// Handles player input, including exit
+				input->takeInput();
+			}
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
@@ -340,21 +336,23 @@ int main(int argc, char* argv[]) {
 
 	while (true) {
 		// Update request and subscriber
-		// Safely run the networking code
-		if (settings.networkType == 2) {
-			PeerToPeer::run(
-				&serverToClientSubscriber,
-				&clientToServerRequest,
-				&peerToPeerPublisher,
-				&peerToPeerSubscriber,
-				playerObject,
-				gameObjectManager,
-				&clientThreads,
-				clientIDSet
-			);
-		}
-		else {
-			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
+		if (!startPlayback) {
+			// Safely run the networking code
+			if (settings.networkType == 2) {
+				PeerToPeer::run(
+					&serverToClientSubscriber,
+					&clientToServerRequest,
+					&peerToPeerPublisher,
+					&peerToPeerSubscriber,
+					playerObject,
+					gameObjectManager,
+					&clientThreads,
+					clientIDSet
+				);
+			}
+			else {
+				Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
+			}
 		}
 
 		// Prepares scene for rendering

@@ -156,6 +156,9 @@
     <ClCompile Include="instantiateObjectEvent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="recorder.cpp" />
+    <ClCompile Include="startPlaybackEvent.cpp" />
+    <ClCompile Include="startRecordingEvent.cpp" />
+    <ClCompile Include="stopRecordingEvent.cpp" />
     <ClCompile Include="updateObjectEvent.cpp" />
     <ClCompile Include="peerToPeer.cpp" />
     <ClCompile Include="physicsCalculator.cpp" />
@@ -195,6 +198,9 @@
     <ClInclude Include="inputEvent.h" />
     <ClInclude Include="instantiateObjectEvent.h" />
     <ClInclude Include="recorder.h" />
+    <ClInclude Include="startPlaybackEvent.h" />
+    <ClInclude Include="startRecordingEvent.h" />
+    <ClInclude Include="stopRecordingEvent.h" />
     <ClInclude Include="updateObjectEvent.h" />
     <ClInclude Include="peerToPeer.h" />
     <ClInclude Include="physicsCalculator.h" />
