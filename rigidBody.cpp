@@ -7,6 +7,7 @@
 #include "playerGO.h"
 #include "boundaryZone.h"
 #include "collisionEvent.h"
+#include "physicsEvent.h"
 #include "global.h"
 
 
@@ -51,25 +52,10 @@ namespace Components {
 	}
 
 	void RigidBody::update() {
-		// Update physics if the object is not kinematic
-		if (!m_isKinematic) {
-			// Get deltaTime and convert into seconds
-			float deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
-
-			// Get the parent GameObject's transform component
-			Utils::Vector2D *position = m_parent->getComponent<Transform>()->getPosition();
-
-			// Update physics vectors
-			PhysCalc::updatePhysicsVectors(deltaTimeInSecs, position, m_velocity, m_acceleration);
-
-			// Set position of the collider to the position of the transform
-			m_collider->x = position->x;
-			m_collider->y = position->y;
-
-			// Apply gravity
-			PhysCalc::applyGravity(deltaTimeInSecs, m_mass, m_acceleration);
-
-		}
+		// Raise PhysicsEvent in order to update physics vectors for this GameObject
+		std::vector<GameObject*> goVec = std::vector<GameObject*>();
+		goVec.push_back(m_parent);
+		eventManager->raiseEvent(new Events::PhysicsEvent(goVec, m_parent->getCurrentTimeStamp(), 0));
 	}
 
 

@@ -14,11 +14,15 @@
 #include "configIO.h"
 #include "physicsCalculator.h"
 
+#include "spawnEvent.h"
+
 #include "eventManager.h"
 #include "gameObjectManager.h"
 
 #include "client.h"
 #include "peerToPeer.h"
+
+#include "recorder.h"
 
 #include "GameObject.h"
 #include "staticObject.h"
@@ -37,6 +41,12 @@ Utils::Vector2D globalScaling;
 bool proportionalScalingActive;
 // Manager in charge of all queueing and execution of events
 EventManager* eventManager;
+// Recorder that records all events being recorded
+Recorder* recorder;
+/** Whether or not this client is recording their events */
+bool isRecording = false;
+/** Whether or not a playback is in process */
+bool startPlayback = false;
 
 /**
  * Frees any allocated memory on application exit
@@ -171,14 +181,18 @@ int main(int argc, char* argv[]) {
 	std::mutex renderMtx;
 	std::condition_variable renderCV;
 
-	// Create EventManager
-    eventManager = new EventManager();
+	
 
 	// Create gameObjectManager
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
 
-	InputHandler* inputHandler = new InputHandler();
+	// Create Recorder
+	recorder = new Recorder(gameObjectManager);
 
+	// Create EventManager
+	eventManager = new EventManager(recorder);
+
+	InputHandler* inputHandler = new InputHandler();
 	Input* input = new Input(inputHandler);
 
 	// Test SpawnPoints
@@ -294,23 +308,21 @@ int main(int argc, char* argv[]) {
 	std::thread gameObjectThread([&]() {
 		while (true) {
 			
-			//std::unique_lock<std::mutex> lock(renderMtx); // Lock the mutex
+			//std::unique_lock<std::mutex> lock(recordingMutex); // Lock the mutex
 			//renderCV.wait(lock, [&] { return currentRenderingID == false; });
 			//std::cout << "GameObject thread loop.\n";
 		
 			// Safely update the player object with the new deltaTime
 			timeline->updateTime(); // Update the timeline for deltaTime
-			// Safely update the physics of all entities
-			{
-				//std::lock_guard<std::mutex> lock(playerMutex);
+
+			// Safely update all GameObjects and Events
+			if (!startPlayback) {
+				// Update GameObject components
 				gameObjectManager->update();
 			}
-
+			// Dispatch events
 			eventManager->dispatchEvents(timeline->getTime());
-			
-			//renderMtx.unlock();
-			//renderCV.notify_all();
-			
+
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
@@ -318,12 +330,10 @@ int main(int argc, char* argv[]) {
 	std::thread inputThread([&]() {
 		while (true) {
 
-			//std::cout << "Player thread loop.\n";
-
-			// Handles player input, including exit
-			input->takeInput();
-
-			//playerObject->update(timeline->getDeltaTime() / MICROSEC_PER_SEC);
+			if (!startPlayback) {
+				// Handles player input, including exit
+				input->takeInput();
+			}
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
@@ -331,21 +341,23 @@ int main(int argc, char* argv[]) {
 
 	while (true) {
 		// Update request and subscriber
-		// Safely run the networking code
-		if (settings.networkType == 2) {
-			PeerToPeer::run(
-				&serverToClientSubscriber,
-				&clientToServerRequest,
-				&peerToPeerPublisher,
-				&peerToPeerSubscriber,
-				playerObject,
-				gameObjectManager,
-				&clientThreads,
-				clientIDSet
-			);
-		}
-		else {
-			Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
+		if (!startPlayback) {
+			// Safely run the networking code
+			if (settings.networkType == 2) {
+				PeerToPeer::run(
+					&serverToClientSubscriber,
+					&clientToServerRequest,
+					&peerToPeerPublisher,
+					&peerToPeerSubscriber,
+					playerObject,
+					gameObjectManager,
+					&clientThreads,
+					clientIDSet
+				);
+			}
+			else {
+				Client::run(&serverToClientSubscriber, &clientToServerRequest, &clientToServerPublisher, playerObject, gameObjectManager);
+			}
 		}
 
 		// Prepares scene for rendering
@@ -366,18 +378,23 @@ int main(int argc, char* argv[]) {
 
 		// Loop through objects and display them all
 		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
-			Render::displayGameObject(*iterGO->second, *cameraPosition);
+			GameObject* go = iterGO->second;
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				Render::displayGameObject(*iterGO->second, *cameraPosition);
+			}
 		}
 
-		// Display all GameObjects sent by clients
-		std::map<int, GameObject*>::iterator iterClientGO;
-		// Get client map
-		std::map<int, GameObject*> clientMap = *gameObjectManager->getClientObjectMap();
+		//// Death plane because the player teleports sometimes
+		//if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
+		//	std::vector<GameObject*> goVec = std::vector<GameObject*>();
+		//	goVec.push_back(playerObject);
+		//	Events::SpawnEvent* se = new Events::SpawnEvent(goVec, playerObject->getCurrentTimeStamp(), 1);
+		//	eventManager->raiseEvent(se);
+		//}
 
-		// Loop through clients and display them all
-		for (iterClientGO = clientMap.begin(); iterClientGO != clientMap.end(); ++iterClientGO) {
-			Render::displayGameObject(*iterClientGO->second, *cameraPosition);
-		}
+		// Try play back recording if applicable
+		recorder->tryDispatchRecording(timeline->getTime());
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();

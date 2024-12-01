@@ -15,13 +15,23 @@ constexpr uint8_t INPUT_DOWN = 0b00000100;
 constexpr uint8_t INPUT_RIGHT = 0b00000010;
 constexpr uint8_t INPUT_LEFT = 0b00000001;
 
+// Bytes representing other inputs
+constexpr uint8_t INPUT_ACTION = 0b10000000;
+constexpr uint8_t INPUT_START_RECORDING = 0b01000000;
+constexpr uint8_t INPUT_STOP_RECORDING = 0b00100000;
+constexpr uint8_t INPUT_PLAYBACK_RECORDING = 0b00010000;
+
+
 // Arrays that contain all special inputs
 const uint8_t INPUT_TELEPORT[3] = { INPUT_DOWN, INPUT_UP, INPUT_DOWN };
 
 // All types of special inputs that can be performed
 enum IFlag {
 	IFLAG_NONE = 0,
-	IFLAG_TELEPORT = 1
+	IFLAG_TELEPORT = 1,
+	IFLAG_START_REC = 2,
+	IFLAG_STOP_REC = 3,
+	IFLAG_PLAYBACK_REC = 4
 };
 
 /**
@@ -47,18 +57,6 @@ public:
 	* https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php
 	*/
 	void takeInput();
-
-//	/**
-//		* Checks the state of the given keyboard key by referencing
-//		* the keyboardState array and the inputHandler.
-//		* inputHander is then updated with the keys current state:
-//		* 0 = key is not pressed
-//		* 1 = key is currently pressed
-//		* 2 = key was just unpressed
-//		* @param scanCode key scanCode to check for
-//		* @param keyboardState array of keyboard key states
-//		*/
-//	void checkKeyState(int scanCode, const Uint8* keyboardState);
 };
 
 

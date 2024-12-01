@@ -1,6 +1,7 @@
 #include "updateObjectEvent.h"
 
 #include "playerInput.h"
+#include "global.h"
 
 namespace Events {
 
@@ -103,13 +104,15 @@ namespace Events {
 			}
 		}
 		else { // If this is sending out a JSON
-			// Convert gameObject and Event data into json format
-			json j;
-			to_json(j);
-			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
-			std::string eventInfo = m_clientIdentifier != 0 ? "Client_" + std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
-			zmq::message_t msg(eventInfo);
-			m_socketRef.send(msg, zmq::send_flags::dontwait);
+			if (!startPlayback) {
+				// Convert gameObject and Event data into json format
+				json j;
+				to_json(j);
+				// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
+				std::string eventInfo = m_clientIdentifier != 0 ? "Client_" + std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
+				zmq::message_t msg(eventInfo);
+				m_socketRef.send(msg, zmq::send_flags::dontwait);
+			}
 		}
 	}
 

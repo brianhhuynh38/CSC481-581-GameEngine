@@ -1,8 +1,13 @@
 #include "inputEvent.h"
 
+#include "startPlaybackEvent.h"
+#include "startRecordingEvent.h"
+#include "stopRecordingEvent.h"
+
 #include "vector2D.h"
 #include "rigidBody.h"
 #include "playerInput.h"
+#include "global.h"
 
 namespace Events {
 
@@ -21,6 +26,7 @@ namespace Events {
 
 			// Applies any special inputs that are defined below
 			applySpecialInput(go, m_flag);
+			applyRecorderInput();
 
 			float deltaTimeInSecs = go->getDeltaTimeInSecsOfObject();
 			Utils::Vector2D posMover = Utils::Vector2D(0, 0); // amount to change positon by
@@ -118,6 +124,25 @@ namespace Events {
 			{
 				break;
 			}
+		}
+	}
+
+	void InputEvent::applyRecorderInput() {
+		uint8_t inputByte = m_inputHandler.inputByte;
+		if ((inputByte & INPUT_START_RECORDING)  == INPUT_START_RECORDING) {
+			eventManager->raiseEvent(new StartRecordingEvent(m_timeStampPriority, m_priority));
+		}
+		if ((inputByte & INPUT_STOP_RECORDING) == INPUT_STOP_RECORDING) {
+			eventManager->raiseEvent(new StopRecordingEvent(m_timeStampPriority, m_priority));
+		}
+		if ((inputByte & INPUT_PLAYBACK_RECORDING) == INPUT_PLAYBACK_RECORDING) {
+			eventManager->raiseEvent(new StartPlaybackEvent(m_timeStampPriority, m_priority));
+		}
+	}
+
+	void InputEvent::applyActionInput() {
+		if ((m_inputHandler.inputByte & INPUT_ACTION) == INPUT_ACTION) {
+			// Action code specific to game here
 		}
 	}
 }

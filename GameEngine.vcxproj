@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="boundaryZone.cpp" />
+    <ClCompile Include="cameraChangeEvent.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="collisionEvent.cpp" />
     <ClCompile Include="configIO.cpp" />
@@ -154,6 +155,11 @@
     <ClCompile Include="inputEvent.cpp" />
     <ClCompile Include="instantiateObjectEvent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="physicsEvent.cpp" />
+    <ClCompile Include="recorder.cpp" />
+    <ClCompile Include="startPlaybackEvent.cpp" />
+    <ClCompile Include="startRecordingEvent.cpp" />
+    <ClCompile Include="stopRecordingEvent.cpp" />
     <ClCompile Include="updateObjectEvent.cpp" />
     <ClCompile Include="peerToPeer.cpp" />
     <ClCompile Include="physicsCalculator.cpp" />
@@ -175,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boundaryZone.h" />
+    <ClInclude Include="cameraChangeEvent.h" />
     <ClInclude Include="client.h" />
     <ClInclude Include="collisionEvent.h" />
     <ClInclude Include="component.h" />
@@ -191,6 +198,11 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="inputEvent.h" />
     <ClInclude Include="instantiateObjectEvent.h" />
+    <ClInclude Include="physicsEvent.h" />
+    <ClInclude Include="recorder.h" />
+    <ClInclude Include="startPlaybackEvent.h" />
+    <ClInclude Include="startRecordingEvent.h" />
+    <ClInclude Include="stopRecordingEvent.h" />
     <ClInclude Include="updateObjectEvent.h" />
     <ClInclude Include="peerToPeer.h" />
     <ClInclude Include="physicsCalculator.h" />

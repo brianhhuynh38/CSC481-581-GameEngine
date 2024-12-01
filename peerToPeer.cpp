@@ -32,8 +32,6 @@ namespace PeerToPeer {
         // Create a subscriber using a Sub model
         zmq::socket_t p2psubscriber{ context, zmq::socket_type::sub };
         zmq::socket_t disconnectSocket{ context, zmq::socket_type::req };
-        // Create socket references for use in Events
-
 
         // Set conflate value to only take most recent message
         int conflate = 1;
@@ -69,13 +67,8 @@ namespace PeerToPeer {
                 std::string clientString = clientInfo.to_string().substr(clientInfo.to_string().find('\n') + 1);
 
                 // Raise event to handle player updates (might change to use client queues)
-                eventManager->raiseEventInstantly(new Events::PlayerUpdateEvent(gameObjectManager, 0, 0, clientString));
-
-                //// Update client from JSON and set to Kinematic to lessen performance impact on current client
-                //gameObjectManager->deserializeClient(clientString, 2);
-
-                
-
+                //eventManager->raiseEventInstantly(new Events::PlayerUpdateEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 0, clientString));
+                eventManager->raiseEvent(new Events::PlayerUpdateEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 0, clientString));
             }
             else { // If not, keep track of time that the thread does not receive messages; after 10 seconds: terminate
 
@@ -151,7 +144,7 @@ namespace PeerToPeer {
         json j = json::parse(starterInfoString);
 
         // Raises an event that should be taking information in regarding all existing network objects and defines the player
-        eventManager->raiseEventInstantly(new Events::InstantiateObjectEvent(gameObjectManager, 0, 0, j["gos"].dump(), clientIDSet, j["playerid"].get<int>()));
+        eventManager->raiseEventInstantly(new Events::InstantiateObjectEvent(gameObjectManager, gameObjectManager->getCurrentTime(), 0, j["gos"].dump(), clientIDSet, j["playerid"].get<int>()));
 
         // Create thread for player publisher
         //threads->push_back(std::thread(runPlayerThread, std::ref(playerGO)));

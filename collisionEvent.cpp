@@ -1,5 +1,5 @@
 #include "collisionEvent.h"
-
+#include "cameraChangeEvent.h"
 #include "deathEvent.h"
 
 #include "global.h"
@@ -51,17 +51,11 @@ namespace Events {
 				{
 					BoundaryZone* boundaryZone = static_cast<BoundaryZone*>(m_hitInfo->collidedObj);
 
-					// Check switch (which side collided from)
-					if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos1()) && boundaryZone->checkCooldown()) {
-						// Change camera location to the other one
-						boundaryZone->setCurrentPos(boundaryZone->getPos2());
-						boundaryZone->initiateTimer(15);
-					}
-					else if (boundaryZone->getCurrentPos().equals(boundaryZone->getPos2()) && boundaryZone->checkCooldown()) {
-						// Change camera location to the other one
-						boundaryZone->setCurrentPos(boundaryZone->getPos1());
-						boundaryZone->initiateTimer(15);
-					}
+					// Call camera change event
+					std::vector<GameObject*> goVec = std::vector<GameObject*>();
+					goVec.push_back(boundaryZone);
+					Events::CameraChangeEvent* cce = new Events::CameraChangeEvent(goVec, go->getCurrentTimeStamp(), 1);
+					eventManager->raiseEvent(cce);
 					break;
 				}
 				default:

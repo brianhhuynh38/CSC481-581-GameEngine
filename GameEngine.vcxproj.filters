@@ -76,6 +76,12 @@
     <Filter Include="Source Files\Events\NetworkEvents">
       <UniqueIdentifier>{1d9232c8-689e-4954-b3ad-09b0e9e2e156}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Events\RecorderEvents">
+      <UniqueIdentifier>{8155f31c-31e5-4c90-b3bb-ce609504aceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events\RecorderEvents">
+      <UniqueIdentifier>{74d239f4-9560-4472-b443-1ad85e3fdbb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -164,6 +170,24 @@
     </ClCompile>
     <ClCompile Include="tree.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraChangeEvent.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="recorder.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="startPlaybackEvent.cpp">
+      <Filter>Source Files\Events\RecorderEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="startRecordingEvent.cpp">
+      <Filter>Source Files\Events\RecorderEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="stopRecordingEvent.cpp">
+      <Filter>Source Files\Events\RecorderEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="physicsEvent.cpp">
+      <Filter>Source Files\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +290,24 @@
     </ClInclude>
     <ClInclude Include="tree.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraChangeEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="recorder.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="startPlaybackEvent.h">
+      <Filter>Header Files\Events\RecorderEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="startRecordingEvent.h">
+      <Filter>Header Files\Events\RecorderEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="stopRecordingEvent.h">
+      <Filter>Header Files\Events\RecorderEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsEvent.h">
+      <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
