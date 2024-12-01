@@ -62,6 +62,15 @@ public:
 	std::set<int> deserialize(std::string gameObjectString, int networkType);
 
 	/**
+	* Deserializes a string of gameObjects and inserts those GameObjects into the object map.
+	* This is meant to read in gameObject information sent from the server. This includes the player.
+	*
+	* @param gameObjectString: string containing movingObject information from the server
+	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+	*/
+	void deserializeAll(std::string gameObjectString, int networkType);
+
+	/**
 	* Deserializes a string of playerGO and inserts those GameObjects into the client object map.
 	* This is meant to read in gameObject information sent from the server
 	*

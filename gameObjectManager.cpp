@@ -92,13 +92,55 @@ std::set<int> GameObjectManager::deserialize(std::string gameObjectString, int n
 		}
 		else if (m_playerID != uuid) { // If it's an existing game object
 			GameObject* go = m_objects->at(uuid);
-			if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) {
-				go->from_json(obj);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) {
+					go->from_json(obj);
+				}
 			}
 		}
 	}
 	// Return the vector of new playerIDs
 	return intSet;
+}
+
+/**
+* Deserializes a string of gameObjects and inserts those GameObjects into the object map.
+* This is meant to read in gameObject information sent from the server. This includes the player.
+*
+* @param gameObjectString: string containing movingObject information from the server
+* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+*/
+void GameObjectManager::deserializeAll(std::string gameObjectString, int networkType) {
+	// Parse json
+	json j = json::parse(gameObjectString);
+
+	// Loop through objects in JSON array
+	for (const auto& obj : j) {
+		auto uuid = obj["uuid"];
+
+		if (!m_objects->count(uuid)) { // If it's a new game object
+			GameObject* go = new GameObject();//
+			go->from_json(obj);
+			// Insert new object into the map
+			insert(go);
+			if (go->getComponent<Components::PlayerInputPlatformer>()) {
+				//insertClient(go); // Comment this out if using p2p
+				if (uuid != m_playerID) {
+					go->getComponent<Components::RigidBody>()->setIsKinematic(true);
+				}
+			}
+		}
+		else { // If it's an existing game object
+			GameObject* go = m_objects->at(uuid);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				if ((networkType == 2 && !go->getComponent<Components::PlayerInputPlatformer>()) || networkType == 1) {
+					go->from_json(obj);
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -150,13 +192,14 @@ void GameObjectManager::deserializeClient(std::string gameObjectString, int netw
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
 void GameObjectManager::serialize(std::string& outputString) {
-	// TODO: Adjust for use in peer-to-peer where only the player's information needs to be sent.
-	// Probably don't need to iterate, but need to have the local player field for conversion
 	json j;
 
 	for (const auto& [id, go] : *m_objects) {
 		json gameObjectJson;
-		go->to_json(gameObjectJson);
+		{
+			std::lock_guard<std::mutex> lock(go->mutex);
+			go->to_json(gameObjectJson);
+		}
 		j.push_back(gameObjectJson);
 	}
 

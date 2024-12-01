@@ -20,6 +20,7 @@ namespace Events {
 		if (!startPlayback) {
 			std::cout << "Recording started...\n";
 			isRecording = true;
+			recorder->setStartingTimeStamp(m_timeStampPriority);
 		}
 	}
 }

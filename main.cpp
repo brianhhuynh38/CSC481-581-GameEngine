@@ -14,6 +14,8 @@
 #include "configIO.h"
 #include "physicsCalculator.h"
 
+#include "spawnEvent.h"
+
 #include "eventManager.h"
 #include "gameObjectManager.h"
 
@@ -39,6 +41,8 @@ Utils::Vector2D globalScaling;
 bool proportionalScalingActive;
 // Manager in charge of all queueing and execution of events
 EventManager* eventManager;
+// Recorder that records all events being recorded
+Recorder* recorder;
 /** Whether or not this client is recording their events */
 bool isRecording = false;
 /** Whether or not a playback is in process */
@@ -183,7 +187,7 @@ int main(int argc, char* argv[]) {
 	GameObjectManager* gameObjectManager = new GameObjectManager(timeline);
 
 	// Create Recorder
-	Recorder* recorder = new Recorder(gameObjectManager);
+	recorder = new Recorder(gameObjectManager);
 
 	// Create EventManager
 	eventManager = new EventManager(recorder);
@@ -315,9 +319,10 @@ int main(int argc, char* argv[]) {
 			if (!startPlayback) {
 				// Update GameObject components
 				gameObjectManager->update();
-				// Dispatch events
-				eventManager->dispatchEvents(timeline->getTime());
 			}
+			// Dispatch events
+			eventManager->dispatchEvents(timeline->getTime());
+
 			std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Sleep to control thread timing
 		}
 	});
@@ -373,18 +378,23 @@ int main(int argc, char* argv[]) {
 
 		// Loop through objects and display them all
 		for (iterGO = objectMap.begin(); iterGO != objectMap.end(); ++iterGO) {
-			Render::displayGameObject(*iterGO->second, *cameraPosition);
+			GameObject* go = iterGO->second;
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				Render::displayGameObject(*iterGO->second, *cameraPosition);
+			}
 		}
 
-		// Display all GameObjects sent by clients
-		std::map<int, GameObject*>::iterator iterClientGO;
-		// Get client map
-		std::map<int, GameObject*> clientMap = *gameObjectManager->getClientObjectMap();
-
-		// Loop through clients and display them all
-		for (iterClientGO = clientMap.begin(); iterClientGO != clientMap.end(); ++iterClientGO) {
-			Render::displayGameObject(*iterClientGO->second, *cameraPosition);
+		// Death plane because the player teleports sometimes
+		if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
+			std::vector<GameObject*> goVec = std::vector<GameObject*>();
+			goVec.push_back(playerObject);
+			Events::SpawnEvent* se = new Events::SpawnEvent(goVec, playerObject->getCurrentTimeStamp(), 1);
+			eventManager->raiseEvent(se);
 		}
+
+		// Try play back recording if applicable
+		recorder->tryDispatchRecording(timeline->getTime());
 
 		// Renders the scene gven the parameters identified in prepareScene()
 		Render::presentScene();

@@ -186,6 +186,9 @@
     <ClCompile Include="stopRecordingEvent.cpp">
       <Filter>Source Files\Events\RecorderEvents</Filter>
     </ClCompile>
+    <ClCompile Include="physicsEvent.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
@@ -302,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="stopRecordingEvent.h">
       <Filter>Header Files\Events\RecorderEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsEvent.h">
+      <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

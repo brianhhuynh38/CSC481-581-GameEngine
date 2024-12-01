@@ -18,7 +18,7 @@ namespace Events {
 	void StartPlaybackEvent::onEvent() {
 		// Start replaying the recording from the queue of events and their timestamps
 		if (!startPlayback) {
-			std::cout << "Playback Starting...\n";
+			std::cout << "Playback event recorded...\n";
 			isRecording = false;
 			startPlayback = true;
 		}

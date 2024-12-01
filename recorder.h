@@ -16,13 +16,15 @@ private:
 	std::queue<Events::Event*> m_eventHistory;
 	// Serialized string of all gameObject info at the start of recording
 	std::string m_startPositions;
+	// Serialized string of GameObject positions from before the playback starts
+	std::string m_tempPositions;
 
 	// Int of starting time of recording
 	int64_t m_startingTimeStamp;
-	// Int of ending time of recording
-	int64_t m_endingTimeStamp;
 	// Time at which the time is offset to determine time by which the events execute
 	int64_t m_startPlaybackTimeOffset;
+	// Whether or not the playback information is initialzied
+	bool m_recordingInitialized;
 
 	// Game object manager reference
 	GameObjectManager *m_goManager;
@@ -42,6 +44,8 @@ public:
 	*  Tries to dispatch recorded events
 	*/
 	void tryDispatchRecording(int64_t timeStamp);
+
+	void setStartingTimeStamp(int64_t timeStamp);
 };
 
 #endif 

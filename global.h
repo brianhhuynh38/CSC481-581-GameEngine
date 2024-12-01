@@ -22,6 +22,8 @@ extern bool startPlayback;
 
 // The global instance of eventManager that everything has access to
 extern EventManager* eventManager;
+// Global instance of Recorder that lets anything access it
+extern Recorder* recorder;
 
 
 #endif
