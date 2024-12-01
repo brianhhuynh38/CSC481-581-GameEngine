@@ -385,13 +385,13 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		// Death plane because the player teleports sometimes
-		if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
-			std::vector<GameObject*> goVec = std::vector<GameObject*>();
-			goVec.push_back(playerObject);
-			Events::SpawnEvent* se = new Events::SpawnEvent(goVec, playerObject->getCurrentTimeStamp(), 1);
-			eventManager->raiseEvent(se);
-		}
+		//// Death plane because the player teleports sometimes
+		//if (playerObject->getComponent<Components::Transform>()->getPosition()->y > 1000) {
+		//	std::vector<GameObject*> goVec = std::vector<GameObject*>();
+		//	goVec.push_back(playerObject);
+		//	Events::SpawnEvent* se = new Events::SpawnEvent(goVec, playerObject->getCurrentTimeStamp(), 1);
+		//	eventManager->raiseEvent(se);
+		//}
 
 		// Try play back recording if applicable
 		recorder->tryDispatchRecording(timeline->getTime());

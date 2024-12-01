@@ -13,6 +13,7 @@ with the server in order to run the program. The code for the network server can
 	- [Homework 2 References](#homework-2)
 	- [Homework 3 References](#homework-3)
 	- [Homework 4 References](#homework-4)
+	- [Homework 5 References](#homework-5)
 
 # Starting Instructions
 
@@ -33,6 +34,8 @@ There is a `config.ini` file where certain variables can be modified and customi
  - Gravity
  - Network Type: (1 = Client-To-Server, 2 = Peer-to-Peer)
 
+ ~**NOTE:** Peer-to-Peer is the only supported network typing as of Homework 4. Please do not try to run with Network type 1.~
+
 As of Homework 2, this implementation uses a multiproject setup within the solution. Right click 
 the solution in the solution explorer, then add the `NetworkServer` project to add to the solution.
 The `GameEngine` project acts as the Client to the server, so it can be executed multiple times to create 
@@ -48,6 +51,19 @@ To exit the engine, press the `ESCAPE` key.
 
 To control the player, use the `ARROW KEYS` for movement, use `UP ARROW` for jump.
 
+Press `E` for Action Button (if applicable to current game)
+
+A set of keys can be used to control playback functionality for the Recording feature of the game engine
+as of Homework 5's completion:
+
+|    Key    |  Function  |
+| --------- | ---------- |
+|  `[ KEY`  |     `Start Recording`    |
+|  `] KEY`  |     `Stop Recording`     |
+|  `P KEY`  |  `Play Back Recording`   |
+
+### Deprecated as of Homework 4
+
 To activate proportional resolution, use the `MINUS KEY` (Base resolution is 1280x720)
 
 The timeline's timescale can be modified by using the `8 KEY`, `9 KEY`, `0 KEY`:
@@ -58,9 +74,10 @@ The timeline's timescale can be modified by using the `8 KEY`, `9 KEY`, `0 KEY`:
 |  `9 KEY`  |   `1.0x`   |
 |  `0 KEY`  |   `2.0x`   |
 
+
 The player can also be paused and unpaused with the `P KEY`
 
-Press `E` for Action Button (if applicable to current game)
+
 
 # References
 There were tutorials and other references used in the making of this game engine. Here, we 
@@ -236,3 +253,9 @@ helped us to understand the basics of how an event system should operate.
 | -------------------------- | ---------------------------------- |
 |                            | [`event.h`](event.h) |
 | [`eventManager.cpp`](eventManager.cpp) | [`eventManager.h`](eventManager.h) |
+
+
+## Homework 5
+
+There were no external references used for the creation of Homework 5. The instructions for the homework
+was followed without too much need to reference anything else.
